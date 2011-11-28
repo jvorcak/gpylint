@@ -17,6 +17,9 @@ class Editor(object):
     def get_component(self):
         return self.component
 
+    def show_pylint_output(self, output):
+        pass
+
 class VimEditor(Editor):
 
     """
@@ -51,13 +54,21 @@ class GeditEditor(Editor):
             self.buff.set_text(f.read())
         self.view.show()
 
+    def show_pylint_output(self, output):
+        print "drawing output"
+        for message in output:
+            type, line, location, msg = message
+            self.tag(int(line), msg)
 
-    def tag(self):
-        self.tag = Gtk.TextTag()
-        self.tag.set_property("style", pango.STYLE_ITALIC)
-        self.tag.set_property("background", "red")
-        self.buff.get_tag_table().add(self.tag)
-        start = self.buff.get_iter_at_offset(2)
-        end = self.buff.get_iter_at_offset(5)
-        self.buff.apply_tag(self.tag, start, end)
+    def tag(self, line, msg, bc_color="red"):
+
+        start = self.buff.get_iter_at_line(line)
+        end = self.buff.get_iter_at_line(line)
+        end.forward_line()
+
+        tag = Gtk.TextTag()
+        tag.set_property("background", "red")
+
+        self.buff.get_tag_table().add(tag)
+        self.buff.apply_tag(tag, start, end)
 

@@ -5,14 +5,18 @@ Author: Jan Vorcak <vorcak@mail.muni.cz>
 '''
 
 import os
+import re
 
 from gi.repository import Gtk
+from pylint.lint import Run
+from pylint.reporters.text import TextReporter
 
 from editor import GeditEditor
 from editor import VimEditor
 
-class Window:
+PYLINT_MSG=re.compile(r'([A-Z]?):([0-9]*):(.*):(.*)')
 
+class Window:
     '''
     This class maps actions from xml to it's methods
     Author: Jan Vorcak <vorcak@mail.muni.cz>
@@ -89,12 +93,48 @@ class Window:
         filename = self.treestore.get_value(tree_iter, 0)
         filepath = self.treestore.get_value(tree_iter, 1)
 
+        self.current_file = (filename, filepath)
+
         # todo check whether file exists
         frame = Gtk.Frame()
-        editor = GeditEditor(filename, filepath)
-        frame.add(editor.get_component())
+        self.editor = GeditEditor(filename, filepath)
+        frame.add(self.editor.get_component())
         frame.show()
 
         self.notebook.append_page(frame, Gtk.Label(filename))
 
-w = Window()
+    def run_pylint(self, parent):
+        '''
+        This method runs pylint agains the currently opened file
+        Author: Jan Vorcak <vorcak@mail.muni.cz>
+        '''
+        filename, filepath = self.current_file
+        output = PylintContext()
+        Run(['--reports=n', filepath], reporter=TextReporter(output), exit=False)
+        self.editor.show_pylint_output(output)
+
+
+class PylintContext(object):
+
+    def __init__(self):
+        self.content = []
+        self.current = 0
+
+    def write(self, msg):
+        search = PYLINT_MSG.search(msg)
+        if search:
+            self.content.append(search.groups())
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        if self.current >= len(self.content):
+            self.current = 0
+            raise StopIteration
+        else:
+            self.current += 1
+            return self.content[self.current - 1]
+
+if __name__ == '__main__':
+    w = Window()
