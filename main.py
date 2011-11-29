@@ -6,15 +6,18 @@ Author: Jan Vorcak <vorcak@mail.muni.cz>
 
 import os
 import re
-
 from gi.repository import Gtk
+from ConfigParser import ConfigParser
+
 from pylint.lint import Run
 from pylint.reporters.text import TextReporter
 
-from editor import GeditEditor
-from editor import VimEditor
+from editor import GeditEditor, VimEditor
 
 PYLINT_MSG=re.compile(r'([A-Z]?):([0-9]*):(.*):(.*)')
+
+config=ConfigParser()
+config.read('config.ini')
 
 class Window:
     '''
@@ -40,10 +43,16 @@ class Window:
         self.project_view.append_column(column)
 
         # exit on close
-        self.window.connect("delete-event", Gtk.main_quit)
+        self.window.connect("delete-event", self.exit)
         self.window.show_all()
 
         self.builder.connect_signals(self)
+
+        # init lastest project
+        if config.has_option('project', 'project_path'):
+            self.project_path = config.get('project', 'project_path')
+            self.load_tree_view()
+
         Gtk.main()
 
     def open_project(self, menu_item):
@@ -60,6 +69,13 @@ class Window:
 
         if response == Gtk.ResponseType.OK:
             self.project_path = dialog.get_filename()
+
+            # add project_path to config to that program starts with latest
+            # project opened
+            if not config.has_section('project'):
+                config.add_section('project')
+            config.set('project', 'project_path', self.project_path)
+
             self.load_tree_view()
         elif response == Gtk.ResponseType.CANCEL:
             pass
@@ -72,6 +88,7 @@ class Window:
         Author: Jan Vorcak <vorcak@mail.muni.cz>
         '''
 
+        self.treestore.clear()
         parents = {}
         for dir, dirs, files in os.walk(self.project_path):
             for subdir in dirs:
@@ -113,6 +130,16 @@ class Window:
         Run(['--reports=n', filepath], reporter=TextReporter(output), exit=False)
         self.editor.show_pylint_output(output)
 
+    def show_graph(self, parent):
+        view = Gtk.View()
+        view.show()
+
+        self.notebook.append_page(view, Gtk.Label("graph"))
+
+    def exit(self, event, data):
+            with open('config.ini', 'w') as f:
+                config.write(f)
+            Gtk.main_quit(event, data)
 
 class PylintContext(object):
 

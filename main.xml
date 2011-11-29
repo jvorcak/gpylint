@@ -19,6 +19,7 @@
     <property name="width_request">700</property>
     <property name="height_request">400</property>
     <property name="can_focus">False</property>
+    <property name="window_position">center</property>
     <child>
       <object class="GtkGrid" id="grid1">
         <property name="visible">True</property>
@@ -281,6 +282,7 @@
                 <property name="label" translatable="yes">Show graph</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-select-color</property>
+                <signal name="clicked" handler="show_graph" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
