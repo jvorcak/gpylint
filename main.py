@@ -14,7 +14,10 @@ from pylint.reporters.text import TextReporter
 
 from editor import GeditEditor, VimEditor
 
-PYLINT_MSG=re.compile(r'([A-Z]?):([0-9]*):(.*):(.*)')
+from gaphas import Canvas, GtkView
+from canvas import ClassBox
+
+PYLINT_MSG=re.compile(r'([A-Z]?):([0-9,]*):(.*)')
 
 config=ConfigParser()
 config.read('config.ini')
@@ -131,7 +134,18 @@ class Window:
         self.editor.show_pylint_output(output)
 
     def show_graph(self, parent):
-        view = Gtk.View()
+        view = GtkView()
+        view.canvas = Canvas()
+
+        cb = ClassBox(self)
+        cb.matrix.translate(40, 40)
+        view.canvas.add(cb)
+
+        cba = ClassBox(cb)
+        cba.matrix.translate(40, 40)
+        view.canvas.add(cba)
+        cba.set_superclass(cb)
+
         view.show()
 
         self.notebook.append_page(view, Gtk.Label("graph"))

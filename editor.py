@@ -1,5 +1,3 @@
-import pango
-
 from gi.repository import Gtk, GtkSource, Vte, GLib
 
 
@@ -55,9 +53,9 @@ class GeditEditor(Editor):
         self.view.show()
 
     def show_pylint_output(self, output):
-        print "drawing output"
         for message in output:
-            type, line, location, msg = message
+            type, location, msg = message
+            line, location = location.split(',')
             self.tag(int(line), msg)
 
     def tag(self, line, msg, bc_color="red"):
