@@ -57,9 +57,9 @@ class ClassBox(Box):
         '''
 
         line = Line()
-        line.matrix.translate(240, 240)
         for handle in line.handles():
             handle.visible = False
+
         self._canvas.add(line)
         connector = Connector(line, line.handles()[0])
         connector.connect(ConnectionSink(superclass, superclass.ports()[4]))

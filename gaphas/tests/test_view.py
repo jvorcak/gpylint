@@ -61,11 +61,7 @@ class ViewTestCase(unittest.TestCase):
         """
         canvas = Canvas()
         view = GtkView(canvas)
-<<<<<<< HEAD
-        window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
-=======
         window = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
->>>>>>> b1c65c8a840f085529c3f8c9f79103fe60941e5e
         window.add(view)
         window.show_all()
 
@@ -92,11 +88,7 @@ class ViewTestCase(unittest.TestCase):
     def test_item_removal(self):
         canvas = Canvas()
         view = GtkView(canvas)
-<<<<<<< HEAD
-        window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
-=======
         window = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
->>>>>>> b1c65c8a840f085529c3f8c9f79103fe60941e5e
         window.add(view)
         window.show_all()
 
@@ -143,11 +135,7 @@ class ViewTestCase(unittest.TestCase):
         assert not box._matrix_i2v.has_key(view)
         assert not box._matrix_v2i.has_key(view)
 
-<<<<<<< HEAD
-        window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
-=======
         window = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
->>>>>>> b1c65c8a840f085529c3f8c9f79103fe60941e5e
         window.add(view)
         window.show_all()
 
@@ -174,11 +162,7 @@ class ViewTestCase(unittest.TestCase):
         """
         canvas = Canvas()
         view = GtkView(canvas)
-<<<<<<< HEAD
-        window = Gtk.Window(Gtk.WindowType.TOPLEVEL)
-=======
         window = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
->>>>>>> b1c65c8a840f085529c3f8c9f79103fe60941e5e
         window.add(view)
         window.show_all()
 

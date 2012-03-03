@@ -11,9 +11,11 @@ from ConfigParser import ConfigParser
 
 from pylint.lint import Run
 from pylint.reporters.text import TextReporter
+# maybe should be replaced with ParseableTextReporter
 
 from editor import GeditEditor, VimEditor
 
+from scanner import ScanProject
 from gaphas import Canvas, GtkView
 from canvas import ClassBox
 
@@ -134,11 +136,14 @@ class Window:
         self.editor.show_pylint_output(output)
 
     def show_graph(self, parent):
+
+        ScanProject(['.'])
+
         view = GtkView()
         view.canvas = Canvas()
 
         cb = ClassBox(self)
-        cb.matrix.translate(40, 40)
+        cb.matrix.translate(140, 140)
         view.canvas.add(cb)
 
         cba = ClassBox(cb)
