@@ -137,16 +137,17 @@ class Window:
 
     def show_graph(self, parent):
 
-        ScanProject(['.'])
 
         view = GtkView()
         view.canvas = Canvas()
 
-        cb = ClassBox(self)
+        ScanProject(view.canvas, ['.'])
+
+        cb = ClassBox("asda")
         cb.matrix.translate(140, 140)
         view.canvas.add(cb)
 
-        cba = ClassBox(cb)
+        cba = ClassBox("asdaa")
         cba.matrix.translate(40, 40)
         view.canvas.add(cba)
         cba.set_superclass(cb)

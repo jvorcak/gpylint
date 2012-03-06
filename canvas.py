@@ -39,15 +39,15 @@ class Box(Element):
 
 class ClassBox(Box):
 
-    def __init__(self, cls, width=100, height=100):
+    def __init__(self, name, width=100, height=100):
         super(ClassBox, self).__init__(width, height)
-        self.cls = cls
+        self.name = name
 
     def draw(self, context):
         super(ClassBox, self).draw(context)
         c = context.cairo
         x,y = self._central_handle.pos
-        text_align(c, x, y, str(self.cls.__class__), 0, 0)
+        text_align(c, x, y, str(self.name), 0, 0)
 
     def set_superclass(self, superclass):
         '''

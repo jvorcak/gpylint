@@ -3,16 +3,36 @@
 Utilities for creating diagram on canvas
 """
 
-from logilab.common.graph import DotBackend
-
 from pylint.pyreverse.writer import DiagramWriter
 from pylint.pyreverse.utils import is_exception
+
+from canvas import ClassBox
+
+class CanvasBackend:
+    """ Canvas backend """
+
+    def __init__(self, canvas):
+        self.canvas = canvas
+
+    def emit_node(self, name, **props):
+        label = props['label']
+
+        box = ClassBox(label)
+        box.matrix.translate(140, 140)
+        self.canvas.add(box)
+
+    def emit_edge(self, name1, name2, **props):
+        print "emit edge", name1, " ", name2
+
+    def generate(self, filename):
+        pass
 
 class DotWriter(DiagramWriter):
     """write dot graphs from a diagram definition and a project
     """
 
-    def __init__(self, config):
+    def __init__(self, canvas, config):
+        self.canvas = canvas
         styles = [dict(arrowtail='none', arrowhead="open"), 
                   dict(arrowtail = "none", arrowhead='empty'), 
                   dict(arrowtail="node", arrowhead='empty', style='dashed'),
@@ -24,7 +44,7 @@ class DotWriter(DiagramWriter):
         """initialize DotWriter and add options for layout.
         """
         layout = dict(rankdir="BT")
-        self.printer = DotBackend(basename, additionnal_param=layout)
+        self.printer = CanvasBackend(self.canvas)
         self.file_name = file_name
 
     def get_title(self, obj):
@@ -33,7 +53,7 @@ class DotWriter(DiagramWriter):
 
     def get_values(self, obj):
         """get label and shape for classes.
-        
+
         The label contains all attributes and methods
         """
         label =  obj.title

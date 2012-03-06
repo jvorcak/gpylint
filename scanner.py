@@ -68,11 +68,12 @@ class ScannerCommand(ConfigurationMixIn):
 
     options = OPTIONS
 
-    def __init__(self, args):
+    def __init__(self, canvas, args):
         ConfigurationMixIn.__init__(self, usage=__doc__)
         insert_default_options()
         self.manager = ASTNGManager()
         self.register_options_provider(self.manager)
+        self.canvas = canvas
         self.run(args)
 
     def run(self, args):
@@ -91,12 +92,12 @@ class ScannerCommand(ConfigurationMixIn):
         finally:
             sys.path.pop(0)
 
-        writer.DotWriter(self.config).write(diadefs)
+        writer.DotWriter(self.canvas, self.config).write(diadefs)
 
 
 class ScanProject:
     """pyreverse main class"""
-    def __init__(self, args):
+    def __init__(self, canvas, args):
         """run pyreverse"""
-        ScannerCommand(args)
+        ScannerCommand(canvas, args)
 
