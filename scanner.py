@@ -58,6 +58,7 @@ this disables -f values")),
 ("output", dict(short="o", dest="output_format", action="store",
                  default="dot", metavar="<format>",
                 help="create a *.<format> output file if format available.")),
+#("ignore", {"dest":"blacklist", "default":("gaphas",)}),
 )
 # FIXME : quiet mode
 #( ('quiet', 
@@ -85,12 +86,15 @@ class ScannerCommand(ConfigurationMixIn):
         # dependencies to local modules even if cwd is not in the PYTHONPATH
         sys.path.insert(0, os.getcwd())
         try:
-            project = self.manager.project_from_files(args)
+            project = self.manager.project_from_files(args, black_list=['gaphas']) # tmp solution, need to add popupmenu
             linker = Linker(project, tag=True)
             handler = DiadefsHandler(self.config)
             diadefs = handler.get_diadefs(project, linker)
         finally:
             sys.path.pop(0)
+
+        # filter just classes (not packages) for now
+        diadefs = filter(lambda x: x.TYPE == 'class', diadefs)
 
         writer.DotWriter(self.canvas, self.config).write(diadefs)
 

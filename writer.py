@@ -43,7 +43,6 @@ class DotWriter(DiagramWriter):
     def set_printer(self, file_name, basename):
         """initialize DotWriter and add options for layout.
         """
-        layout = dict(rankdir="BT")
         self.printer = CanvasBackend(self.canvas)
         self.file_name = file_name
 
@@ -59,11 +58,11 @@ class DotWriter(DiagramWriter):
         label =  obj.title
         if obj.shape == 'interface':
             label = "«interface»\\n%s" % label
-        if not self.config.only_classnames:
-            label = "%s|%s\l|" % (label,  r"\l".join(obj.attrs) )
-            for func in obj.methods:
-                label = r'%s%s()\l' % (label, func.name)
-            label = '{%s}' % label
+#        if not self.config.only_classnames:
+#            label = "%s|%s\l|" % (label,  r"\l".join(obj.attrs) )
+#            for func in obj.methods:
+#                label = r'%s%s()\l' % (label, func.name)
+#            label = '{%s}' % label
         if is_exception(obj.node):
             return dict(fontcolor="red", label=label, shape="record")
         return dict(label=label, shape="record")

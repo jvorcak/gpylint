@@ -44,8 +44,9 @@ class Window:
 
         self.treestore = Gtk.TreeStore(str, str)
         self.project_view.set_model(self.treestore)
-        column = Gtk.TreeViewColumn("title", Gtk.CellRendererText(), text=0)
+        column = Gtk.TreeViewColumn("Title", Gtk.CellRendererText(), text=0)
         self.project_view.append_column(column)
+
 
         # exit on close
         self.window.connect("delete-event", self.exit)
@@ -59,6 +60,9 @@ class Window:
             self.load_tree_view()
 
         Gtk.main()
+
+    def ignore_popup(self):
+        print "popup"
 
     def open_project(self, menu_item):
         '''
@@ -124,6 +128,11 @@ class Window:
         frame.show()
 
         self.notebook.append_page(frame, Gtk.Label(filename))
+
+
+    def show_files_popup(self, widget, event):
+        print "right click"
+
 
     def run_pylint(self, parent):
         '''
