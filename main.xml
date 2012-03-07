@@ -134,7 +134,11 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="headers_clickable">False</property>
+                        <signal name="button-press-event" handler="show_files_popup" swapped="no"/>
                         <signal name="row-activated" handler="file_clicked" swapped="no"/>
+                        <child internal-child="selection">
+                          <object class="GtkTreeSelection" id="treeview-selection1"/>
+                        </child>
                         <child>
                           <object class="GtkTreeViewColumn" id="treeviewcolumn1">
                             <property name="title" translatable="yes">column</property>
@@ -295,20 +299,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEventBox" id="eventbox1">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <signal name="button-press-event" handler="show_files_popup" swapped="no"/>
-            <child>
-              <placeholder/>
-            </child>
-          </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">2</property>
-            <property name="width">1</property>
-            <property name="height">1</property>
-          </packing>
+          <placeholder/>
         </child>
         <child>
           <placeholder/>

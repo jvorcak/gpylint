@@ -130,7 +130,7 @@ class Window:
         self.notebook.append_page(frame, Gtk.Label(filename))
 
 
-    def show_files_popup(self, widget, event):
+    def show_files_popup(self, event):
         print "right click"
 
 
@@ -146,20 +146,10 @@ class Window:
 
     def show_graph(self, parent):
 
-
         view = GtkView()
         view.canvas = Canvas()
 
-        ScanProject(view.canvas, ['.'])
-
-        cb = ClassBox("asda")
-        cb.matrix.translate(140, 140)
-        view.canvas.add(cb)
-
-        cba = ClassBox("asdaa")
-        cba.matrix.translate(40, 40)
-        view.canvas.add(cba)
-        cba.set_superclass(cb)
+        ScanProject(view, ['.'])
 
         view.show()
 

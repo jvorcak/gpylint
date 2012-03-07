@@ -8,21 +8,31 @@ from pylint.pyreverse.utils import is_exception
 
 from canvas import ClassBox
 
+import random
+
 class CanvasBackend:
     """ Canvas backend """
 
-    def __init__(self, canvas):
-        self.canvas = canvas
+    def __init__(self, view):
+        self.view = view
+        self.nodes = {}
 
     def emit_node(self, name, **props):
         label = props['label']
 
         box = ClassBox(label)
-        box.matrix.translate(140, 140)
-        self.canvas.add(box)
+        box.matrix.translate(random.randint(0, 400), random.randint(0,400))
+        self.view.canvas.add(box)
+
+        self.nodes[name] = box
 
     def emit_edge(self, name1, name2, **props):
-        print "emit edge", name1, " ", name2
+        # for now, basic connection (set_superclass) is enough to try
+        # force based algorithm
+        node1 = self.nodes[name1]
+        node2 = self.nodes[name2]
+        node1.set_superclass(node2)
+
 
     def generate(self, filename):
         pass
