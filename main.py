@@ -146,14 +146,20 @@ class Window:
 
     def show_graph(self, parent):
 
-        view = GtkView()
-        view.canvas = Canvas()
+        self.view = GtkView()
+        self.view.canvas = Canvas()
 
-        ScanProject(view, ['.'])
+        ScanProject(self.view, ['.'])
 
-        view.show()
+        self.view.show()
 
-        self.notebook.append_page(view, Gtk.Label("graph"))
+        self.notebook.append_page(self.view, Gtk.Label("graph"))
+
+    def zoom_in(self, button):
+        self.view.zoom(1.2)
+
+    def zoom_out(self, button):
+        self.view.zoom(1/1.2)
 
     def exit(self, event, data):
             with open('config.ini', 'w') as f:
