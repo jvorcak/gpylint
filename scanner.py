@@ -96,7 +96,7 @@ class ScannerCommand(ConfigurationMixIn):
         # filter just classes (not packages) for now
         diadefs = filter(lambda x: x.TYPE == 'class', diadefs)
 
-        writer.DotWriter(self.view, self.config).write(diadefs)
+        writer.CanvasWriter(self.view, self.config).write(diadefs)
 
 
 class ScanProject:

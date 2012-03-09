@@ -17,7 +17,6 @@ from editor import GeditEditor, VimEditor
 
 from scanner import ScanProject
 from gaphas import Canvas, GtkView
-from canvas import ClassBox
 
 PYLINT_MSG=re.compile(r'([A-Z]?):([0-9,]*):(.*)')
 
@@ -149,7 +148,7 @@ class Window:
         self.view = GtkView()
         self.view.canvas = Canvas()
 
-        ScanProject(self.view, ['.'])
+        ScanProject(self.view, [self.project_path])
 
         self.view.show()
 

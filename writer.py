@@ -6,9 +6,7 @@ Utilities for creating diagram on canvas
 from pylint.pyreverse.writer import DiagramWriter
 from pylint.pyreverse.utils import is_exception
 
-from canvas import ClassBox
-
-import random
+from canvas import ClassBox, set_association
 from igraph import Graph
 
 class CanvasBackend:
@@ -23,54 +21,51 @@ class CanvasBackend:
     def emit_node(self, name, **props):
         label = props['label']
         box = ClassBox(label)
-        #box.matrix.translate(random.randint(0, 400), random.randint(0,400))
-        #self.view.canvas.add(box)
 
         self.nodes.append({'name' : name, 'box' : box })
 
     def emit_edge(self, name1, name2, **props):
-        self.edges.append((name1, name2))
+        self.edges.append((name1, name2, props))
 
     def generate(self, filename):
         self.graph = Graph(len(self.nodes))
         self.graph.vs['name'] = [node['name'] for node in self.nodes]
         self.graph.vs['box'] = [node['box'] for node in self.nodes]
 
-        for name1, name2 in self.edges:
+        for name1, name2, props in self.edges:
             v1 = self.graph.vs.select(name_eq=name1)
             v2 = self.graph.vs.select(name_eq=name2)
             self.graph.add_edges((v1[0].index, v2[0].index))
 
-        for i, v in enumerate(self.graph.layout_fruchterman_reingold()):
+        for i, v in enumerate(self.graph.layout_grid_fruchterman_reingold()):
             x, y = v
             box = self.graph.vs[i]['box']
             box.matrix.translate((x+2)*40, (y+2)*40)
             print box, " at ", x+2, y+2
             self.view.canvas.add(box)
 
-        for name1, name2 in self.edges:
-            v1 = self.graph.vs.select(name_eq=name1)
-            v2 = self.graph.vs.select(name_eq=name2)
-            # for now, basic connection (set_superclass) is enough to try
-            # force based algorithm
-            v1['box'][0].set_superclass(v2['box'][0])
+        for name1, name2, props in self.edges:
+            v1 = self.graph.vs.select(name_eq=name1)['box'][0]
+            v2 = self.graph.vs.select(name_eq=name2)['box'][0]
+
+            set_association(self.view.canvas, v2, v1, props)
 
 
-class DotWriter(DiagramWriter):
-    """write dot graphs from a diagram definition and a project
+class CanvasWriter(DiagramWriter):
+    """write canvas graphs from a diagram definition and a project
     """
 
     def __init__(self, canvas, config):
         self.canvas = canvas
         styles = [dict(arrowtail='none', arrowhead="open"), 
-                  dict(arrowtail = "none", arrowhead='empty'), 
+                  dict(arrowtail="none", arrowhead='empty'), 
                   dict(arrowtail="node", arrowhead='empty', style='dashed'),
                   dict(fontcolor='green', arrowtail='none',
                        arrowhead='diamond', style='solid') ]
         DiagramWriter.__init__(self, config, styles)
 
     def set_printer(self, file_name, basename):
-        """initialize DotWriter and add options for layout.
+        """initialize CanvasBackend and add options for layout.
         """
         self.printer = CanvasBackend(self.canvas)
         self.file_name = file_name
@@ -97,7 +92,7 @@ class DotWriter(DiagramWriter):
         return dict(label=label, shape="record")
 
     def close_graph(self):
-        """print the dot graph into <file_name>"""
+        """print the graph into the canvas"""
         self.printer.generate(self.file_name)
 
 
