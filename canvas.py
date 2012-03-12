@@ -3,7 +3,7 @@ This modules is responsible for drawing classes and modules on canvas
 Author: Jan Vorcak <vorcak@mail.muni.cz>
 '''
 
-from gaphas.item import Element, NW, Line
+from gaphas.item import Element, NW, SW, NE, SE, Line
 from gaphas.connector import Handle, PointPort
 from gaphas.solver import STRONG
 from gaphas.util import text_align
@@ -19,10 +19,16 @@ class Box(Element):
     def __init__(self, width=10, height=10):
         super(Box, self).__init__(width, height)
         self._central_handle = Handle(strength=STRONG)
-        self._central_handle.visible = False
+        self._central_handle.visible = True
         self._central_handle.pos = width / 2.0, height / 2.0
         self._ports.append(PointPort(self._central_handle.pos))
         self._handles.append(self._central_handle)
+
+        self.constraint(left_of=(self._central_handle.pos, self._handles[NE].pos))
+        self.constraint(left_of=(self._handles[NW].pos, self._central_handle.pos))
+        self.constraint(above=(self._central_handle.pos, self._handles[SE].pos))
+        self.constraint(above=(self._handles[NE].pos, self._central_handle.pos))
+
 
     def draw(self, context):
         c = context.cairo
@@ -212,8 +218,10 @@ def set_association(canvas, o1, o2, props):
         handle.visible = False
 
     canvas.add(line)
+
     connector = Connector(line, line.handles()[0])
     connector.connect(ConnectionSink(o1, o1.ports()[4]))
 
     connector = Connector(line, line.handles()[1])
     connector.connect(ConnectionSink(o2, o2.ports()[4]))
+
