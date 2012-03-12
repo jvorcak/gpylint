@@ -18,17 +18,28 @@ class Box(Element):
 
     def __init__(self, width=10, height=10):
         super(Box, self).__init__(width, height)
+
+        for handle in self._handles:
+            handle.visible = False
+            handle.moveable = False
+
         self._central_handle = Handle(strength=STRONG)
         self._central_handle.visible = True
         self._central_handle.pos = width / 2.0, height / 2.0
         self._ports.append(PointPort(self._central_handle.pos))
         self._handles.append(self._central_handle)
 
-        self.constraint(left_of=(self._central_handle.pos, self._handles[NE].pos))
-        self.constraint(left_of=(self._handles[NW].pos, self._central_handle.pos))
-        self.constraint(above=(self._central_handle.pos, self._handles[SE].pos))
-        self.constraint(above=(self._handles[NE].pos, self._central_handle.pos))
+        from gaphas.constraint import EquationConstraint
 
+        c = EquationConstraint(
+                lambda a, b : max(a*a-1000,
+                                  b*b-1000),
+                    a=self._central_handle.pos[0],
+                    b=self._central_handle.pos[1]
+                )
+
+
+        self._constraints.append(c)
 
     def draw(self, context):
         c = context.cairo
