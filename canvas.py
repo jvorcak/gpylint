@@ -10,7 +10,7 @@ from gaphas.connector import Handle, PointPort
 from gaphas.solver import STRONG
 from gaphas.util import text_align
 from gaphas.aspect import Connector, ConnectionSink
-from gaphas.constraint import EquationConstraint
+from gaphas.constraint import EquationConstraint, LineConstraint
 
 class Box(Element):
     """ A Box has 5 handles:
@@ -32,16 +32,8 @@ class Box(Element):
         self._ports.append(PointPort(self._central_handle.pos))
         self._handles.append(self._central_handle)
 
-
-        c = EquationConstraint(
-                lambda x, y : max(math.pow(x-self.width/2,2),
-                                  math.pow(y-self.width/2,2)) -
-                              math.pow(self.width/2, 2),
-                    x=self._central_handle.pos[0],
-                    y=self._central_handle.pos[1]
-                )
-
-        self._constraints.append(c)
+    def get_centeral_position(self):
+        return self._central_handle.pos
 
     def draw(self, context):
         c = context.cairo
@@ -216,6 +208,44 @@ class ClassBox(Box):
         x,y = self._central_handle.pos
         text_align(c, x, y, str(self.name), 0, 0)
 
+    def add_moveable_handle(self, canvas, snd_obj):
+        handle = Handle(strength=STRONG)
+        handle.visible = True
+        handle.pos = self.width/2, self.height
+        port = PointPort(handle.pos)
+        self._ports.append(port)
+        self._handles.append(handle)
+
+        c = EquationConstraint(
+                lambda x, y : max(math.pow(x-self.width/2,2),
+                                  math.pow(y-self.width/2,2)) -
+                              math.pow(self.width/2, 2),
+                    x=handle.pos[0],
+                    y=handle.pos[1]
+                )
+
+        sx, sy = self.matrix[4], self.matrix[5]
+        fx, fy = snd_obj.matrix[4], snd_obj.matrix[5]
+        # count distance between nodes
+        dx, dy = fx - sx, fy - sy
+
+        from gaphas.solver import Projection, Variable
+
+        v1, v2 = self.get_centeral_position()
+        p1, p2 = Variable(v1+dx), Variable(v2+dy)
+
+        s = LineConstraint(
+            (
+                self.get_centeral_position(),
+                (p1, p2)
+            ),
+            handle.pos)
+
+        canvas.solver.add_constraint(c)
+        #canvas.solver.add_constraint(s)
+
+        return handle, port
+
 def set_association(canvas, o1, o2, props):
     '''
     Make connection between two canvas objects
@@ -232,9 +262,12 @@ def set_association(canvas, o1, o2, props):
 
     canvas.add(line)
 
+    h1, p1 = o1.add_moveable_handle(canvas, o2)
+    h2, p2 = o2.add_moveable_handle(canvas, o1)
+
     connector = Connector(line, line.handles()[0])
-    connector.connect(ConnectionSink(o1, o1.ports()[4]))
+    connector.connect(ConnectionSink(o1, p1))
 
     connector = Connector(line, line.handles()[1])
-    connector.connect(ConnectionSink(o2, o2.ports()[4]))
+    connector.connect(ConnectionSink(o2, p2))
 
