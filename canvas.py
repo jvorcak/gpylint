@@ -3,11 +3,14 @@ This modules is responsible for drawing classes and modules on canvas
 Author: Jan Vorcak <vorcak@mail.muni.cz>
 '''
 
+import math
+
 from gaphas.item import Element, NW, SW, NE, SE, Line
 from gaphas.connector import Handle, PointPort
 from gaphas.solver import STRONG
 from gaphas.util import text_align
 from gaphas.aspect import Connector, ConnectionSink
+from gaphas.constraint import EquationConstraint
 
 class Box(Element):
     """ A Box has 5 handles:
@@ -29,15 +32,14 @@ class Box(Element):
         self._ports.append(PointPort(self._central_handle.pos))
         self._handles.append(self._central_handle)
 
-        from gaphas.constraint import EquationConstraint
 
         c = EquationConstraint(
-                lambda a, b : max(a*a-1000,
-                                  b*b-1000),
-                    a=self._central_handle.pos[0],
-                    b=self._central_handle.pos[1]
+                lambda x, y : max(math.pow(x-self.width/2,2),
+                                  math.pow(y-self.width/2,2)) -
+                              math.pow(self.width/2, 2),
+                    x=self._central_handle.pos[0],
+                    y=self._central_handle.pos[1]
                 )
-
 
         self._constraints.append(c)
 
