@@ -5,9 +5,9 @@ Utilities for creating diagram on canvas
 
 from pylint.pyreverse.writer import DiagramWriter
 from pylint.pyreverse.utils import is_exception
-
-from canvas import ClassBox, set_association
 from igraph import Graph
+
+from gpylint.canvas import ClassBox, set_association
 
 class CanvasBackend:
     """ Canvas backend """
@@ -19,15 +19,28 @@ class CanvasBackend:
         self.graph = None
 
     def emit_node(self, name, **props):
+        '''
+        Append node with given properties to the list
+        '''
         label = props['label']
         box = ClassBox(label)
 
         self.nodes.append({'name' : name, 'box' : box })
 
     def emit_edge(self, name1, name2, **props):
+        '''
+        Append edge with give properties to the list
+        '''
         self.edges.append((name1, name2, props))
 
     def generate(self, filename):
+        '''
+        Displays the graph on the canvas
+        Uses python-igraph fruchterman-reingold algorithm to decide about
+        position of the nodes, then draw these nodes on the canvas and
+        draw connections between them
+        Author: Jan Vorcak <vorcak@mail.muni.cz>
+        '''
         self.graph = Graph(len(self.nodes))
         self.graph.vs['name'] = [node['name'] for node in self.nodes]
         self.graph.vs['box'] = [node['box'] for node in self.nodes]
@@ -52,7 +65,7 @@ class CanvasBackend:
 
 
 class CanvasWriter(DiagramWriter):
-    """write canvas graphs from a diagram definition and a project
+    """write canvas graphs from a diagram definition
     """
 
     def __init__(self, canvas, config):

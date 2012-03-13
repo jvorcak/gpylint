@@ -187,6 +187,10 @@ class AssociationLine(Line):
 
 class ClassBox(Box):
 
+    '''
+    This class represents class on the canvas
+    '''
+
     def __init__(self, name, width=100, height=100):
         super(ClassBox, self).__init__(width, height)
         self.name = name

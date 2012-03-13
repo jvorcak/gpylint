@@ -8,15 +8,16 @@ import os
 import re
 from gi.repository import Gtk
 from ConfigParser import ConfigParser
-
 from pylint.lint import Run
 from pylint.reporters.text import TextReporter
 # maybe should be replaced with ParseableTextReporter
 
-from editor import GeditEditor, VimEditor
-
-from scanner import ScanProject
+# gaphas usage
 from gaphas import Canvas, GtkView
+
+# gpylint usage
+from gpylint.editor import GeditEditor, VimEditor
+from gpylint.scanner import ScanProject
 
 PYLINT_MSG=re.compile(r'([A-Z]?):([0-9,]*):(.*)')
 
@@ -144,29 +145,45 @@ class Window:
         self.editor.show_pylint_output(output)
 
     def show_graph(self, parent):
+        '''
+        Displays graph in the new tab
+        Scans the project and display the results on the canvas
+        '''
 
+        #TODO limit to have just one tab
         self.view = GtkView()
         self.view.canvas = Canvas()
 
         ScanProject(self.view, [self.project_path])
 
         self.view.show()
-
         self.notebook.append_page(self.view, Gtk.Label("graph"))
 
     def zoom_in(self, button):
+        '''
+        Zoom in the canvas
+        '''
         self.view.zoom(1.2)
 
     def zoom_out(self, button):
+        '''
+        Zoom out the canvas
+        '''
         self.view.zoom(1/1.2)
 
     def exit(self, event, data):
-            with open('config.ini', 'w') as f:
-                config.write(f)
+        '''
+        Close the program and save the path to config
+        '''
+        #TODO fix closing the program
+        with open('config.ini', 'w') as f:
+            config.write(f)
             Gtk.main_quit(event, data)
 
 class PylintContext(object):
-
+    '''
+    Class stores the information about pylint results
+    '''
     def __init__(self):
         self.content = []
         self.current = 0
