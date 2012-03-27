@@ -1,0 +1,97 @@
+\documentclass[11pt,oneside,final]{fithesis2}
+
+\usepackage[utf8]{inputenc}
+\usepackage[slovak]{babel}
+\usepackage[T1]{fontenc} 
+\usepackage{a4wide}
+\usepackage[plainpages=false,pdfpagelabels,unicode]{hyperref}
+\usepackage{tabularx}
+\usepackage{pifont}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{varioref}
+\usepackage{multirow}
+\usepackage[protrusion=true, expansion, kerning]{microtype}
+\lstset{basicstyle=\ttfamily, breaklines=true, breakatwhitespace=false}
+
+\thesistitle{Grafické rozhranie k programu Pylint}
+\thesissubtitle{Bakalárska práca}  
+\thesisstudent{Ján Vorčák}
+\thesiswoman{false}
+\thesisfaculty{fi}  
+\thesisyear{2012}
+\thesisadvisor{Mgr. Marek Grác}
+\thesislang{sk}
+\emergencystretch4dd
+\begin{document}
+ \widowpenalty10000
+ \clubpenalty10000
+ \hfuzz2mm
+ \FrontMatter  
+ \ThesisTitlePage
+
+\begin{ThesisDeclaration}
+\DeclarationText
+\AdvisorName
+\end{ThesisDeclaration}
+
+\begin{ThesisThanks}
+\end{ThesisThanks}
+
+\begin{ThesisAbstract}
+\end{ThesisAbstract}
+
+\begin{ThesisKeyWords}
+\end{ThesisKeyWords}
+
+
+
+\MainMatter  
+\tableofcontents
+
+\chapter{Úvod}
+\chapter{O jazyku Python}
+	\section{Čo je to Python?}
+	\section{Princip jazyka Python}
+\chapter{Nástroje na analýzu kódu pre jazyk Python}
+	\section{Nástroje analýzu kódu projektu}			
+	\section{Nástroje na vizualizáciu projektu}
+    
+\chapter{Analýza nástroja Gaphas}
+
+	\section{Základná charakteristika nástroja Gaphas}
+
+		Gaphas predstavuje zoskupenie knižníc a nástrojov na vykresľovanie grafických objektov na určené elementy grafického rozhrania GTK. Je naprogramovaný v jazyku Python a vydaný pod ??? licenciou.
+
+	\section{Popis Gaphas API}
+
+Gaphas API využíva MVC návrhový vzor a môzme ho teda rozdeliť na 3 hlavné časti.
+\begin{list}{•}{}
+\item Model - canvas, items
+\item View - view
+\item Controller - tools
+\end{list}
+
+\subsection{Model}
+
+    
+\subsection{View}
+View obsahuje všetko súvisiace so zobrazovaním a vykresľovaním jednotlivých elementov.
+
+\subsection{Controller}
+
+\begin{list}{•}{}
+\item api/view
+\item api/painters
+\item api/gtkview
+\end{list}
+    
+\section{Zhrnutie}    
+    
+\chapter{Projekt gpylint}
+	\section{Aplikácia jednotlivých nástrojov}
+	\section{Vyhodnotenie}	
+
+\chapter{Záver}
+\end{document}

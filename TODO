@@ -1,0 +1,6 @@
+Bugs:
+
+    Open directory which doesn't have __init__.py file inside
+    Unable to load module /home/xvorcak/gpylint/tests/project_sample/__init__.py (No module named /home/xvorcak/gpylint/tests/project_sample/__init__.py)
+    Segmentation fault (core dumped)
+
