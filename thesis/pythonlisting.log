@@ -1,0 +1,669 @@
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2012.1.16)  28 MAR 2012 22:06
+entering extended mode
+ %&-line parsing enabled.
+**pythonlisting.tex
+(./pythonlisting.tex
+LaTeX2e <2005/12/01>
+Babel <v3.8h> and hyphenation patterns for english, usenglishmax, dumylang, noh
+yphenation, arabic, basque, bulgarian, coptic, welsh, czech, slovak, german, ng
+erman, danish, esperanto, spanish, catalan, galician, estonian, farsi, finnish,
+ french, greek, monogreek, ancientgreek, croatian, hungarian, interlingua, ibyc
+us, indonesian, icelandic, italian, latin, mongolian, dutch, norsk, polish, por
+tuguese, pinyin, romanian, russian, slovenian, uppersorbian, serbian, swedish, 
+turkish, ukenglish, ukrainian, loaded.
+
+! LaTeX Error: \usepackage before \documentclass.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3 \usepackage{
+                color}
+\usepackage may only appear in the document preamble, i.e.,
+between \documentclass and \begin{document}.
+
+
+! LaTeX Error: \usepackage before \documentclass.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.4 \usepackage[procnames]{
+                           listings}
+\usepackage may only appear in the document preamble, i.e.,
+between \documentclass and \begin{document}.
+
+
+! LaTeX Error: \usepackage before \documentclass.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.5 \usepackage{
+                textcomp}
+\usepackage may only appear in the document preamble, i.e.,
+between \documentclass and \begin{document}.
+
+
+! LaTeX Error: \usepackage before \documentclass.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.6 \usepackage{
+                setspace}
+\usepackage may only appear in the document preamble, i.e.,
+between \documentclass and \begin{document}.
+
+
+! LaTeX Error: \usepackage before \documentclass.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.7 \usepackage{
+                palatino}
+\usepackage may only appear in the document preamble, i.e.,
+between \documentclass and \begin{document}.
+
+
+! LaTeX Error: \lstlistlistingname undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.8 \renewcommand{\lstlistlistingname}
+                                      {Code Listings}
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \lstlistingname undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.9 \renewcommand{\lstlistingname}
+                                  {Code Listing}
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+! Undefined control sequence.
+l.10 \definecolor
+                 {gray}{gray}{0.5}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.10 \definecolor{g
+                   ray}{gray}{0.5}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no g in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no y in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no y in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no 5 in font nullfont!
+! Undefined control sequence.
+l.11 \definecolor
+                 {green}{rgb}{0,0.5,0}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+Missing character: There is no g in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no b in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no , in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no 5 in font nullfont!
+Missing character: There is no , in font nullfont!
+Missing character: There is no 0 in font nullfont!
+! Undefined control sequence.
+l.12 \definecolor
+                 {lightgreen}{rgb}{0,0.7,0}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+Missing character: There is no l in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no b in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no , in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no 7 in font nullfont!
+Missing character: There is no , in font nullfont!
+Missing character: There is no 0 in font nullfont!
+! Undefined control sequence.
+l.13 \definecolor
+                 {purple}{rgb}{0.5,0,0.5}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+Missing character: There is no p in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no b in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no 5 in font nullfont!
+Missing character: There is no , in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no , in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no 5 in font nullfont!
+! Undefined control sequence.
+l.14 \definecolor
+                 {darkred}{rgb}{0.5,0,0}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+Missing character: There is no d in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no k in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no d in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no b in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no 5 in font nullfont!
+Missing character: There is no , in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no , in font nullfont!
+Missing character: There is no 0 in font nullfont!
+! Undefined control sequence.
+l.15 \lstnewenvironment
+                       {python}[1][]{
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+Missing character: There is no p in font nullfont!
+Missing character: There is no y in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no [ in font nullfont!
+Missing character: There is no 1 in font nullfont!
+Missing character: There is no ] in font nullfont!
+Missing character: There is no [ in font nullfont!
+Missing character: There is no ] in font nullfont!
+! Undefined control sequence.
+l.16 \lstset
+            {
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+Missing character: There is no l in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no u in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no = in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no y in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no h in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no , in font nullfont!
+Missing character: There is no b in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no y in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no = in font nullfont!
+! Undefined control sequence.
+l.18 basicstyle=\ttfamily\small
+                               \setstretch{1},
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.18 basicstyle=\ttfamily\small\setstretch
+                                          {1},
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.19 stringstyle=\color
+                       {green},
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+LaTeX Font Info:    Try loading font information for OMS+cmtt on input line 22.
+
+LaTeX Font Info:    No file OMScmtt.fd. on input line 22.
+
+LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
+(Font)              using `OMS/cmsy/m/n' instead
+(Font)              for symbol `textbraceright' on input line 22.
+
+! Undefined control sequence.
+l.23 keywordstyle=\color
+                        {blue},
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.27 emphstyle=\color
+                     {orange}\bfseries,
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 27.
+! Undefined control sequence.
+l.29 emphstyle=[2]\color
+                        {gray},
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.46 quit,range,raw_
+                    input,reduce,reload,repr,reversed,round,set,setattr,%
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 46.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 46.
+! Extra }, or forgotten $.
+l.48 vars,xrange,zip}
+                     ,
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+! Undefined control sequence.
+l.49 emphstyle=[4]\color
+                        {purple}\bfseries,
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+! LaTeX Error: Command \bfseries invalid in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.49 emphstyle=[4]\color{purple}\bfseries
+                                         ,
+Please use the math alphabet \mathbf instead of the \bfseries command. 
+
+! Undefined control sequence.
+l.51 morecomment=[s][\color
+                           {lightgreen}]{"""}{"""},
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.52 commentstyle=\color
+                        {red}\slshape,
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+! LaTeX Error: Command \slshape invalid in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.52 commentstyle=\color{red}\slshape
+                                     ,
+Please define a new math alphabet
+if you want to use a special font in math mode. 
+
+
+LaTeX Font Warning: Font shape `OT1/cmtt/bx/sl' undefined
+(Font)              using `OT1/cmtt/bx/n' instead on input line 52.
+
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/sl' in size <10> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 53.
+! Undefined control sequence.
+<argument> \bfseries \textcolor 
+                                {darkred}{>{>}>}
+l.53 ...={>>>}{\textbf{\textcolor{darkred}{>{>}>}}
+                                                  }3%
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.54          {...}{{\textcolor
+                               {gray}{...}}}3,
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.56 procnamestyle=\color
+                         {blue}\textbf,
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+l.58 rulesepcolor=\color
+                        {blue},#1
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! You can't use `macro parameter character #' in math mode.
+l.58 rulesepcolor=\color{blue},#
+                                1
+Sorry, but I'm not programmed to handle this case;
+I'll just pretend that you didn't ask for it.
+If you're in the wrong mode, you might be able to
+return to the right one by typing `I}' or `I$' or `I\par'.
+
+! Extra }, or forgotten $.
+l.59 }
+      }{}
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+! Extra }, or forgotten $.
+l.59 }}
+       {}
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.60 
+     
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+Overfull \hbox (20.0pt too wide) in paragraph at lines 10--60
+[]
+ []
+
+
+Overfull \hbox (10.49991pt too wide) in paragraph at lines 10--60
+\OT1/cmtt/m/n/10 1,
+ []
+
+
+Overfull \hbox (94.49918pt too wide) in paragraph at lines 10--60
+\OT1/cmtt/m/n/10 stringstyle=green,
+ []
+
+
+Overfull \hbox (120.74895pt too wide) in paragraph at lines 10--60
+\OT1/cmtt/m/n/10 showstringspaces=false,
+ []
+
+
+Overfull \hbox (115.499pt too wide) in paragraph at lines 10--60
+\OT1/cmtt/m/n/10 alsoletter=1234567890,
+ []
+
+
+Overfull \hbox (73.49936pt too wide) in paragraph at lines 10--60
+\OT1/cmtt/m/n/10 otherkeywords=
+ []
+
+
+Overfull \hbox (5.24995pt too wide) in paragraph at lines 10--60
+\OT1/cmtt/m/n/10 ,
+ []
+
+
+Overfull \hbox (10.24997pt too wide) in paragraph at lines 10--60
+\OMS/cmtt/m/n/10 g\OT1/cmtt/m/n/10 ,
+ []
+
+
+Overfull \hbox (10.24997pt too wide) in paragraph at lines 10--60
+\OMS/cmtt/m/n/10 f\OT1/cmtt/m/n/10 ,
+ []
+
+
+Overfull \hbox (94.49918pt too wide) in paragraph at lines 10--60
+\OT1/cmtt/m/n/10 keywordstyle=blue,
+ []
+
+
+Overfull \hbox (866.24245pt too wide) in paragraph at lines 10--60
+\OT1/cmtt/m/n/10 emph=access,and,as,break,class,continue,def,del,elif,else,exce
+pt,exec,finally,for,from,global,if,import,in,is,lambda,not,or,pass,print,raise,
+return,try,while,assert,
+ []
+
+
+Overfull \hbox (89.24922pt too wide) in paragraph at lines 10--60
+\OT1/cmtt/m/n/10 emphstyle=orange,
+ []
+
+
+Overfull \hbox (68.2494pt too wide) in paragraph at lines 10--60
+\OT1/cmtt/m/n/10 emph=[2]self,
+ []
+
+
+Overfull \hbox (94.49918pt too wide) in paragraph at lines 10--60
+\OT1/cmtt/m/n/10 emphstyle=[2]gray,
+ []
+
+
+Overfull \hbox (6253.62523pt too wide) in paragraph at lines 10--60
+\OT1/cmtt/m/n/10 emph=[4]ArithmeticError,AssertionError,AttributeError,BaseExce
+ption,DeprecationWarning,EOFError,Ellipsis,EnvironmentError,Exception,False,Flo
+atingPointError,FutureWarning,GeneratorExit,IOError,ImportError,ImportWarning,I
+ndentationError,IndexError,KeyError,KeyboardInterrupt,LookupError,MemoryError,N
+ameError,None,NotImplemented,NotImplementedError,OSError,OverflowError,PendingD
+eprecationWarning,ReferenceError,RuntimeError,RuntimeWarning,StandardError,Stop
+Iteration,SyntaxError,SyntaxWarning,SystemError,SystemExit,TabError,True,TypeEr
+ror,UnboundLocalError,UnicodeDecodeError,UnicodeEncodeError,UnicodeError,Unicod
+eTranslateError,UnicodeWarning,UserWarning,ValueError,Warning,ZeroDivisionError
+,abs,all,any,apply,basestring,bool,buffer,callable,chr,classmethod,cmp,coerce,c
+ompile,complex,copyright,credits,delattr,dict,dir,divmod,enumerate,eval,execfil
+e,exit,file,filter,float,frozenset,getattr,globals,hasattr,hash,help,hex,id,inp
+ut,int,intern,isinstance,issubclass,iter,len,license,list,locals,long,map,max,m
+in,object,oct,open,ord,pow,property,quit,range,raw$[]\OML/cmm/m/it/10 nput; red
+uce; reload; repr; reversed; round; set; setattr; slice; sorted; staticmethod; 
+str; sum; super; tuple; type; unichr; unicode; vars; xrange; zip; emphstyle \OT
+1/cmr/m/n/10 =
+ []
+
+
+Overfull \hbox (88.38672pt too wide) in paragraph at lines 10--60
+\OT1/cmr/m/n/10 [4][]\OML/cmm/m/it/10 ; upquote \OT1/cmr/m/n/10 =
+ []
+
+
+Overfull \hbox (97.85904pt too wide) in paragraph at lines 10--60
+\OML/cmm/m/it/10 true; morecomment \OT1/cmr/m/n/10 =
+ []
+
+
+Overfull \hbox (169.56007pt too wide) in paragraph at lines 10--60
+\OT1/cmr/m/n/10 [\OML/cmm/m/it/10 s\OT1/cmr/m/n/10 ][[]][][]\OML/cmm/m/it/10 ; 
+commentstyle \OT1/cmr/m/n/10 =
+ []
+
+
+Overfull \hbox (62.88614pt too wide) in paragraph at lines 10--60
+[]\OML/cmm/m/it/10 ; literate \OT1/cmr/m/n/10 =
+ []
+
+
+Overfull \hbox (201.81119pt too wide) in paragraph at lines 10--60
+[][]\OT1/cmr/m/n/10 3[][]3\OML/cmm/m/it/10 ; procnamekeys \OT1/cmr/m/n/10 =
+ []
+
+
+Overfull \hbox (122.00829pt too wide) in paragraph at lines 10--60
+[]\OML/cmm/m/it/10 ; procnamestyle \OT1/cmr/m/n/10 =
+ []
+
+
+Overfull \hbox (119.70927pt too wide) in paragraph at lines 10--60
+[][]\OML/cmm/m/it/10 framexleftmargin \OT1/cmr/m/n/10 =
+ []
+
+
+Overfull \hbox (119.68033pt too wide) in paragraph at lines 10--60
+\OT1/cmr/m/n/10 1\OML/cmm/m/it/10 mm; framextopmargin \OT1/cmr/m/n/10 =
+ []
+
+
+Overfull \hbox (67.04413pt too wide) in paragraph at lines 10--60
+\OT1/cmr/m/n/10 1\OML/cmm/m/it/10 mm; frame \OT1/cmr/m/n/10 =
+ []
+
+
+Overfull \hbox (117.78716pt too wide) in paragraph at lines 10--60
+\OML/cmm/m/it/10 shadowbox; rulesepcolor \OT1/cmr/m/n/10 =
+ []
+
+
+Overfull \hbox (27.2975pt too wide) in paragraph at lines 10--60
+[]\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 1[]$ 
+ []
+
+)
+! Emergency stop.
+<*> pythonlisting.tex
+                     
+*** (job aborted, no legal \end found)
+
+ 
+Here is how much of TeX's memory you used:
+ 23 strings out of 256216
+ 388 string characters out of 1917072
+ 49804 words of memory out of 1500000
+ 3405 multiletter control sequences out of 10000+200000
+ 3808 words of font info for 15 fonts, out of 1200000 for 2000
+ 645 hyphenation exceptions out of 8191
+ 20i,4n,14p,104b,121s stack positions out of 5000i,500n,6000p,200000b,15000s
+!  ==> Fatal error occurred, no output PDF file produced!

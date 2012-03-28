@@ -12,6 +12,7 @@
 \usepackage{listings}
 \usepackage{varioref}
 \usepackage{multirow}
+\usepackage{listing}
 \usepackage[protrusion=true, expansion, kerning]{microtype}
 \lstset{basicstyle=\ttfamily, breaklines=true, breakatwhitespace=false}
 
@@ -52,8 +53,47 @@
 
 \chapter{Úvod}
 \chapter{O jazyku Python}
+
 	\section{Čo je to Python?}
+	Python je vysoko úrovňový, objektovo orientovaný dynamický jazyk, ktorý vytvoril holandský programátor Guido van Rossum ako následníka jazyka ABC.
+Vyznačuje sa prehľadnou syntaxou, jednoduchosťou a modulárnosťou. Python podporuje viacero programátorských paradigmat, najmä objektovo orientované, imperatívne a čiastočne aj funkcionálne paradigma.
+
+Existuje viacero implementácií jazka Python. Mezdi najznámejšie patria:
+\begin{list}{•}{}
+\item CPython
+\item Jython
+\item Python pre .NET
+\item IronPython
+\item PyPy
+\end{list}
+
+Najpožívanejšou a najpodporovanejšou je ale CPython. Každá z implementácií sa môže líšiť špecifickými informáciami mimo štandardnej Python dokumentácie.
+Zdrojové kódy sú preložené do byte kódu a zvyčajne uložené v .pyc alebo .pyo súboroch, ktoré sú neskôr spúštané virtuálnou
+
+	V štandardnej knižnici je dostupné množstvo datových typov ako napríklad reálne a komplexné čísla, celé čísla s neobmedzenou dĺžkou, znakové reťazce, zoznamy a slovníky. Datové typy su silno a dynamicky typované. Použitie nekompatibilného typu spôsobí vyvolanie výnimky. Python podporuje objektovo orientované programovanie vrátane viacnásobnej dedičnosti. Kód je sústredený do modulov a balíkov s možnosťou importovať špecifický modul, triedu, funkciu alebo iný objekt. Za účelom ošetrenia chýb Python podporuje vyvolávanie a odchytávanie výnimiek. Automatická správa pamäti nahrádza nutnosť manuálne alokovať a uvoľnovať pamäť v kóde.
+
+
 	\section{Introspekcia v jazyku Python}
+		Introspekcia je schopnosť preskúmať daný objekt a rozhodnúť o jeho identite, vlastnostiach a schopnostiach. Jazyk Python podporuje rozsiahlu introspekciu objektov. Medzi hlavné informácie, ktoré potrebujeme o objektoch v jazyku Python zisťiť patrí ich meno, typ, identita, vlastnosti, schopnosti a ich pôvod. Jazyk Python ponúka množstvo nástrojov, ktoré nám tieto vlastnosti umožnujú zisťiť. Môžeme ich rozdeliť do dvoch hlavných skupín. V prvej skupine sú funkcie či už zo štandardnej knižnice alebo z pomocných modulov akým je napríklad modul inspect, do druhej skupiny radíme atribúty objektov, ktoré priamo v objekte uchovávajú užitocné informácie.
+	
+		\subsection{Funkcia dir()}
+			Funkcia dir() je jedným z hlavných nástrojov introspekcie v jazyku Python a vracia zotriedený zoznam mien atribútov objektu, ktorý bol uvedený ako jej argument. Funkcia je súčasťou štandardnej knižnice, takže nemusíme importovať žiaden modul pre jej použitie. Na výpis funkcií zo štandardnej knižnice môžeme teda využiť samotnú funkciu dir().
+			
+
+\begin{lstlisting}[language=python]
+In [1]: print dir(__builtin__)[-10:]
+['str', 'sum', 'super', 'tuple', 'type', 'unichr', 'unicode', 'vars', 'xrange', 'zip']
+\end{lstlisting}
+
+			 V prípade, že je funkcia dir() použitá bez argumentov vracia zoznam mien, ktoré sú momentálne definované.
+
+\begin{lstlisting}[language=python]
+In [2]: print dir()
+['In', 'Out', '_', '__', '___', '__builtin__', '__builtins__', '__name__', '_dh', '_i', '_i1', '_i2', '_ih', '_ii', '_iii', '_oh', '_sh', 'exit', 'get_ipython', 'help', 'quit']
+
+\end{lstlisting}
+	
+
 \chapter{Nástroje na analýzu kódu pre jazyk Python}
 	\section{Nástroje analýzu kódu projektu}	
 	\section{Nástroje na vizualizáciu projektu}
