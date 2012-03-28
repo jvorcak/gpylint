@@ -2,7 +2,7 @@
 \contentsline {chapter}{\numberline {1}\bfseries \IeC {\'U}vod}{2}{chapter*.5}
 \contentsline {chapter}{\numberline {2}\bfseries O jazyku Python}{3}{chapter*.5}
 \contentsline {section}{\numberline {2.1}\slshape \IeC {\v C}o je to Python?}{3}{section*.6}
-\contentsline {section}{\numberline {2.2}\slshape Princip jazyka Python}{3}{section*.6}
+\contentsline {section}{\numberline {2.2}\slshape Introspekcia v jazyku Python}{3}{section*.6}
 \contentsline {chapter}{\numberline {3}\bfseries N\IeC {\'a}stroje na anal\IeC {\'y}zu k\IeC {\'o}du pre jazyk Python}{4}{section*.6}
 \contentsline {section}{\numberline {3.1}\slshape N\IeC {\'a}stroje anal\IeC {\'y}zu k\IeC {\'o}du projektu}{4}{section*.7}
 \contentsline {section}{\numberline {3.2}\slshape N\IeC {\'a}stroje na vizualiz\IeC {\'a}ciu projektu}{4}{section*.7}
