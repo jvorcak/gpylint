@@ -32,8 +32,8 @@ class Box(Element):
         self._ports.append(PointPort(self._central_handle.pos))
         self._handles.append(self._central_handle)
 
-    def get_centeral_position(self):
-        return self._central_handle.pos
+    def get_central_handle(self):
+        return self._central_handle
 
     def draw(self, context):
         c = context.cairo
@@ -215,7 +215,7 @@ class ClassBox(Box):
     def add_moveable_handle(self, canvas, snd_obj):
         handle = Handle(strength=STRONG)
         handle.visible = True
-        handle.pos = self.width/2, self.height
+        handle.pos = self.width/2, self.height/2
         port = PointPort(handle.pos)
         self._ports.append(port)
         self._handles.append(handle)
@@ -228,27 +228,28 @@ class ClassBox(Box):
                     y=handle.pos[1]
                 )
 
-        sx, sy = self.matrix[4], self.matrix[5]
-        fx, fy = snd_obj.matrix[4], snd_obj.matrix[5]
-        # count distance between nodes
-        dx, dy = fx - sx, fy - sy
+        #canvas.solver.add_constraint(c)
 
-        from gaphas.solver import Projection, Variable
+        # add line constraint
+        from gaphas.canvas import CanvasProjection
+        from gaphas.constraint import LineAlignConstraint
 
-        v1, v2 = self.get_centeral_position()
-        p1, p2 = Variable(v1+dx), Variable(v2+dy)
+        # central handle of the first object
+        p1 = CanvasProjection(self.get_central_handle().pos, self)
+        # central handle of the second object
+        p2 = CanvasProjection(snd_obj.get_central_handle().pos, snd_obj)
+        # handle which should stick on the line between these two objects
+        handle_projection = CanvasProjection(handle.pos, self)
 
-        s = LineConstraint(
-            (
-                self.get_centeral_position(),
-                (p1, p2)
-            ),
-            handle.pos)
+        s = LineAlignConstraint(
+            (p1, p2),
+            handle_projection, align=0, delta=self.width/2)
 
-        canvas.solver.add_constraint(c)
-        #canvas.solver.add_constraint(s)
+        canvas.solver.add_constraint(s)
+        #canvas.solver.add_constraint(c)
 
         return handle, port
+
 
 def set_association(canvas, o1, o2, props):
     '''
