@@ -94,6 +94,103 @@ In [2]: print dir()
 \end{lstlisting}
 	
 
+		\subsection{Atribút \_\_doc\_\_ }
+			Atribút \_\_doc\_\_ obsahuje komentáre, ktoré popisujú objekt. V prípade, že prvý v module, triede alebo v metóde je znakový reťazec, je automatický považovaný za \_\_doc\_\_ atribút. V opačnom prípade sa jeho hodnota nastaví na None. Hodnoty \_\_doc\_\_ sa z dôvodu kompaktnosti nevkladajú do byte kódu.
+			
+\begin{lstlisting}[language=python]
+In [3]: print __doc__.__doc__
+str(object) -> string
+
+Return a nice string representation of the object.
+If the argument is a string, the return value is the same object.
+\end{lstlisting}
+
+		\subsection{Atribút \_\_name\_\_ }
+			Atribút \_\_name\_\_ obsahuje názov objektu odvodený z jeho typu. Niektoré objekty, ako napríklad objekty typu string tento atribút neobsahujú. Tento atribút obsahujú napríklad moduly. V prípade, že spúštame script priamo pomocou Python interpretu je atribút \_\_name\_\_ nastavený na '\_\_main\_\_' nakoľko Python interpreter je považovaný za hlavný modul. Tak isto v prípade, že Python skript spúštame z príkazového riadku. Je teda často používaný na rozpoznanie či daný modul len importujeme alebo priamo spúštame.
+	
+\begin{lstlisting}[language=python]		
+In [4]: def my_function():
+   ....:     pass
+   ....: 
+
+In [5]: my_function.__name__
+Out[5]: 'my_function'
+
+In [6]: __name__
+Out[6]: '__main__'
+\end{lstlisting}
+
+		\subsection{Funkcia type()}
+		
+		Funkcia type() zo štandardnej knižnice vracia typ jej argumentu. Ten vracia v podobe typového objektu, ktorý môže byť porovnávaný s typmi definovanými v module types.
+
+\begin{lstlisting}[language=python]	
+In [7]: type(my_function)
+Out[7]: function
+
+In [8]: type(1)
+Out[8]: int
+\end{lstlisting}
+
+
+		\subsection{Funkcia id()}
+		
+		Funkcia id() vracia unikátnu identitu objektu. Táto funkcia je užitočná nakoľko viacero premenných môže odkazovať na rovnaký objekt. Funkcia id() konkrétne vracia pamäťovú adresu objektu.
+
+\begin{lstlisting}[language=python]	
+In [9]: id('string')
+Out[9]: 3078023712L
+
+In [10]: id(id)
+Out[10]: 3078187660L
+\end{lstlisting}
+
+		\subsection{Funkcie hasattr() a getattr()}
+		V prípade, že je potrebné zistiť prítomnosť alebo hodnotu atribútu štandardná knižnica ponúka funkcie hasattr() a getattr().
+
+\begin{lstlisting}[language=python]	
+In [11]: hasattr(id, '__name__')
+Out[11]: True
+
+In [12]: getattr(id, '__name__')
+Out[12]: 'id'
+\end{lstlisting}		
+
+		\subsection{Funkcia callable()}
+		V niektorých prípadoch môžu objekty slúžiť na vyvolanie určitého druhu udalosti. Pomocou funkcie callable() sa dá overiť, či je daný objekt spustiteľný.
+
+\begin{lstlisting}[language=python]	
+In [13]: callable(id)
+Out[13]: True
+
+In [14]: callable(1)
+Out[14]: False
+\end{lstlisting}			
+
+
+		\subsection{Funkcie isinstance() a issubclass()}
+		Funkcia isinstance() vracia hodnotu v závislosti na tom, či je objekt inštanciou danej triedy. Funkcia vracia True aj v prípade, že je objekt inštanciou jej predka.
+		
+		Funkcia issubclass() vracia True v prípade, že objekt reprezentujúci triedu je podtriedou druhého argumentu.
+
+\begin{lstlisting}[language=python]	
+class Person(object):
+    pass
+class Student(Person):
+	pass
+p=Person()
+s=Student()
+
+In [15]: isinstance(s, Student)
+Out[15]: True
+
+In [16]: isinstance(s, Person)
+Out[16]: True
+
+In [17]: issubclass(Student, Person)
+Out[17]: True
+\end{lstlisting}		
+			
 \chapter{Nástroje na analýzu kódu pre jazyk Python}
 	\section{Nástroje analýzu kódu projektu}	
 	\section{Nástroje na vizualizáciu projektu}
