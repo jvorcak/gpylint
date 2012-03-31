@@ -52,6 +52,9 @@
 \tableofcontents
 
 \chapter{Úvod}
+
+
+
 \chapter{O jazyku Python}
 
 	\section{Čo je to Python?}
@@ -76,7 +79,7 @@ Zdrojové kódy sú preložené do byte kódu a zvyčajne uložené v .pyc alebo
 	\section{Introspekcia v jazyku Python}
 		Introspekcia je schopnosť preskúmať daný objekt a rozhodnúť o jeho identite, vlastnostiach a schopnostiach. Jazyk Python podporuje rozsiahlu introspekciu objektov. Medzi hlavné informácie, ktoré potrebujeme o objektoch v jazyku Python zisťiť patrí ich meno, typ, identita, vlastnosti, schopnosti a ich pôvod. Jazyk Python ponúka množstvo nástrojov, ktoré nám tieto vlastnosti umožnujú zisťiť. Môžeme ich rozdeliť do dvoch hlavných skupín. V prvej skupine sú funkcie či už zo štandardnej knižnice alebo z pomocných modulov akým je napríklad modul inspect, do druhej skupiny radíme atribúty objektov, ktoré priamo v objekte uchovávajú užitocné informácie.
 	
-		\subsection{Funkcia dir()}
+		\paragraph{Funkcia dir()}
 			Funkcia dir() je jedným z hlavných nástrojov introspekcie v jazyku Python a vracia zotriedený zoznam mien atribútov objektu, ktorý bol uvedený ako jej argument. Funkcia je súčasťou štandardnej knižnice, takže nemusíme importovať žiaden modul pre jej použitie. Na výpis funkcií zo štandardnej knižnice môžeme teda využiť samotnú funkciu dir().
 			
 
@@ -94,7 +97,7 @@ In [2]: print dir()
 \end{lstlisting}
 	
 
-		\subsection{Atribút \_\_doc\_\_ }
+		\paragraph{Atribút \_\_doc\_\_ }
 			Atribút \_\_doc\_\_ obsahuje komentáre, ktoré popisujú objekt. V prípade, že prvý v module, triede alebo v metóde je znakový reťazec, je automatický považovaný za \_\_doc\_\_ atribút. V opačnom prípade sa jeho hodnota nastaví na None. Hodnoty \_\_doc\_\_ sa z dôvodu kompaktnosti nevkladajú do byte kódu.
 			
 \begin{lstlisting}[language=python]
@@ -105,7 +108,7 @@ Return a nice string representation of the object.
 If the argument is a string, the return value is the same object.
 \end{lstlisting}
 
-		\subsection{Atribút \_\_name\_\_ }
+		\paragraph{Atribút \_\_name\_\_ }
 			Atribút \_\_name\_\_ obsahuje názov objektu odvodený z jeho typu. Niektoré objekty, ako napríklad objekty typu string tento atribút neobsahujú. Tento atribút obsahujú napríklad moduly. V prípade, že spúštame script priamo pomocou Python interpretu je atribút \_\_name\_\_ nastavený na '\_\_main\_\_' nakoľko Python interpreter je považovaný za hlavný modul. Tak isto v prípade, že Python skript spúštame z príkazového riadku. Je teda často používaný na rozpoznanie či daný modul len importujeme alebo priamo spúštame.
 	
 \begin{lstlisting}[language=python]		
@@ -120,7 +123,7 @@ In [6]: __name__
 Out[6]: '__main__'
 \end{lstlisting}
 
-		\subsection{Funkcia type()}
+		\paragraph{Funkcia type()}
 		
 		Funkcia type() zo štandardnej knižnice vracia typ jej argumentu. Ten vracia v podobe typového objektu, ktorý môže byť porovnávaný s typmi definovanými v module types.
 
@@ -133,7 +136,7 @@ Out[8]: int
 \end{lstlisting}
 
 
-		\subsection{Funkcia id()}
+		\paragraph{Funkcia id()}
 		
 		Funkcia id() vracia unikátnu identitu objektu. Táto funkcia je užitočná nakoľko viacero premenných môže odkazovať na rovnaký objekt. Funkcia id() konkrétne vracia pamäťovú adresu objektu.
 
@@ -145,7 +148,7 @@ In [10]: id(id)
 Out[10]: 3078187660L
 \end{lstlisting}
 
-		\subsection{Funkcie hasattr() a getattr()}
+		\paragraph{Funkcie hasattr() a getattr()}
 		V prípade, že je potrebné zistiť prítomnosť alebo hodnotu atribútu štandardná knižnica ponúka funkcie hasattr() a getattr().
 
 \begin{lstlisting}[language=python]	
@@ -156,7 +159,7 @@ In [12]: getattr(id, '__name__')
 Out[12]: 'id'
 \end{lstlisting}		
 
-		\subsection{Funkcia callable()}
+		\paragraph{Funkcia callable()}
 		V niektorých prípadoch môžu objekty slúžiť na vyvolanie určitého druhu udalosti. Pomocou funkcie callable() sa dá overiť, či je daný objekt spustiteľný.
 
 \begin{lstlisting}[language=python]	
@@ -168,7 +171,7 @@ Out[14]: False
 \end{lstlisting}			
 
 
-		\subsection{Funkcie isinstance() a issubclass()}
+		\paragraph{Funkcie isinstance() a issubclass()}
 		Funkcia isinstance() vracia hodnotu v závislosti na tom, či je objekt inštanciou danej triedy. Funkcia vracia True aj v prípade, že je objekt inštanciou jej predka.
 		
 		Funkcia issubclass() vracia True v prípade, že objekt reprezentujúci triedu je podtriedou druhého argumentu.
