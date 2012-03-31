@@ -3,7 +3,6 @@
 \usepackage[utf8]{inputenc}
 \usepackage[slovak]{babel}
 \usepackage[T1]{fontenc} 
-\usepackage{a4wide}
 \usepackage[plainpages=false,pdfpagelabels,unicode]{hyperref}
 \usepackage{tabularx}
 \usepackage{pifont}
@@ -53,7 +52,23 @@
 
 \chapter{Úvod}
 
+	Pri vývoji aplikácií musíme klásť dôraz nielen na samotné programovanie, ale najmä na analýzu a návrh systému, dôkladné otestovanie ale aj spätnú analýzu samotného kódu. Z tohto dôvodu vzniká pre takmer každý programovací či značkovací jazyk množstvo nástrojov, ktoré nám pomáhajú automaticky objaviť potencionálne chyby či porušenie konvencií v zdrojových kódoch. Často krát sú tieto nástroje síce efektívne a ľahko konfigurovateľné, no najmä výstupom nie príliš užívateľsky prívetivé. Asi najpoužívanejším nástrojom na analýzu kódu v jazyku Python je konzolová utilita Pylint. Pokiaľ si chceme vďaka tomuto programu vytvoriť obraz o väčšom projekte nestačí nám iba textový výstup, no musíme tieto dáta automaticky spracovať.
+	
+	Cieľom tejto bakalárskej práce je analyzovať nástroje na analýzu a vizualizáciu Python kódu ako aj vlastnosti jazyka ako je napríklad introspekcia, ktoré nám túto analýzu umožnujú. Z dôvodu vizualizácie je nutné taktiež naštudovať základy modelovania hierarchických štruktúr v UML. Výstupom bakalárskej práce je nástroj, ktorý poskytuje funkcionalitu, ktorú v existujúcich nástrojoch nenájdeme. Nástroj teda zjednoduší orientáciu najmä vo väčšom projekte pomocou vizualizácie dát najmä za pomoci vygenerovania interaktívnych UML diagramov. Program bude taktiež dopĺňať funkcionalitu, ktorú nám klasický program Pylint neumožnuje ako je napríklad filtrácia falošných poplachov. 
 
+	Práca pozostáva z piatich kapitol. V druhej kapitole si predstavíme jazyk Python a jeho vlastnosti, neskôr rozanalyzujeme existujúce nástroje na analýzu kódu v jazyku Python a ich nedostatky. Pred implementačnou časťou si predstavíme knižnice, ktoré nám neskôr pomôžu pri implementácií nástroja ako je napríklad knižnica Gaphas na vykresľovanie grafiky v GTK programoch alebo samotný Pylint. Nasledovať bude kapitola o návrhu nástroja a samotná implementácia. Nakoniec zhodnotíme, či implementovaný nástroj spĺňa určené požiadavky či už po stránke funkcionality alebo škálovateľnosti a navrhneme zmeny na jeho zlepšenie.
+ 
+
+
+%
+%Nástroje pro analýzu kódu v Pythonu a vizualizace jejich výstupu.
+%
+%- Nastudujte možnosti introspekce v jazyce Python
+%- Seznamte se s existujícími nástroji pro analýzu kódu v tomto programovacím jazyce
+%- Seznamte se se základy modelování hierarchických struktur v UML
+%- Vyberte si jeden z projektů pro analýzu kódu a vytvořte aplikaci, která bude schopná ukázat informaci o pozici nalezené chyby v rámci hierarchie modulů, tříd, funkcí a ve zdrojovém kódu.
+%- Volitelně můžete implementovat například filtraci falešných poplachů
+%
 
 \chapter{O jazyku Python}
 
