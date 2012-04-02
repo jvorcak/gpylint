@@ -93,8 +93,9 @@ Zdrojové kódy sú preložené do byte kódu a zvyčajne uložené v .pyc alebo
 
 	\section{Introspekcia v jazyku Python}
 		Introspekcia je schopnosť preskúmať daný objekt a rozhodnúť o jeho identite, vlastnostiach a schopnostiach. Jazyk Python podporuje rozsiahlu introspekciu objektov. Medzi hlavné informácie, ktoré potrebujeme o objektoch v jazyku Python zisťiť patrí ich meno, typ, identita, vlastnosti, schopnosti a ich pôvod. Jazyk Python ponúka množstvo nástrojov, ktoré nám tieto vlastnosti umožnujú zisťiť. Môžeme ich rozdeliť do dvoch hlavných skupín. V prvej skupine sú funkcie či už zo štandardnej knižnice alebo z pomocných modulov akým je napríklad modul inspect, do druhej skupiny radíme atribúty objektov, ktoré priamo v objekte uchovávajú užitocné informácie.
-
-		\paragraph{Funkcia dir()}
+		
+\begin{list}{•}{}
+		\item 
 			Funkcia dir() je jedným z hlavných nástrojov introspekcie v jazyku Python a vracia zotriedený zoznam mien atribútov objektu, ktorý bol uvedený ako jej argument. Funkcia je súčasťou štandardnej knižnice, takže nemusíme importovať žiaden modul pre jej použitie. Na výpis funkcií zo štandardnej knižnice môžeme teda využiť samotnú funkciu dir().
 			
 
@@ -112,7 +113,7 @@ In [2]: print dir()
 \end{lstlisting}
 	
 
-		\paragraph{Atribút \_\_doc\_\_ }
+		\item 
 			Atribút \_\_doc\_\_ obsahuje komentáre, ktoré popisujú objekt. V prípade, že prvý v module, triede alebo v metóde je znakový reťazec, je automatický považovaný za \_\_doc\_\_ atribút. V opačnom prípade sa jeho hodnota nastaví na None. Hodnoty \_\_doc\_\_ sa z dôvodu kompaktnosti nevkladajú do byte kódu.
 			
 \begin{lstlisting}[language=python]
@@ -123,7 +124,7 @@ Return a nice string representation of the object.
 If the argument is a string, the return value is the same object.
 \end{lstlisting}
 
-		\paragraph{Atribút \_\_name\_\_ }
+		\item 
 			Atribút \_\_name\_\_ obsahuje názov objektu odvodený z jeho typu. Niektoré objekty, ako napríklad objekty typu string tento atribút neobsahujú. Tento atribút obsahujú napríklad moduly. V prípade, že spúštame script priamo pomocou Python interpretu je atribút \_\_name\_\_ nastavený na '\_\_main\_\_' nakoľko Python interpreter je považovaný za hlavný modul. Tak isto v prípade, že Python skript spúštame z príkazového riadku. Je teda často používaný na rozpoznanie či daný modul len importujeme alebo priamo spúštame.
 	
 \begin{lstlisting}[language=python]		
@@ -138,7 +139,7 @@ In [6]: __name__
 Out[6]: '__main__'
 \end{lstlisting}
 
-		\paragraph{Funkcia type()}
+		\item 
 		
 		Funkcia type() zo štandardnej knižnice vracia typ jej argumentu. Ten vracia v podobe typového objektu, ktorý môže byť porovnávaný s typmi definovanými v module types.
 
@@ -151,7 +152,7 @@ Out[8]: int
 \end{lstlisting}
 
 
-		\paragraph{Funkcia id()}
+		\item 
 		
 		Funkcia id() vracia unikátnu identitu objektu. Táto funkcia je užitočná nakoľko viacero premenných môže odkazovať na rovnaký objekt. Funkcia id() konkrétne vracia pamäťovú adresu objektu.
 
@@ -163,7 +164,7 @@ In [10]: id(id)
 Out[10]: 3078187660L
 \end{lstlisting}
 
-		\paragraph{Funkcie hasattr() a getattr()}
+		\item Funkcie hasattr() a getattr() -
 		V prípade, že je potrebné zistiť prítomnosť alebo hodnotu atribútu štandardná knižnica ponúka funkcie hasattr() a getattr().
 
 \begin{lstlisting}[language=python]	
@@ -174,7 +175,7 @@ In [12]: getattr(id, '__name__')
 Out[12]: 'id'
 \end{lstlisting}		
 
-		\paragraph{Funkcia callable()}
+		\item Funkcia callable() -
 		V niektorých prípadoch môžu objekty slúžiť na vyvolanie určitého druhu udalosti. Pomocou funkcie callable() sa dá overiť, či je daný objekt spustiteľný.
 
 \begin{lstlisting}[language=python]	
@@ -186,7 +187,7 @@ Out[14]: False
 \end{lstlisting}			
 
 
-		\paragraph{Funkcie isinstance() a issubclass()}
+		\item Funkcie isinstance() a issubclass() - 
 		Funkcia isinstance() vracia hodnotu v závislosti na tom, či je objekt inštanciou danej triedy. Funkcia vracia True aj v prípade, že je objekt inštanciou jej predka.
 		
 		Funkcia issubclass() vracia True v prípade, že objekt reprezentujúci triedu je podtriedou druhého argumentu.
@@ -208,7 +209,10 @@ Out[16]: True
 In [17]: issubclass(Student, Person)
 Out[17]: True
 \end{lstlisting}		
-			
+
+\end{list}
+
+
 \chapter{Nástroje na analýzu kódu pre jazyk Python}
 	\section{Nástroje analýzu kódu Python projektu}	
 
@@ -309,20 +313,81 @@ Gaphas API využíva MVC návrhový vzor a môzme ho teda rozdeliť na 3 hlavné
     \end{list}
 
 
-\item View - Obsahuje všetko súvisiace so zobrazovaním a vykresľovaním jednotlivých elementov.
+\item View - Obsahuje všetko súvisiace so zobrazovaním a vykresľovaním jednotlivých elementov. 
     \begin{list}{•}{}
-    \item api/view
-    \item api/painters
-    \item api/gtkview
+    \item api/view - trieda, ktorej úlohou je spravovať vykresľovanie gaphas položiek, uchováva vykresľovacie plátno, informácie o označených objektoch, objektoch nad ktorými sa nachádza myš.
+    \item api/painters - vykresľovače, ktoré vykresľujú jednotlivé objekty
+    \item api/gtkview - trieda implementujúca funkcionalitu gaphas.view.View v Gtk.DrawingArea, slúži teda na vykreslenie plátna na Gtk prvok. Používa nástroje z časti controller, a vykresľovače z časti view.
     \end{list}
 
 
-\item Controller - tools
+\item Controller - Časť API slúžiaca na interakciu s plátnom a objektami
+    \begin{list}{•}{}
+		\item api/tools - Nástroje poskytujú pohľadu interaktívnosť tým že spracovávajú udalosti ktoré sú ním posielané. Gaphas API poskytuje HoverTool slúžiaci k označeniu položky, ktorá sa nachádza pod myšou, ItemTool poskytuje výber a premiestňovanie položiek, HandleTool výber a pohyb s objektami typu gaphas.connector.Handle. Okrem nich ponúka aj nástroje ako PanTool pre pohyb plátna alebo PlacementTool pre umiestnenie nových položiek na plátno. Nástroje môžu byť nakombinované a zreťazené do jedného nástroja kombinujúceho ich vlastnosti s použitím triedy ToolChain. Nástroje sú implementované pomocou událostí. Nástroj môže událosť obslúžiť alebo ignorovať. Je teda jednoduchá možnosť v prípade potreby naimplementovať vlastný nástroj.
+		\item api/aspects - Definujú funkcionalitu na rozmedzí položiek a nástrojov. Vysporiadajú sa teda s pohybom položiek alebo ich označením.
+    \end{list}
+
+
 \end{list}
 
 
 
-\section{Zhrnutie}    
+	\subsection{Zhrnutie}
+
+		Gaphas knižnica umožnuje vykresľovanie grafiky na plátno v prostredí GTK. Jej výhodou je možnosť prispôsobiť vykresľované objekty priamo na mieru. Výborne spracovaná je aj interakcia medzi objektami. Vďaka constraints môžeme dva objekty udržovať v definovanej pozící, napríklad na jednej čiare, v jednom bode alebo na pozícií definovanou rovnicou.
+    
+    
+\section{Analýza nástroja Pylint}
+
+	\subsection{Pylint}
+		Kľúčová trieda v štruktúre programu Pylint je trieda pylint.lint.Pylinter, ktorá spravuje nastavenia, doplnky, aktiváciu a deaktiváciu správ na úrovni modulov. Uchováva taktiež informácie o počte tried, metód a iné jednoduché štatistiky. Táto trieda je spúšťaná hlavnou triedou Run pri spustení programu. Spravuje taktiež checkers, ktoré analyzujú kód a reporter - triedu zopovednú za výstup. 
+		
+		V nasledujúcom odseku si podrobne opíšeme najdôležitejšie prvky programu Pylint.
+		
+    \begin{list}{•}{}
+		\item Checkers 
+		
+		Ide o triedy, ktoré implementujú aspoň jednu z tried
+		
+			    \begin{list}{•}{}
+					\item IRawChecker
+					\item IASTNGChecker
+    			\end{list}		
+		
+		Tieto triedy sú zaregistrované v triede pylint.lint.Pylinter pomocou jej metódy register\_checker.	Po zaregistrovaní sa prevedie hlavná práca v metóde pylint.lint.Pylinter.check, kde sa rozdelia zaregistrované triedy podľa ich predkov a začne sa prehľadávanie a kontrola modulov. V triedach checker sa zavolá metóda process\_module, ktorej implementácia je ponechaná na každej triede samostatne.
+		
+		Každá takáto trieda má v zaregistrovaný slovník chybových správ ktorý dokáže detekovať. Ako kľúč je použitý kód chyby a ako hodnota dvojica obsahujúca textovú reprezentáciu chyby a popis jej odvôvodnenie.
+
+\begin{lstlisting}
+
+MSGS = {
+    'W0511': ('%s',
+              'Used when a warning note as FIXME or XXX is detected.'),
+    }
+		
+\end{lstlisting}		
+
+Slovník chybových hlášok triedy EncodingChecker.
+
+
+Pri náleze chyby checker zaregistruje chybu pomocou metódy add\_message zdedenej z triedy pylint.checkers.BaseChecker, ktorá chybu predá instancii triedy pylint.lint.Pylinter.
+
+\begin{lstlisting}
+    def add_message(self, msg_id, line=None, node=None, args=None):
+        """add a message of a given type"""
+        self.linter.add_message(msg_id, line, node, args)
+\end{lstlisting}
+
+		
+		\item Reporters
+    \end{list}
+		
+	\subsection{Pyreverse}
+	
+	
+	   
+    
+    
     
 \chapter{Projekt gpylint}
 	\section{Aplikácia jednotlivých nástrojov}
