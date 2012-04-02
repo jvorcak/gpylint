@@ -9,7 +9,6 @@ import re
 from gi.repository import Gtk
 from ConfigParser import ConfigParser
 from pylint.lint import Run
-from pylint.reporters.text import TextReporter
 # maybe should be replaced with ParseableTextReporter
 
 # gaphas usage
@@ -18,6 +17,7 @@ from gaphas import Canvas, GtkView
 # gpylint usage
 from gpylint.editor import GeditEditor, VimEditor
 from gpylint.scanner import ScanProject
+from gpylint.reporters import EditorReporter
 
 PYLINT_MSG=re.compile(r'([A-Z]?):([0-9,]*):(.*)')
 
@@ -141,8 +141,7 @@ class Window:
         '''
         filename, filepath = self.current_file
         output = PylintContext()
-        Run(['--reports=n', filepath], reporter=TextReporter(output), exit=False)
-        self.editor.show_pylint_output(output)
+        Run(['--reports=n', filepath], reporter=EditorReporter(self.editor, output), exit=False)
 
     def show_graph(self, parent):
         '''
