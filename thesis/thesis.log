@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2012.1.16)  2 APR 2012 02:04
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2012.1.16)  2 APR 2012 21:00
 entering extended mode
  %&-line parsing enabled.
 **thesis.tex
@@ -1019,77 +1019,144 @@ po-mo-cou me-tó-dy add_message
  []
 
 [13]
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `\<def>-command' on input line 385.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `\f@family' on input line 385.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `\<def>-command' on input line 385.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `\font@name' on input line 385.
-
-
-Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `\T1/ppl/bx/n/10.95' on input line 385.
+Overfull \hbox (30.83566pt too wide) in paragraph at lines 406--408
+[]\T1/ppl/m/n/10.95 (-20) Reporters Ten-to typ tried je od-vo-de-ný od trie-dy 
+py-lint.reporters.BaseReporter.
+ []
 
 [14]
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\<def>-command' on input line 422.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\f@family' on input line 422.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\<def>-command' on input line 422.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\font@name' on input line 422.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\T1/ppl/bx/n/10.95' on input line 422.
+
+[15] [16]
 Kapitola 5.
 
 Package hyperref Warning: The anchor of a bookmark and its parent's must not
-(hyperref)                be the same. Added a new anchor on input line 393.
+(hyperref)                be the same. Added a new anchor on input line 462.
 
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `\<def>-command' on input line 393.
+(hyperref)                removing `\<def>-command' on input line 462.
 
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `\f@shape' on input line 393.
+(hyperref)                removing `\f@shape' on input line 462.
 
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `\<def>-command' on input line 393.
+(hyperref)                removing `\<def>-command' on input line 462.
 
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `\font@name' on input line 393.
+(hyperref)                removing `\font@name' on input line 462.
 
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `\T1/ppl/bx/n/12' on input line 393.
+(hyperref)                removing `\T1/ppl/bx/n/12' on input line 462.
 
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `\<def>-command' on input line 394.
+(hyperref)                removing `\<def>-command' on input line 466.
 
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `\f@shape' on input line 394.
+(hyperref)                removing `\f@shape' on input line 466.
 
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `\<def>-command' on input line 394.
+(hyperref)                removing `\<def>-command' on input line 466.
 
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `\font@name' on input line 394.
+(hyperref)                removing `\font@name' on input line 466.
 
 
 Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
-(hyperref)                removing `\T1/ppl/bx/n/12' on input line 394.
+(hyperref)                removing `\T1/ppl/bx/n/12' on input line 466.
 
-[15
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\<def>-command' on input line 478.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\f@shape' on input line 478.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\<def>-command' on input line 478.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\font@name' on input line 478.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\T1/ppl/bx/n/12' on input line 478.
+
+[17
 
 ]
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\<def>-command' on input line 489.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\f@shape' on input line 489.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\<def>-command' on input line 489.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\font@name' on input line 489.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\T1/ppl/bx/n/12' on input line 489.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\<def>-command' on input line 491.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\f@shape' on input line 491.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\<def>-command' on input line 491.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\font@name' on input line 491.
+
+
+Package hyperref Warning: Token not allowed in a PDFDocEncoded string,
+(hyperref)                removing `\T1/ppl/bx/n/12' on input line 491.
+
+[18]
 Kapitola 6.
-[16
+[19
 
 ] (./thesis.aux)
 
@@ -1097,10 +1164,10 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 7752 strings out of 256216
- 105295 string characters out of 1917072
+ 7776 strings out of 256216
+ 105589 string characters out of 1917072
  227976 words of memory out of 1500000
- 10810 multiletter control sequences out of 10000+200000
+ 10830 multiletter control sequences out of 10000+200000
  28858 words of font info for 90 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
  32i,7n,47p,1013b,1867s stack positions out of 5000i,500n,6000p,200000b,15000s
@@ -1110,9 +1177,9 @@ r/ucrb8a.pfb></usr/share/texmf/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/t
 exmf/fonts/type1/urw/palatino/uplb8a.pfb></usr/share/texmf/fonts/type1/urw/pala
 tino/uplr8a.pfb></usr/share/texmf/fonts/type1/urw/palatino/uplr8a.pfb></usr/sha
 re/texmf/fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on thesis.pdf (21 pages, 180378 bytes).
+Output written on thesis.pdf (24 pages, 192668 bytes).
 PDF statistics:
- 326 PDF objects out of 1000 (max. 8388607)
- 45 named destinations out of 1000 (max. 131072)
- 26345 words of extra memory for PDF output out of 29859 (max. 10000000)
+ 352 PDF objects out of 1000 (max. 8388607)
+ 49 named destinations out of 1000 (max. 131072)
+ 26369 words of extra memory for PDF output out of 29859 (max. 10000000)
 

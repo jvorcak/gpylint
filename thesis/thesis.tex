@@ -378,19 +378,116 @@ Pri náleze chyby checker zaregistruje chybu pomocou metódy add\_message zdeden
         self.linter.add_message(msg_id, line, node, args)
 \end{lstlisting}
 
+		Pylint obsahuje nasledujúce triedy typu checker
+		
+			    \begin{list}{•}{}
+					\item ImportsChecker
+					\item NewStyleConflictChecker
+					\item ClassChecker
+					\item BaseChecker
+					\item BaseRawChecker
+					\item BasicErrorChecker
+					\item NameChecker
+					\item DocStringChecker
+					\item PassChecker
+					\item MisdesignChecker
+					\item ExceptionsChecker
+					\item TypeChecker
+					\item LoggingChecker
+					\item StringFormatChecker
+					\item FormatChecker
+					\item VariablesChecker
+					\item RawMetricsChecker
+					\item SimilarChecker
+    			\end{list}
+		
+
 		
 		\item Reporters
+		Tento typ tried je odvodený od triedy pylint.reporters.BaseReporter. Triedy slúžia na formátovanie a vygenerovanie samotného výstupu. Pri inicializácií sa triede pomocou metódy set\_output nastaví výstupný prúd, ktorý je v predvolenom režime nastavený na štandardný výstup. Je ale možné ho predefinovať na súbor alebo iný typ výstupného prúdu. Tak ako pri triedach typu checker je aj v tomto prípade veľmi jednoduché vytvoriť vlastnú implementáciu.
+		
+		V programe Pylint ale nájdeme pomerne široký výber výstupov.
+		
+			    \begin{list}{•}{}
+					\item HTMLReporter
+					\item GUIReporter
+					\item TextReporter
+					\item ParseableTextReporter
+					\item VSTextReporter
+					\item ColorizedTextReporter
+    			\end{list}
+		
     \end{list}
 		
 	\subsection{Pyreverse}
+	Pri prehľadávaní projektu si program Pyreverse vygeneruje s daných argumentov instanciu triedy logilab.astng.manager.Project za pomoci triedy ASTNGManager z balíčka logilab.astng, ktorý je závislosťou projektu Pylint.
+	Táto trieda obsahuje informácie o názve, ceste, moduloch a premenných.
 	
+		Za pomoci triedy logilab.astng.Linker preskenuje daný projekt a vygeneruje vzťahy medzi jednotlivými triedami.
 	
-	   
-    
-    
-    
-\chapter{Projekt gpylint}
+		Inštancie týchto dvoch tried sú predané ako parametry objektu typu DiadefsHandler, ktorý za pomoci triedy ClassDiadefGenerator vygeneruje diagram tried. Diagram tried je neskôr predaný triede zodpovednej za zápis.
+		
+		Nasledujúca časť kódu je hlavnou kostrou programu Pyreverse.
+		
+\begin{lstlisting}[language=python]	
+try:
+    project = self.manager.project_from_files(args)
+    linker = Linker(project, tag=True)
+    handler = DiadefsHandler(self.config)
+    diadefs = handler.get_diadefs(project, linker)
+finally:
+    sys.path.pop(0)
+
+if self.config.output_format == "vcg":
+	writer.VCGWriter(self.config).write(diadefs)
+else:
+    writer.DotWriter(self.config).write(diadefs)
+\end{lstlisting}
+		
+		
+		Triedou zodpovednú za zápis rozumieme triedu, ktorá rozširuje triedu pylint.pyreverse.writer.DiagramWriter.
+		
+			Príkladmi takýchto tried sú napríklad nasledujúce triedy:
+			    \begin{list}{•}{}
+					\item DotWriter
+					\item VCGWriter
+    			\end{list}
+    			
+    	Úlohou týchto tried je implementovať medódu set\_printer, ktorá nastaví backend, ktorý bude zapisovať do súboru.
+    	Implementujú aj medódy get\_title get\_values a close\_graph.
+    	Prácu za nich vykonáva funkcia write, ktorú zdedia po triede DiagramWriter, ktorá pomocou interných metód write\_packages a write\_classes vyvoláva metódy backendu pre zápis. Pri implementácií novej triedy typu writer je teda dôležité naimplementovať triedu, ktorá sa využíva ako backend a inicializovať a nastaviť ju vo vnútri metódy set\_printer.
+    	Dôležité je taktiež backend triedu korektne uzavrieť v metóde close\_graph, ktorá je taktiež volaná metódou write.
+ 
+\chapter{Implementácia nástroja}
+	\section{Cieľ}
+	
+	Mojím cieľom je naimplementovať nástroj, ktorý bude schopný prehľadne a interaktívne zobrazovať chyby v kóde v rámci hierarchie modulov, tried a funkcií a taktiež ich zobraziť v zdrojovom kóde bez nutnosti pregenerovania. Nástroj bude zobrazovať zdrojové kódy a umožnovať ich editáciu, pričom nebude obmedzený na jeden typ editoru. Taktiež by mal fungovať v plnej funkčnosti multiplatformne.
+	
+	\section{Zdôvodnenie výberu knižníc a nástrojov pre implementáciu}
+		Program bude implementovaný ako GUI aplikácia v programovacom jazyku Python, nakoľko vďaka jeho introspekcii je väčšina programov a knižníc pre jeho analýzu naprogramovaná práve v ňom.
+		
+		Ako grafické rozhranie som zvolil GTK+ toolkit, nakoľko spĺňa moje požiadavky a tými sú multiplatformnosť, kompaktnosť a rýchlosť. Aj napriek tomu, že bol pôvodne vyvíjaný pre X Window System je možné ho implementovať aj pre platformu Microsoft Windows a Quartz.
+		
+		Backend systému bude zabezpečovať program Pylint, nakoľko je dostupný na všetkých platformách a je dlhodobo používaný a otestovaný. Fakt že je implementovaný do viacerých populárnych IDE potvrdzuje prítomnosť výborne navrhnutej API. Okrem generovania chýb poskytuje taktiež služby Pyreverse, vďaka ktorým bude možné naimplementovať generovanie tried a modulov.
+		
+		Nakoľko bude ako grafické prostredie použitá knižnica GTK+ je jednoduché použiť ako editor Gedit komponentu, ktorú ponúka táto knižnica. Nakoľko ale nechcem obmedziť program len na jeden druh editoru vytvorím jednoduché rozhranie pomocou ktorého naimplementujem napríklad editor Vim a umožním doimplementovať ostatné editory v prípade potreby. V prípade editorov je nutné aby boli schopné zobrazovať na chybových miestach príslušné značky. V prípade Gedit editoru využijeme jeho funkcionalitu značiek. V prípade editoru Vim využijeme možnosť zvýraznenia určitých riadkov.
+		
+		Pre zobrazenie grafu modulov a tried využijeme knižnicu Gaphas dostupnú pre GTK+. Knižnica nám pomôže vizualizovať výsledky analýzy. Jej jediným nedostatkom je neprítomnosť prvkov pre UML. Prvky pre zobrazenie tried, modulov a funkcií bude nutné doprogramovať manuálne.
+
+
+	\section{Analýza a návrh}
+		
+		Program rozdelíme na dve hlavné časti, ktoré bude vykonávať.
+		
+			    \begin{list}{•}{}
+					\item Zobrazovanie a správa chýb
+					\item Zobrazenie UML diagramu
+    			\end{list}
+    			
+    	Pri zobrazovaní 
+
 	\section{Aplikácia jednotlivých nástrojov}
+		
 	\section{Vyhodnotenie}	
 
 \chapter{Záver}
