@@ -140,8 +140,8 @@ class Window:
         Author: Jan Vorcak <vorcak@mail.muni.cz>
         '''
         filename, filepath = self.current_file
-        output = PylintContext()
-        Run(['--reports=n', filepath], reporter=EditorReporter(self.editor, output), exit=False)
+        Run(['--reports=n', filepath], reporter=EditorReporter(self.editor), \
+                exit=False)
 
     def show_graph(self, parent):
         '''
@@ -179,29 +179,6 @@ class Window:
             config.write(f)
             Gtk.main_quit(event, data)
 
-class PylintContext(object):
-    '''
-    Class stores the information about pylint results
-    '''
-    def __init__(self):
-        self.content = []
-        self.current = 0
-
-    def write(self, msg):
-        search = PYLINT_MSG.search(msg)
-        if search:
-            self.content.append(search.groups())
-
-    def __iter__(self):
-        return self
-
-    def next(self):
-        if self.current >= len(self.content):
-            self.current = 0
-            raise StopIteration
-        else:
-            self.current += 1
-            return self.content[self.current - 1]
 
 if __name__ == '__main__':
     w = Window()
