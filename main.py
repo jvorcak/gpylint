@@ -123,7 +123,7 @@ class Window:
 
         # todo check whether file exists
         frame = Gtk.Frame()
-        self.editor = GeditEditor(filename, filepath)
+        self.editor = GeditEditor(filename, filepath, self)
         frame.add(self.editor.get_component())
         frame.show()
 
