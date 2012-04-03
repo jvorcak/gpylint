@@ -6,6 +6,8 @@ Author: Jan Vorcak <vorcak@mail.muni.cz>
 
 import os
 import re
+import cPickle as pickle
+
 from gi.repository import Gtk
 from ConfigParser import ConfigParser
 from pylint.lint import Run
@@ -14,8 +16,9 @@ from pylint.lint import Run
 # gaphas usage
 from gaphas import Canvas, GtkView
 
+
 # gpylint usage
-from gpylint.editor import GeditEditor, VimEditor
+from gpylint.editor import GeditEditor, VimEditor, ignored_tags
 from gpylint.scanner import ScanProject
 from gpylint.reporters import EditorReporter
 
@@ -58,6 +61,13 @@ class Window:
         if config.has_option('project', 'project_path'):
             self.project_path = config.get('project', 'project_path')
             self.load_tree_view()
+
+        with open('ignored_tags', 'wr+') as f:
+            try:
+                errors=pickle.load(f)
+                ignored_tags.load_errors(errors)
+            except EOFError:
+                pass
 
         Gtk.main()
 
@@ -174,10 +184,15 @@ class Window:
         '''
         Close the program and save the path to config
         '''
+
+        with open('ignored_tags', 'w') as f:
+            pickle.dump(ignored_tags.ignored, f)
+        
         #TODO fix closing the program
         with open('config.ini', 'w') as f:
             config.write(f)
-            Gtk.main_quit(event, data)
+
+        Gtk.main_quit(event, data)
 
 
 if __name__ == '__main__':

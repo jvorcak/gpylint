@@ -1,5 +1,37 @@
 from gi.repository import Gtk, GtkSource, Vte, GLib
 
+class IgnoredTags(object):
+
+    '''
+    Manager for tags, that have been marked as ignored
+    Responsible for (un)pickle these tags
+    Author: Jan Vorcak <vorcak@mail.muni.cz>
+    '''
+
+    ignored = {}
+
+    def add_tag(self, filepath, error):
+        if not self.ignored.has_key(filepath):
+            self.ignored[filepath] = []
+        if error not in self.ignored[filepath]:
+            self.ignored[filepath].append(error)
+
+    def get_values(self, filepath):
+        if not self.ignored.has_key(filepath):
+            self.ignored[filepath] = []
+        return self.ignored[filepath]
+
+    def load_errors(self, errors):
+        for k in errors.keys():
+            if not self.ignored.has_key(k):
+                self.ignored[k] = []
+            self.ignored[k].extend(errors[k])
+            self.ignored[k] = list(set(self.ignored[k]))
+
+
+ignored_tags = IgnoredTags()
+
+
 class Editor(object):
 
     """
@@ -10,7 +42,6 @@ class Editor(object):
         self.filename = filename
         self.filepath = filepath
         self.open_file()
-        self.ignored_tags = []
 
     def get_component(self):
         return self.component
@@ -25,7 +56,12 @@ class Editor(object):
         @param obj - object in which the error occured
         @param msg - additional comment
         '''
+
         error = sigle, line-1, col_offset, obj, msg
+
+        # needs to be improved
+        if error in ignored_tags.get_values(self.filepath):
+            return
 
         {
             'E': self.error_line,
@@ -35,6 +71,7 @@ class Editor(object):
             'R': self.refactor_line,
             'F': self.fatal_line
         }[sigle](error)
+
 
 class VimEditor(Editor):
 
@@ -75,7 +112,7 @@ class GeditEditor(Editor):
 
     def __init__(self, filename, filepath):
         Editor.__init__(self, filename, filepath)
-        self._error = self.ErrorWindow(self.ignored_tags)
+        self._error = self.ErrorWindow(filepath)
 
     def open_file(self):
         self.component = Gtk.ScrolledWindow()
@@ -113,9 +150,6 @@ class GeditEditor(Editor):
         self._tag(error, bc_color='red')
 
     def _tag(self, error, bc_color='red'):
-
-        if error in self.ignored_tags:
-            return
 
         sigle, line, col_offset, obj, msg = error
 
@@ -176,7 +210,7 @@ class GeditEditor(Editor):
 
     class ErrorWindow(Gtk.Window):
 
-        def __init__(self, ignored_tags):
+        def __init__(self, filepath):
             Gtk.Window.__init__(self, type=Gtk.WindowType.POPUP)
             builder = Gtk.Builder()
             builder.add_from_file('error_window.xml')
@@ -184,7 +218,7 @@ class GeditEditor(Editor):
             self.label = builder.get_object('error_msg')
             builder.connect_signals(self)
 
-            self.ignored_tags = ignored_tags
+            self._filepath = filepath
 
         def set_error_tag(self, error):
             self.error_tag = error
@@ -194,9 +228,9 @@ class GeditEditor(Editor):
 
             self.error_tag.disable()
 
-            if self.error_tag not in self.ignored_tags:
-                self.ignored_tags.append(self.error_tag)
+            if self.error_tag.error not in \
+                    ignored_tags.get_values(self._filepath):
+                ignored_tags.add_tag(self._filepath, self.error_tag.error)
 
             self.window.hide()
-
 
