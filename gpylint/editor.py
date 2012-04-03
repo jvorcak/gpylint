@@ -70,10 +70,9 @@ class GeditEditor(Editor):
     GeditEditor
     """
 
-    def __init__(self, filename, filepath, parent):
+    def __init__(self, filename, filepath):
         Editor.__init__(self, filename, filepath)
-        self._error = self.ErrorWindow(parent.window)
-        self._parent = parent.window
+        self._error = self.ErrorWindow()
 
     def open_file(self):
         self.component = Gtk.ScrolledWindow()
@@ -135,10 +134,9 @@ class GeditEditor(Editor):
         it = self.buff.get_iter_at_offset(offset)
         for x in it.get_tags():
             if hasattr(x, 'msg'):
-                print x.msg
-                px, py = self._parent.get_position()
-                self._error.window.move(px + event.x, py + event.y)
-                self._error.window.set_default_size(300, 40)
+                w, h = self._error.window.get_size()
+                self._error.window.move(event.x_root - w/2, \
+                        event.y_root - h - 5)
                 self._error.set_msg(x.msg)
                 self._error.window.show_all()
 
@@ -150,7 +148,7 @@ class GeditEditor(Editor):
 
     class ErrorWindow(Gtk.Window):
 
-        def __init__(self, parent):
+        def __init__(self):
             Gtk.Window.__init__(self, type=Gtk.WindowType.POPUP)
             builder = Gtk.Builder()
             builder.add_from_file('error_window.xml')
