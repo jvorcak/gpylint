@@ -10,6 +10,7 @@ class Editor(object):
         self.filename = filename
         self.filepath = filepath
         self.open_file()
+        self.ignored_tags = []
 
     def get_component(self):
         return self.component
@@ -24,6 +25,8 @@ class Editor(object):
         @param obj - object in which the error occured
         @param msg - additional comment
         '''
+        error = sigle, line-1, col_offset, obj, msg
+
         {
             'E': self.error_line,
             'W': self.warning_line,
@@ -31,7 +34,7 @@ class Editor(object):
             'I': self.info_line,
             'R': self.refactor_line,
             'F': self.fatal_line
-            }[sigle](line-1, msg)
+        }[sigle](error)
 
 class VimEditor(Editor):
 
@@ -45,22 +48,22 @@ class VimEditor(Editor):
                 self.filepath], [], GLib.SpawnFlags.SEARCH_PATH, None, None)
         self.component.show()
 
-    def error_line(self, line_number, msg):
+    def error_line(self, error):
         pass
 
-    def warning_line(self, line_number, msg):
+    def warning_line(self, error):
         pass
 
-    def convention_line(self, line_number, msg):
+    def convention_line(self, error):
         pass
 
-    def info_line(self, line_number, msg):
+    def info_line(self, error):
         pass
 
-    def refactor_line(self, line_number, msg):
+    def refactor_line(self, error):
         pass
 
-    def fatal_line(self, line_number, msg):
+    def fatal_line(self, error):
         pass
 
 
@@ -72,7 +75,7 @@ class GeditEditor(Editor):
 
     def __init__(self, filename, filepath):
         Editor.__init__(self, filename, filepath)
-        self._error = self.ErrorWindow()
+        self._error = self.ErrorWindow(self.ignored_tags)
 
     def open_file(self):
         self.component = Gtk.ScrolledWindow()
@@ -91,31 +94,36 @@ class GeditEditor(Editor):
             self.buff.set_text(f.read())
         self.view.show()
 
-    def error_line(self, line_number, msg):
-        self._tag(line_number, msg, bc_color='red')
+    def error_line(self, error):
+        self._tag(error, bc_color='red')
 
-    def warning_line(self, line_number, msg):
-        self._tag(line_number, msg, bc_color='orange')
+    def warning_line(self, error):
+        self._tag(error, bc_color='orange')
 
-    def convention_line(self, line_number, msg):
-        self._tag(line_number, msg, bc_color='orange')
+    def convention_line(self, error):
+        self._tag(error, bc_color='orange')
 
-    def info_line(self, line_number, msg):
-        self._tag(line_number, msg, bc_color='orange')
+    def info_line(self, error):
+        self._tag(error, bc_color='orange')
 
-    def refactor_line(self, line_number, msg):
-        self._tag(line_number, msg, bc_color='orange')
+    def refactor_line(self, error):
+        self._tag(error, bc_color='orange')
 
-    def fatal_line(self, line_number, msg):
-        self._tag(line_number, msg, bc_color='red')
+    def fatal_line(self, error):
+        self._tag(error, bc_color='red')
 
-    def _tag(self, line, msg, bc_color='red'):
+    def _tag(self, error, bc_color='red'):
+
+        if error in self.ignored_tags:
+            return
+
+        sigle, line, col_offset, obj, msg = error
 
         start = self.buff.get_iter_at_line(line)
         end = self.buff.get_iter_at_line(line)
         end.forward_line()
 
-        tag = self.ErrorTag(msg)
+        tag = self.ErrorTag(error, self.buff.get_tag_table())
         tag.set_property('background', bc_color)
 
         self.buff.get_tag_table().add(tag)
@@ -133,31 +141,62 @@ class GeditEditor(Editor):
         offset = self.buff.get_property('cursor-position')
         it = self.buff.get_iter_at_offset(offset)
         for x in it.get_tags():
-            if hasattr(x, 'msg'):
+            if hasattr(x, 'error'):
                 w, h = self._error.window.get_size()
                 self._error.window.move(event.x_root - w/2, \
                         event.y_root - h - 5)
-                self._error.set_msg(x.msg)
+                self._error.set_error_tag(x)
                 self._error.window.show_all()
 
     class ErrorTag(Gtk.TextTag):
 
-        def __init__(self, msg):
+        def __init__(self, error, tag_table):
             Gtk.TextTag.__init__(self)
-            self.msg = msg
+            # sigle, line, col_offset, obj, msg = error
+            self.error = error
+            self._tag_table = tag_table
+
+        msg = property(lambda self: self.error[4])
+
+        def __cmp__(self, other):
+            if id(self) == id(other):
+                return True
+
+            if not isinstance(other, self.__class__):
+                return False
+
+            if self.msg == other.msg and self.sigle == other.sigle and\
+                    self.obj == self.obj:
+                return True
+
+            return False
+
+        def disable(self):
+            self._tag_table.remove(self)
 
     class ErrorWindow(Gtk.Window):
 
-        def __init__(self):
+        def __init__(self, ignored_tags):
             Gtk.Window.__init__(self, type=Gtk.WindowType.POPUP)
             builder = Gtk.Builder()
             builder.add_from_file('error_window.xml')
             self.window = builder.get_object('error_window')
             self.label = builder.get_object('error_msg')
+            builder.connect_signals(self)
 
-        def set_msg(self, msg):
-            self.label.set_text(msg)
+            self.ignored_tags = ignored_tags
 
+        def set_error_tag(self, error):
+            self.error_tag = error
+            self.label.set_text(error.msg)
 
+        def ignore_tag(self, button):
+
+            self.error_tag.disable()
+
+            if self.error_tag not in self.ignored_tags:
+                self.ignored_tags.append(self.error_tag)
+
+            self.window.hide()
 
 
