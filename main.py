@@ -84,6 +84,7 @@ class Window:
 
         # exit on close
         self.window.connect("delete-event", self.exit)
+        self.window.maximize()
         self.window.show_all()
 
         self.builder.connect_signals(self)

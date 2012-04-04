@@ -1,16 +1,11 @@
-'''
-This modules is responsible for drawing classes and modules on canvas
-Author: Jan Vorcak <vorcak@mail.muni.cz>
-'''
-
 import math
 
 from gaphas.item import Element, NW, SW, NE, SE, Line
 from gaphas.connector import Handle, PointPort
 from gaphas.solver import STRONG
 from gaphas.util import text_align
-from gaphas.aspect import Connector, ConnectionSink
-from gaphas.constraint import EquationConstraint, LineConstraint
+from gaphas.constraint import EquationConstraint
+
 
 class Box(Element):
     """ A Box has 5 handles:
@@ -202,9 +197,10 @@ class ClassBox(Box):
     This class represents class on the canvas
     '''
 
-    def __init__(self, name, width=100, height=100):
+    def __init__(self, props, width=100, height=100):
         super(ClassBox, self).__init__(width, height)
-        self.name = name
+        self.name = props['label']
+        self.filename = props['filename']
 
     def draw(self, context):
         super(ClassBox, self).draw(context)
@@ -249,30 +245,3 @@ class ClassBox(Box):
         #canvas.solver.add_constraint(c)
 
         return handle, port
-
-
-def set_association(canvas, o1, o2, props):
-    '''
-    Make connection between two canvas objects
-    @author Jan Vorcak <vorcak@mail.muni.cz>
-    @param canvas - canvas on which we will draw
-    @param o1 - frist ClassBox to be associated
-    @param o2 - second ClassBox to be associated
-    @param props - properties of association
-    '''
-
-    line = AssociationLine(props)
-    for handle in line.handles():
-        handle.visible = False
-
-    canvas.add(line)
-
-    h1, p1 = o1.add_moveable_handle(canvas, o2)
-    h2, p2 = o2.add_moveable_handle(canvas, o1)
-
-    connector = Connector(line, line.handles()[0])
-    connector.connect(ConnectionSink(o1, p1))
-
-    connector = Connector(line, line.handles()[1])
-    connector.connect(ConnectionSink(o2, p2))
-

@@ -7,7 +7,9 @@ from pylint.pyreverse.writer import DiagramWriter
 from pylint.pyreverse.utils import is_exception
 from igraph import Graph
 
-from gpylint.canvas import ClassBox, set_association
+from gpylint.canvas import set_association
+from gpylint.canvas.items import ClassBox
+
 
 class CanvasBackend:
     """ Canvas backend """
@@ -22,8 +24,7 @@ class CanvasBackend:
         '''
         Append node with given properties to the list
         '''
-        label = props['label']
-        box = ClassBox(label)
+        box = ClassBox(props)
 
         self.nodes.append({'name' : name, 'box' : box })
 
@@ -93,6 +94,9 @@ class CanvasWriter(DiagramWriter):
         The label contains all attributes and methods
         """
         label =  obj.title
+        filename = None
+        if obj.shape == 'class' and hasattr(obj.node.parent, 'file'):
+            filename = obj.node.parent.file
         if obj.shape == 'interface':
             label = "«interface»\\n%s" % label
 #        if not self.config.only_classnames:
@@ -102,7 +106,7 @@ class CanvasWriter(DiagramWriter):
 #            label = '{%s}' % label
         if is_exception(obj.node):
             return dict(fontcolor="red", label=label, shape="record")
-        return dict(label=label, shape="record")
+        return dict(label=label, shape="record", filename=filename)
 
     def close_graph(self):
         """print the graph into the canvas"""
