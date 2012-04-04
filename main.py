@@ -11,11 +11,9 @@ import cPickle as pickle
 from gi.repository import Gtk
 from ConfigParser import ConfigParser
 from pylint.lint import Run
-# maybe should be replaced with ParseableTextReporter
 
 # gaphas usage
 from gaphas import Canvas, GtkView
-
 
 # gpylint usage
 from gpylint.editor import GeditEditor, VimEditor, ignored_tags
@@ -26,6 +24,36 @@ PYLINT_MSG=re.compile(r'([A-Z]?):([0-9,]*):(.*)')
 
 config=ConfigParser()
 config.read('config.ini')
+
+class CodeWindow:
+    '''
+    Source code window
+    Author: Jan Vorcak <vorcak@mail.muni.cz>
+    '''
+    def __init__(self, filename, filepath):
+        '''
+        Initialize builder class and reads objects from xml
+        '''
+        self._builder = Gtk.Builder()
+        self._builder.add_from_file('code_window.xml')
+        self._window = self._builder.get_object('code_window')
+        self._code_frame = self._builder.get_object('code_frame')
+        self._builder.connect_signals(self)
+        self._filename = filename
+        self._filepath = filepath
+        self._editor = GeditEditor(filename, filepath)
+        self._code_frame.add(self._editor.get_component())
+
+    def show_all(self):
+        self._window.show_all()
+
+    def run_pylint(self, parent):
+        '''
+        This method runs pylint agains the currently opened file
+        Author: Jan Vorcak <vorcak@mail.muni.cz>
+        '''
+        Run(['--reports=n', self._filepath], reporter=EditorReporter(self._editor), \
+                exit=False)
 
 class Window:
     '''
@@ -39,8 +67,7 @@ class Window:
         self.builder = Gtk.Builder()
         self.builder.add_from_file('main.xml')
         self.window = self.builder.get_object('window')
-        self.paned = self.builder.get_object('paned')
-        self.code_view = self.builder.get_object('code_view')
+        self.paned_main = self.builder.get_object('paned_main')
         self.project_view = self.builder.get_object('project_view')
         self.project_view_store = self.builder.get_object('project_store')
         self.notebook = self.builder.get_object('notebook')
@@ -50,6 +77,9 @@ class Window:
         column = Gtk.TreeViewColumn("Title", Gtk.CellRendererText(), text=0)
         self.project_view.append_column(column)
 
+        self.view = GtkView()
+        self.view.canvas = Canvas()
+	self.paned_main.add2(self.view)
 
         # exit on close
         self.window.connect("delete-event", self.exit)
@@ -62,7 +92,9 @@ class Window:
             self.project_path = config.get('project', 'project_path')
             self.load_tree_view()
 
-        with open('ignored_tags', 'wr+') as f:
+        ScanProject(self.view, [self.project_path])
+
+        with open('ignored_tags', 'r+') as f:
             try:
                 errors=pickle.load(f)
                 ignored_tags.load_errors(errors)
@@ -129,44 +161,13 @@ class Window:
         filename = self.treestore.get_value(tree_iter, 0)
         filepath = self.treestore.get_value(tree_iter, 1)
 
-        self.current_file = (filename, filepath)
-
         # todo check whether file exists
-        frame = Gtk.Frame()
-        self.editor = GeditEditor(filename, filepath)
-        frame.add(self.editor.get_component())
-        frame.show()
-
-        self.notebook.append_page(frame, Gtk.Label(filename))
+        window = CodeWindow(filename, filepath)
+        window.show_all()
 
 
     def show_files_popup(self, event):
         print "right click"
-
-
-    def run_pylint(self, parent):
-        '''
-        This method runs pylint agains the currently opened file
-        Author: Jan Vorcak <vorcak@mail.muni.cz>
-        '''
-        filename, filepath = self.current_file
-        Run(['--reports=n', filepath], reporter=EditorReporter(self.editor), \
-                exit=False)
-
-    def show_graph(self, parent):
-        '''
-        Displays graph in the new tab
-        Scans the project and display the results on the canvas
-        '''
-
-        #TODO limit to have just one tab
-        self.view = GtkView()
-        self.view.canvas = Canvas()
-
-        ScanProject(self.view, [self.project_path])
-
-        self.view.show()
-        self.notebook.append_page(self.view, Gtk.Label("graph"))
 
     def zoom_in(self, button):
         '''
