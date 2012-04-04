@@ -213,7 +213,7 @@ class GeditEditor(Editor):
         def __init__(self, filepath):
             Gtk.Window.__init__(self, type=Gtk.WindowType.POPUP)
             builder = Gtk.Builder()
-            builder.add_from_file('error_window.xml')
+            builder.add_from_file('windows/error_window.xml')
             self.window = builder.get_object('error_window')
             self.label = builder.get_object('error_msg')
             builder.connect_signals(self)
