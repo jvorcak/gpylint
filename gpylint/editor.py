@@ -72,6 +72,9 @@ class Editor(object):
             'F': self.fatal_line
         }[sigle](error)
 
+    def set_lineno(self, lineno):
+        raise NotImplementedError
+
 
 class VimEditor(Editor):
 

@@ -199,14 +199,17 @@ class ClassBox(Box):
 
     def __init__(self, props, width=100, height=100):
         super(ClassBox, self).__init__(width, height)
-        self.name = props['label']
-        self.filename = props['filename']
+        self.properties = props
+
+    filepath = property(lambda x: x.properties['filepath'])
+    title = property(lambda x: x.properties['title'])
+    lineno = property(lambda x: x.properties['lineno'])
 
     def draw(self, context):
         super(ClassBox, self).draw(context)
         c = context.cairo
         x,y = self._central_handle.pos
-        text_align(c, x, y, str(self.name), 0, 0)
+        text_align(c, x, y, str(self.title), 0, 0)
 
     def add_moveable_handle(self, canvas, snd_obj):
         handle = Handle(strength=STRONG)

@@ -7,9 +7,8 @@ from pylint.pyreverse.writer import DiagramWriter
 from pylint.pyreverse.utils import is_exception
 from igraph import Graph
 
-from gpylint.canvas import set_association
 from gpylint.canvas.items import ClassBox
-
+from gpylint.canvas import set_association
 
 class CanvasBackend:
     """ Canvas backend """
@@ -89,24 +88,18 @@ class CanvasWriter(DiagramWriter):
         return obj.title
 
     def get_values(self, obj):
-        """get label and shape for classes.
+        '''
+        Parse dictionary from object depending on the object type
+        '''
 
-        The label contains all attributes and methods
-        """
-        label =  obj.title
-        filename = None
+        d = dict()
+        d['title'] = obj.title
+
         if obj.shape == 'class' and hasattr(obj.node.parent, 'file'):
-            filename = obj.node.parent.file
-        if obj.shape == 'interface':
-            label = "«interface»\\n%s" % label
-#        if not self.config.only_classnames:
-#            label = "%s|%s\l|" % (label,  r"\l".join(obj.attrs) )
-#            for func in obj.methods:
-#                label = r'%s%s()\l' % (label, func.name)
-#            label = '{%s}' % label
-        if is_exception(obj.node):
-            return dict(fontcolor="red", label=label, shape="record")
-        return dict(label=label, shape="record", filename=filename)
+            d['filepath'] = obj.node.parent.file
+            d['lineno'] = obj.node.lineno
+
+        return d
 
     def close_graph(self):
         """print the graph into the canvas"""

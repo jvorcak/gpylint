@@ -9,53 +9,21 @@ import cPickle as pickle
 
 from gi.repository import Gtk
 from ConfigParser import ConfigParser
-from pylint.lint import Run
 
 # gaphas usage
 from gaphas import Canvas, GtkView
+from gaphas.tool import ToolChain, HoverTool, ConnectHandleTool, PanTool, ZoomTool, ItemTool, TextEditTool, RubberbandTool
 
 # gpylint usage
-from gpylint.editor import GeditEditor, VimEditor, ignored_tags
+from gpylint.editor import ignored_tags
 from gpylint.scanner import ScanProject
-from gpylint.reporters import EditorReporter
+from gpylint.canvas.tools import OpenEditorTool
+from gpylint.windows import WindowManager
 
 config=ConfigParser()
 config.read('config.ini')
 
-class CodeWindow:
-    '''
-    Source code window
-    Author: Jan Vorcak <vorcak@mail.muni.cz>
-    '''
-    def __init__(self, filename, filepath):
-        '''
-        Initialize builder class and reads objects from xml
-        '''
-        self._builder = Gtk.Builder()
-        self._builder.add_from_file('windows/code_window.xml')
-        self._window = self._builder.get_object('code_window')
-        self._code_frame = self._builder.get_object('code_frame')
-        self._builder.connect_signals(self)
-        self._filename = filename
-        self._filepath = filepath
-        self._editor = GeditEditor(filename, filepath)
-        self._code_frame.add(self._editor.get_component())
-
-        self._window.set_title("%s : %s" % (filename, filepath))
-
-    def show_all(self):
-        self._window.show_all()
-
-    def run_pylint(self, parent):
-        '''
-        This method runs pylint agains the currently opened file
-        Author: Jan Vorcak <vorcak@mail.muni.cz>
-        '''
-        Run(['--reports=n', self._filepath], reporter=EditorReporter(self._editor), \
-                exit=False)
-
-    def save(self, parent):
-        raise NotImplementedError
+wm = WindowManager()
 
 class Window:
     '''
@@ -80,6 +48,16 @@ class Window:
         # set graph as a second item in the main paned
         self.view = GtkView()
         self.view.canvas = Canvas()
+        self.view.tool = ToolChain(self.view). \
+            append(OpenEditorTool()). \
+            append(HoverTool()). \
+            append(ConnectHandleTool()). \
+            append(PanTool()). \
+            append(ZoomTool()). \
+            append(ItemTool()). \
+            append(TextEditTool()). \
+            append(RubberbandTool())
+
         self.paned_main.add2(self.view)
 
         # exit on close
@@ -165,9 +143,11 @@ class Window:
         filename = self.treestore.get_value(tree_iter, 0)
         filepath = self.treestore.get_value(tree_iter, 1)
 
-        # todo check whether file exists
-        window = CodeWindow(filename, filepath)
+        # TODO check whether file exists
+        # TODO remove duplicated code (OpenEditorTool)
+        window = wm.get_window(filename, filepath)
         window.show_all()
+        window.present()
 
     def zoom_in(self, button):
         '''
