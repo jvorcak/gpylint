@@ -3,7 +3,7 @@ import math
 from gaphas.item import Element, NW, SW, NE, SE, Line
 from gaphas.connector import Handle, PointPort
 from gaphas.solver import STRONG
-from gaphas.util import text_align
+from gaphas.util import text_align, text_extents
 from gaphas.constraint import EquationConstraint
 
 
@@ -21,9 +21,10 @@ class Box(Element):
             handle.visible = False
             handle.moveable = False
 
+    def add_central_handle(self):
         self._central_handle = Handle(strength=STRONG)
         self._central_handle.visible = True
-        self._central_handle.pos = width / 2.0, height / 2.0
+        self._central_handle.pos = self.width / 2.0, self.height / 2.0
         self._ports.append(PointPort(self._central_handle.pos))
         self._handles.append(self._central_handle)
 
@@ -206,6 +207,16 @@ class ClassBox(Box):
     lineno = property(lambda x: x.properties['lineno'])
 
     def draw(self, context):
+        # count the size of the Box
+        self.width, self.height = text_extents(context.cairo, \
+                str(self.title))
+
+        self.width += 50
+        self.height += 50
+
+        # now we have position so we can add central handle
+        self.add_central_handle()
+
         super(ClassBox, self).draw(context)
         c = context.cairo
         x,y = self._central_handle.pos

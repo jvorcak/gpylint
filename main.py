@@ -38,6 +38,7 @@ class Window:
         self.builder.add_from_file('windows/main.xml')
         self.window = self.builder.get_object('window')
         self.paned_main = self.builder.get_object('paned_main')
+        self.paned_left = self.builder.get_object('paned_left')
         self.project_view = self.builder.get_object('project_view')
 
         self.treestore = Gtk.TreeStore(str, str)
@@ -58,8 +59,15 @@ class Window:
             append(TextEditTool()). \
             append(RubberbandTool())
 
-        self.paned_main.add2(self.view)
+        # add minimized view
+        #self.minimized_view = GtkView()
+        #self.minimized_view.canvas = self.view.canvas
+        #self.minimized_view.zoom(1/3.)
+        #self.paned_left.add2(self.minimized_view)
 
+
+        self.paned_main.add2(self.view)
+        
         # exit on close
         self.window.connect("delete-event", self.exit)
         self.window.maximize()
