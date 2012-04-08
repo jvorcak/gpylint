@@ -1,7 +1,7 @@
 \select@language {slovak}
 \contentsline {chapter}{\numberline {1}\bfseries \IeC {\'U}vod}{2}{chapter*.5}
-\contentsline {chapter}{\numberline {2}\bfseries O jazyku Python}{3}{chapter*.5}
-\contentsline {section}{\numberline {2.1}\slshape \IeC {\v C}o je to Python?}{3}{section*.6}
+\contentsline {chapter}{\numberline {2}\bfseries Python}{3}{chapter*.5}
+\contentsline {section}{\numberline {2.1}\slshape Charekteristika jazyka Python}{3}{section*.6}
 \contentsline {section}{\numberline {2.2}\slshape Introspekcia v jazyku Python}{3}{section*.6}
 \contentsline {chapter}{\numberline {3}\bfseries N\IeC {\'a}stroje na anal\IeC {\'y}zu k\IeC {\'o}du pre jazyk Python}{7}{lstlisting.2.-9}
 \contentsline {section}{\numberline {3.1}\slshape N\IeC {\'a}stroje anal\IeC {\'y}zu k\IeC {\'o}du Python projektu}{7}{section*.7}
@@ -14,7 +14,7 @@
 \contentsline {subsection}{\numberline {3.2.2}\rmfamily Pylint-gui}{9}{lstlisting.3.-10}
 \contentsline {subsection}{\numberline {3.2.3}\rmfamily Implement\IeC {\'a}cia programu Pylint v IDE}{10}{lstlisting.3.-10}
 \contentsline {subsection}{\numberline {3.2.4}\rmfamily Zhrnutie}{10}{lstlisting.3.-10}
-\contentsline {chapter}{\numberline {4}\bfseries Anal\IeC {\'y}za n\IeC {\'a}strojov potrebn\IeC {\'y}ch k implement\IeC {\'a}ci\IeC {\'\i }}{11}{lstlisting.3.-10}
+\contentsline {chapter}{\numberline {4}\bfseries Anal\IeC {\'y}za n\IeC {\'a}strojov potrebn\IeC {\'y}ch k implement\IeC {\'a}cii}{11}{lstlisting.3.-10}
 \contentsline {section}{\numberline {4.1}\slshape Anal\IeC {\'y}za n\IeC {\'a}stroja Gaphas}{11}{section*.9}
 \contentsline {subsection}{\numberline {4.1.1}\rmfamily Z\IeC {\'a}kladn\IeC {\'a} charakteristika n\IeC {\'a}stroja Gaphas}{11}{section*.9}
 \contentsline {subsection}{\numberline {4.1.2}\rmfamily Popis Gaphas API}{11}{section*.9}
