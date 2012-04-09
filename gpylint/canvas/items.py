@@ -23,7 +23,7 @@ class Box(Element):
 
     def add_central_handle(self):
         self._central_handle = Handle(strength=STRONG)
-        self._central_handle.visible = True
+        self._central_handle.visible = False
         self._central_handle.pos = self.width / 2.0, self.height / 2.0
         self._ports.append(PointPort(self._central_handle.pos))
         self._handles.append(self._central_handle)
@@ -55,9 +55,11 @@ class Box(Element):
         if context.hovered:
             c.set_source_rgba(.8,.8,1, .8)
         else:
-            c.set_source_rgba(1,1,1, .8)
-        c.fill_preserve()
-        c.set_source_rgb(0,0,0.8)
+            c.set_source_rgba(.96, .82, 0.65)
+        c.fill()
+        c.set_source_rgba(0,0,0)
+        c.rectangle(nw.x, nw.y, self.width, self.height)
+        c.rectangle(nw.x, nw.y, self.width, 20)
         c.stroke()
 
 
@@ -237,11 +239,11 @@ class ClassBox(Box):
         super(ClassBox, self).draw(context)
         c = context.cairo
         x,y = self._central_handle.pos
-        text_align(c, x, y, str(self.title), 0, 0)
+        text_align(c, x, 10, str(self.title), 0, 0)
 
     def _create_handle_and_port(self):
         handle = Handle(strength=VERY_STRONG)
-        handle.visible = True
+        handle.visible = False
         handle.pos = 0, 0
         port = PointPort(handle.pos)
         return handle, port
