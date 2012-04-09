@@ -4,7 +4,6 @@ Utilities for creating diagram on canvas
 """
 
 from pylint.pyreverse.writer import DiagramWriter
-from pylint.pyreverse.utils import is_exception
 from igraph import Graph
 
 from gpylint.canvas.items import ClassBox

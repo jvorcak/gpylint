@@ -19,16 +19,15 @@ def set_association(canvas, o1, o2, props):
 
     line = AssociationLine(props)
     for handle in line.handles():
-        handle.visible = False
+        handle.visible = True
 
     canvas.add(line)
 
-    h1, p1 = o1.add_moveable_handle(canvas, o2)
-    h2, p2 = o2.add_moveable_handle(canvas, o1)
+    ports = o1.add_moveable_handle(canvas, o2)
 
     connector = Connector(line, line.handles()[0])
-    connector.connect(ConnectionSink(o1, p1))
+    connector.connect(ConnectionSink(o1, ports[0]))
 
     connector = Connector(line, line.handles()[1])
-    connector.connect(ConnectionSink(o2, p2))
+    connector.connect(ConnectionSink(o2, ports[1]))
 

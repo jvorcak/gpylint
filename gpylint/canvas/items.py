@@ -1,10 +1,10 @@
-import math
-
 from gaphas.item import Element, NW, SW, NE, SE, Line
 from gaphas.connector import Handle, PointPort
-from gaphas.solver import STRONG
+from gaphas.solver import STRONG, VERY_WEAK, VERY_STRONG
+from gaphas.canvas import CanvasProjection
 from gaphas.util import text_align, text_extents
-from gaphas.constraint import EquationConstraint
+
+from gpylint.canvas.constraints import HandlesConstraint
 
 
 class Box(Element):
@@ -28,8 +28,25 @@ class Box(Element):
         self._ports.append(PointPort(self._central_handle.pos))
         self._handles.append(self._central_handle)
 
-    def get_central_handle(self):
-        return self._central_handle
+    def get_canvas_handle(self, handle_type='central'):
+        '''
+        Return canvas projection of the specified handle
+        Author: Jan Vorcak <vorcak@mail.muni.cz>
+        @param handle_type - type of the handle
+                handle_type should be one of the
+                ['central', 'NW', 'NE', 'SW', 'SE']
+        '''
+        handle_dict = {
+            'central': self._central_handle,
+            'NW': self._handles[NW],
+            'NE': self._handles[NE],
+            'SW': self._handles[SW],
+            'SE': self._handles[SE]
+        }
+        assert handle_type in handle_dict.keys()
+        handle = handle_dict[handle_type]
+
+        return CanvasProjection(handle.pos, self)
 
     def draw(self, context):
         c = context.cairo
@@ -193,7 +210,6 @@ class AssociationLine(Line):
 
 
 class ClassBox(Box):
-
     '''
     This class represents class on the canvas
     '''
@@ -211,10 +227,11 @@ class ClassBox(Box):
         self.width, self.height = text_extents(context.cairo, \
                 str(self.title))
 
+        # add some padding
         self.width += 50
         self.height += 50
 
-        # now we have position so we can add central handle
+        # now we have position so we can add central handle and draw object
         self.add_central_handle()
 
         super(ClassBox, self).draw(context)
@@ -222,40 +239,27 @@ class ClassBox(Box):
         x,y = self._central_handle.pos
         text_align(c, x, y, str(self.title), 0, 0)
 
-    def add_moveable_handle(self, canvas, snd_obj):
-        handle = Handle(strength=STRONG)
+    def _create_handle_and_port(self):
+        handle = Handle(strength=VERY_STRONG)
         handle.visible = True
-        handle.pos = self.width/2, self.height/2
+        handle.pos = 0, 0
         port = PointPort(handle.pos)
-        self._ports.append(port)
-        self._handles.append(handle)
-
-        c = EquationConstraint(
-                lambda x, y : max(math.pow(x-self.width/2,2),
-                                  math.pow(y-self.width/2,2)) -
-                              math.pow(self.width/2, 2),
-                    x=handle.pos[0],
-                    y=handle.pos[1]
-                )
-
-        #canvas.solver.add_constraint(c)
-
-        # add line constraint
-        from gaphas.canvas import CanvasProjection
-        from gaphas.constraint import LineAlignConstraint
-
-        # central handle of the first object
-        p1 = CanvasProjection(self.get_central_handle().pos, self)
-        # central handle of the second object
-        p2 = CanvasProjection(snd_obj.get_central_handle().pos, snd_obj)
-        # handle which should stick on the line between these two objects
-        handle_projection = CanvasProjection(handle.pos, self)
-
-        s = LineAlignConstraint(
-            (p1, p2),
-            handle_projection, align=0, delta=self.width/2)
-
-        canvas.solver.add_constraint(s)
-        #canvas.solver.add_constraint(c)
-
         return handle, port
+
+    def add_moveable_handle(self, canvas, snd_obj):
+        projections = []
+        ports = []
+        for obj in [self, snd_obj]:
+            handle, port = self._create_handle_and_port()
+            obj._ports.append(port)
+            obj._handles.append(handle)
+            hp = CanvasProjection(handle.pos, obj)
+            projections.append(hp)
+            ports.append(port)
+
+        # function is given a list of projections
+        # the first one is self projection, snd_one is snd_obj's projection
+        c = HandlesConstraint(o1=self, o2=snd_obj, hp=projections)
+        canvas.solver.add_constraint(c)
+
+        return ports

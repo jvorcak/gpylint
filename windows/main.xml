@@ -49,6 +49,7 @@
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="open_project_button">
+                        <property name="label" translatable="yes">Open project</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="use_action_appearance">False</property>
