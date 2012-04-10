@@ -72,6 +72,9 @@ class AssociationLine(Line):
         '''
         super(AssociationLine, self).__init__()
         self.props = props
+        for handle in self._handles:
+            handle.visible = False
+            handle.moveable = False
 
     def draw(self, context):
         super(AssociationLine, self).draw(context)
