@@ -18,7 +18,7 @@ from gaphas.tool import ToolChain, HoverTool, ConnectHandleTool, PanTool, ZoomTo
 from gpylint.editor import ignored_tags
 from gpylint.scanner import ScanProject
 from gpylint.canvas.tools import OpenEditorTool
-from gpylint.windows import WindowManager
+from gpylint.windows import WindowManager, SettingsWindow
 
 config=ConfigParser()
 config.read('config.ini')
@@ -67,7 +67,7 @@ class Window:
 
 
         self.paned_main.add2(self.view)
-        
+
         # exit on close
         self.window.connect("delete-event", self.exit)
         self.window.maximize()
@@ -95,6 +95,13 @@ class Window:
             pass
 
         Gtk.main()
+
+    def open_settings(self, menu_item):
+        '''
+        Display settings window
+        '''
+        window = SettingsWindow()
+        window.show_all()
 
     def open_project(self, menu_item):
         '''

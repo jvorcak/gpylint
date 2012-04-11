@@ -46,18 +46,18 @@ class Editor(object):
     def get_component(self):
         return self.component
 
-    def add_message(self, sigle, line, col_offset, obj, msg):
+    def add_message(self, msg_id, line, col_offset, obj, msg):
         '''
         Displays pylint error message on the editor
         @author Jan Vorcak <vorcak@mail.muni.cz>
-        @param sigle - pylint type of the error
+        @param msg_id - pylint code of the error
         @param line - line number
         @param col_offset - offset
         @param obj - object in which the error occured
         @param msg - additional comment
         '''
-
-        error = sigle, line-1, col_offset, obj, msg
+        sigle = msg_id[0]
+        error = sigle, msg_id, line-1, col_offset, obj, msg
 
         # needs to be improved
         if error in ignored_tags.get_values(self.filepath):
@@ -154,7 +154,7 @@ class GeditEditor(Editor):
 
     def _tag(self, error, bc_color='red'):
 
-        sigle, line, col_offset, obj, msg = error
+        sigle, msg_id, line, col_offset, obj, msg = error
 
         start = self.buff.get_iter_at_line(line)
         end = self.buff.get_iter_at_line(line)
@@ -193,7 +193,11 @@ class GeditEditor(Editor):
             self.error = error
             self._tag_table = tag_table
 
-        msg = property(lambda self: self.error[4])
+        # self error example
+        # ('C', 'C0111', 31, 4, 'CodeWindow.present', 'Missing docstring')
+
+        msg_code = property(lambda self: self.error[1])
+        msg = property(lambda self: self.error[5])
 
         def __cmp__(self, other):
             if id(self) == id(other):
@@ -225,7 +229,7 @@ class GeditEditor(Editor):
 
         def set_error_tag(self, error):
             self.error_tag = error
-            self.label.set_text(error.msg)
+            self.label.set_text(error.msg_code + ' : ' + error.msg)
 
         def ignore_tag(self, button):
 

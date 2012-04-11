@@ -1,9 +1,10 @@
 from gi.repository import Gtk
-from pylint.lint import Run
+from pylint.lint import PyLinter
 
 from gpylint.editor import GeditEditor, VimEditor
 from gpylint.reporters import EditorReporter
-
+from gpylint.settings import SettingsManager
+from gpylint.helpers import get_tab_name
 
 class CodeWindow:
     '''
@@ -37,8 +38,17 @@ class CodeWindow:
         This method runs pylint agains the currently opened file
         Author: Jan Vorcak <vorcak@mail.muni.cz>
         '''
-        Run(['--reports=n', self._filepath], reporter=EditorReporter(self._editor), \
-                exit=False)
+        plugins = []
+        pylintrc = None
+        linter = PyLinter(reporter=EditorReporter(self._editor),
+                pylintrc=pylintrc)
+        linter.load_default_plugins()
+        linter.load_plugin_modules(plugins)
+        linter.read_config_file()
+        linter.load_config_file()
+        args = linter.load_command_line_configuration(\
+                ['--reports=n', self._filepath])
+        linter.check(args)
 
     def save(self, parent):
         raise NotImplementedError
@@ -52,6 +62,76 @@ class CodeWindow:
         '''
         w = WindowManager()
         w.unregister(self._filepath)
+
+
+class SettingsWindow(object):
+    '''
+    Settings window
+    '''
+
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(SettingsWindow, cls).__new__(\
+                    cls, *args, **kwargs)
+
+        return cls._instance
+
+    def __init__(self):
+        self._builder = Gtk.Builder()
+        self._builder.add_from_file('windows/settings.xml')
+        self._window = self._builder.get_object('settings_window')
+        self._notebook = self._builder.get_object('notebook')
+
+        sm = SettingsManager()
+        for name, messages in sm.get_pylint_msgs().iteritems():
+            self.add_section_tab(name, messages)
+
+        self._builder.connect_signals(self)
+
+    def add_section_tab(self, name, messages):
+        # init list store and set it as a model for treeview
+        self._liststore = Gtk.ListStore(str, str, str, 'gboolean')
+        treeview = Gtk.TreeView(self._liststore)
+        scrolled = Gtk.ScrolledWindow()
+        scrolled.add(treeview)
+        self._notebook.append_page(scrolled, Gtk.Label(get_tab_name(name)))
+
+        # init renderers
+        self._code_renderer = Gtk.CellRendererText()
+        self._msg_renderer = Gtk.CellRendererText()
+        self._description_renderer = Gtk.CellRendererText()
+        self._enabled_renderer = Gtk.CellRendererToggle()
+
+        # init columns
+        self._code_column = Gtk.TreeViewColumn('Code', self._code_renderer, \
+                text=0)
+        self._msg_column = Gtk.TreeViewColumn('Message', self._msg_renderer, \
+                text=1)
+        self._description_column = Gtk.TreeViewColumn('Description', \
+                self._description_renderer, text=2)
+        self._enabled_renderer = Gtk.TreeViewColumn('Enabled', \
+                self._enabled_renderer, active=3)
+
+        # expand message
+        self._msg_column.set_expand(True)
+
+        self._msg_column.set_resizable(True)
+        self._description_column.set_resizable(True)
+
+        # append columns to the tree view
+        treeview.append_column(self._enabled_renderer)
+        treeview.append_column(self._code_column)
+        treeview.append_column(self._msg_column)
+        treeview.append_column(self._description_column)
+
+        for code, msg_tuple in messages.iteritems():
+            msg, description = msg_tuple
+            self._liststore.append([code, msg, description, True])
+
+    def show_all(self):
+        self._window.show_all()
 
 class WindowManager(object):
     '''
