@@ -8,3 +8,4 @@ config.ini
 *.dot
 *.png
 .ignored_tags
+pylint_settings.ini

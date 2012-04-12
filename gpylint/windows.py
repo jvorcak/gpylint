@@ -3,8 +3,10 @@ from pylint.lint import PyLinter, MSG_TYPES
 
 from gpylint.editor import GeditEditor, VimEditor
 from gpylint.reporters import EditorReporter
-from gpylint.settings import SettingsManager
+from gpylint.settings import PylintMessagesManager
 from gpylint.helpers import get_pretty_name
+
+pmm= PylintMessagesManager()
 
 class CodeWindow:
     '''
@@ -85,9 +87,9 @@ class SettingsWindow(object):
         self._message_types_box = self._builder.get_object('message_types_box')
         self._main_notebook = self._builder.get_object('main_notebook')
         self._pylint_messages = self._builder.get_object('pylint_messages')
+        self._window.connect("delete-event", self.exit)
 
-        sm = SettingsManager()
-        for name, messages in sm.get_pylint_msgs().iteritems():
+        for name, messages in pmm.get_pylint_msgs().iteritems():
             self.add_section_tab(name, messages)
 
         self.load_pylint_general_page()
@@ -107,21 +109,40 @@ class SettingsWindow(object):
         '''
         box = self._message_types_box
         for k, v in MSG_TYPES.iteritems():
-            box.add(Gtk.CheckButton(get_pretty_name(v)))
+            button = Gtk.CheckButton(get_pretty_name(v))
+            box.add(button)
 
     def add_section_tab(self, name, messages):
+        PylintCheckerTab(self, name, messages)
+
+    def show_all(self):
+        self._window.show_all()
+
+    def exit(self, event, data):
+        pmm.save()
+
+class PylintCheckerTab(object):
+
+    def __init__(self, parent, name, messages):
+
+        self.name = name
+
         # init list store and set it as a model for treeview
-        self._liststore = Gtk.ListStore(str, str, str, 'gboolean')
-        treeview = Gtk.TreeView(self._liststore)
+        # error_code, message, description, enabled
+
+        self.liststore = Gtk.ListStore(str, str, str, 'gboolean')
+        treeview = Gtk.TreeView(self.liststore)
         scrolled = Gtk.ScrolledWindow()
         scrolled.add(treeview)
-        self._pylint_messages.append_page(scrolled, Gtk.Label(get_pretty_name(name)))
+        parent._pylint_messages.append_page(scrolled, \
+                Gtk.Label(get_pretty_name(name)))
 
         # init renderers
         self._code_renderer = Gtk.CellRendererText()
         self._msg_renderer = Gtk.CellRendererText()
         self._description_renderer = Gtk.CellRendererText()
         self._enabled_renderer = Gtk.CellRendererToggle()
+        self._enabled_renderer.connect('toggled', self.on_cell_toggled)
 
         # init columns
         self._code_column = Gtk.TreeViewColumn('Code', self._code_renderer, \
@@ -147,10 +168,15 @@ class SettingsWindow(object):
 
         for code, msg_tuple in messages.iteritems():
             msg, description = msg_tuple
-            self._liststore.append([code, msg, description, True])
+            # get value
+            value = pmm.get_boolean(self.name, code)
+            self.liststore.append([code, msg, description, value])
 
-    def show_all(self):
-        self._window.show_all()
+    def on_cell_toggled(self, widget, path):
+        self.liststore[path][3] = not self.liststore[path][3]
+        code, msg, description, value = self.liststore[path]
+        pmm.save_boolean(self.name, code, value)
+
 
 class WindowManager(object):
     '''
