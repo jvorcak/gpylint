@@ -1,10 +1,10 @@
 from gi.repository import Gtk
-from pylint.lint import PyLinter
+from pylint.lint import PyLinter, MSG_TYPES
 
 from gpylint.editor import GeditEditor, VimEditor
 from gpylint.reporters import EditorReporter
 from gpylint.settings import SettingsManager
-from gpylint.helpers import get_tab_name
+from gpylint.helpers import get_pretty_name
 
 class CodeWindow:
     '''
@@ -82,13 +82,32 @@ class SettingsWindow(object):
         self._builder = Gtk.Builder()
         self._builder.add_from_file('windows/settings.xml')
         self._window = self._builder.get_object('settings_window')
-        self._notebook = self._builder.get_object('notebook')
+        self._message_types_box = self._builder.get_object('message_types_box')
+        self._main_notebook = self._builder.get_object('main_notebook')
+        self._pylint_messages = self._builder.get_object('pylint_messages')
 
         sm = SettingsManager()
         for name, messages in sm.get_pylint_msgs().iteritems():
             self.add_section_tab(name, messages)
 
+        self.load_pylint_general_page()
         self._builder.connect_signals(self)
+
+    def show_pylint_general(self, button):
+        self._main_notebook.set_current_page(0)
+
+    def show_pylint_messages(self, button):
+        self._main_notebook.set_current_page(1)
+
+
+    def load_pylint_general_page(self):
+        '''
+        Loads the first settings page about Pylint
+        Contains options to enable/disable message types
+        '''
+        box = self._message_types_box
+        for k, v in MSG_TYPES.iteritems():
+            box.add(Gtk.CheckButton(get_pretty_name(v)))
 
     def add_section_tab(self, name, messages):
         # init list store and set it as a model for treeview
@@ -96,7 +115,7 @@ class SettingsWindow(object):
         treeview = Gtk.TreeView(self._liststore)
         scrolled = Gtk.ScrolledWindow()
         scrolled.add(treeview)
-        self._notebook.append_page(scrolled, Gtk.Label(get_tab_name(name)))
+        self._pylint_messages.append_page(scrolled, Gtk.Label(get_pretty_name(name)))
 
         # init renderers
         self._code_renderer = Gtk.CellRendererText()
