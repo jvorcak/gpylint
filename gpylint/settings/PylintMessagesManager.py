@@ -1,17 +1,19 @@
 '''
 Settings module responsible for loading and saving settings
-Author Jan Vorcak <vorcak@mail.muni.cz>
+about pylint messages
+Author: Jan Vorcak <vorcak@mail.muni.cz>
 '''
 
 import ConfigParser
 
-from pylint.lint import MSGS, MSG_TYPES, PyLinter
+from pylint.lint import PyLinter
+from gpylint.settings import SettingsManager
 
 CONFIG_FILE = 'pylint_settings.ini'
-config = config = ConfigParser.SafeConfigParser()
+config = ConfigParser.SafeConfigParser()
 config.read(CONFIG_FILE)
 
-class PylintMessagesManager(object):
+class PylintMessagesManager(SettingsManager):
 
     _instance = None
 
@@ -40,6 +42,8 @@ class PylintMessagesManager(object):
 
     def __init__(self):
 
+        self.config = config
+        self.CONFIG_FILE = CONFIG_FILE
 
         linter = PyLinter()
         linter.load_default_plugins()
@@ -63,20 +67,7 @@ class PylintMessagesManager(object):
                 if not config.has_option(section, code):
                     config.set(section, code, 'on')
 
-    def save_boolean(self, section, option, value):
-        value = {
-                    True: 'on',
-                    False: 'off'
-                }[value]
-        config.set(section, option, value)
-
-    def get_boolean(self, section, option):
-        return config.getboolean(section, option)
-
     def get_pylint_msgs(self):
         return self.msgs
 
-    def save(self):
-        with open(CONFIG_FILE, 'w') as configfile:
-            config.write(configfile)
 

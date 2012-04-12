@@ -1,12 +1,14 @@
 from gi.repository import Gtk
-from pylint.lint import PyLinter, MSG_TYPES
+from pylint.lint import PyLinter
 
 from gpylint.editor import GeditEditor, VimEditor
 from gpylint.reporters import EditorReporter
-from gpylint.settings import PylintMessagesManager
+from gpylint.settings.PylintMessagesManager import PylintMessagesManager
+from gpylint.settings.GeneralSettingsManager import GeneralSettingsManager
 from gpylint.helpers import get_pretty_name
 
 pmm= PylintMessagesManager()
+gsm = GeneralSettingsManager()
 
 class CodeWindow:
     '''
@@ -101,16 +103,20 @@ class SettingsWindow(object):
     def show_pylint_messages(self, button):
         self._main_notebook.set_current_page(1)
 
-
     def load_pylint_general_page(self):
         '''
         Loads the first settings page about Pylint
         Contains options to enable/disable message types
         '''
         box = self._message_types_box
-        for k, v in MSG_TYPES.iteritems():
-            button = Gtk.CheckButton(get_pretty_name(v))
+        for msg, value in gsm.get_pylint_msgs_types().iteritems():
+            button = Gtk.CheckButton(get_pretty_name(msg))
+            button.connect('toggled', self.pylint_checkbox_toggled, msg)
+            button.set_active(value)
             box.add(button)
+
+    def pylint_checkbox_toggled(self, button, msg):
+        gsm.save_boolean('pylint', msg, button.get_active())
 
     def add_section_tab(self, name, messages):
         PylintCheckerTab(self, name, messages)
@@ -120,6 +126,7 @@ class SettingsWindow(object):
 
     def exit(self, event, data):
         pmm.save()
+        gsm.save()
 
 class PylintCheckerTab(object):
 
