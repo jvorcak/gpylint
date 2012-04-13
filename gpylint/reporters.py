@@ -2,6 +2,9 @@ import sys
 
 from pylint.interfaces import IReporter
 from pylint.reporters import BaseReporter
+from gpylint.filters import SettingsFilter
+
+settings_filter = SettingsFilter()
 
 class EditorReporter(BaseReporter):
     '''
@@ -19,5 +22,7 @@ class EditorReporter(BaseReporter):
         """manage message of different type and in the context of path"""
         module, obj, line, col_offset = location[1:]
 
-        self._editor.add_message(msg_id, line, col_offset, obj, msg)
+        # TODO maybe it'd be great to show ignored messages somehow
+        if not settings_filter.code_is_ignored(msg_id):
+            self._editor.add_message(msg_id, line, col_offset, obj, msg)
 

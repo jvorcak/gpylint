@@ -240,7 +240,7 @@ class GeditEditor(Editor):
             self.error_tag = error
             self.label.set_text(error.msg_code + ' : ' + error.msg)
 
-        def ignore_tag(self, button):
+        def ignore_pressed(self, button):
 
             self.error_tag.disable()
 
@@ -249,4 +249,10 @@ class GeditEditor(Editor):
                 ignored_tags.add_tag(self._filepath, self.error_tag.error)
 
             self.window.hide()
+
+        def ok_pressed(self, button):
+            self.window.hide()
+
+        def permanent_ignore_pressed(self, button):
+            self.ignore_pressed(button)
 

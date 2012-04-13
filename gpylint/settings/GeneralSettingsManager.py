@@ -43,3 +43,9 @@ class GeneralSettingsManager(SettingsManager):
             msgs[msg] = config.getboolean('pylint', msg)
         return msgs
 
+    def code_is_ignored(self, code):
+        error_type = MSG_TYPES[code[0]]
+        if config.has_option('pylint', error_type):
+            return not config.getboolean('pylint', error_type)
+        return False
+

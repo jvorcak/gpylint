@@ -67,6 +67,18 @@ class PylintMessagesManager(SettingsManager):
                 if not config.has_option(section, code):
                     config.set(section, code, 'on')
 
+    def code_is_ignored(self, code):
+        '''
+        Author: Jan Vorcak <vorcak@mail.muni.cz>
+        Return True if code is ignored by Settings
+               False otherwise
+        '''
+        for section in config.sections():
+            if config.has_option(section, code):
+                return not config.getboolean(section, code)
+        # don't ignore any errors by default
+        return False
+
     def get_pylint_msgs(self):
         return self.msgs
 

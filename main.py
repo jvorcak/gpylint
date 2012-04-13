@@ -137,6 +137,8 @@ class Window:
         Author: Jan Vorcak <vorcak@mail.muni.cz>
         '''
 
+        ignored_suffixes = ['.pyc', '.pyo']
+
         self.treestore.clear()
         parents = {}
         for dr, dirs, files in os.walk(self.project_path):
@@ -146,6 +148,8 @@ class Window:
                         self.treestore.append(parents.get(dr, None), [subdir,\
                         full_path])
             for item in files:
+                if True in [item.endswith(x) for x in ignored_suffixes]:
+                    continue
                 self.treestore.append(parents.get(dr, None), [item,\
                         os.path.join(dr, item)])
 
