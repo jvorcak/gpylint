@@ -74,6 +74,7 @@ class Window:
         self.window.show_all()
 
         self.builder.connect_signals(self)
+        self.project_path = '.'
 
         # init lastest project
         if config.has_option('project', 'project_path'):

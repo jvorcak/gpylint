@@ -120,6 +120,15 @@ class GeditEditor(Editor):
     def open_file(self):
         self.component = Gtk.ScrolledWindow()
         self.view = GtkSource.View()
+
+        # set view properties
+        self.view.set_property('highlight-current-line', True)
+        self.view.set_property('show-line-numbers', True)
+        self.view.set_property('draw-spaces', True)
+        self.view.set_property('insert-spaces-instead-of-tabs', True)
+        self.view.set_property('tab-width', 4)
+
+
         self.component.add(self.view)
         self.component.show()
         self.buff = GtkSource.Buffer()
