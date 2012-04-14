@@ -72,6 +72,24 @@ class Editor(object):
             'F': self.fatal_line
         }[sigle](error)
 
+    def error_line(self, error):
+        raise NotImplementedError
+
+    def warning_line(self, error):
+        raise NotImplementedError
+
+    def convention_line(self, error):
+        raise NotImplementedError
+
+    def info_line(self, error):
+        raise NotImplementedError
+
+    def refactor_line(self, error):
+        raise NotImplementedError
+
+    def fatal_line(self, error):
+        raise NotImplementedError
+
     def set_lineno(self, lineno):
         raise NotImplementedError
 

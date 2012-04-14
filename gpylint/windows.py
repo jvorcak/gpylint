@@ -1,3 +1,4 @@
+import os
 from gi.repository import Gtk
 from pylint.lint import PyLinter
 
@@ -206,7 +207,8 @@ class WindowManager(object):
     # class implementation
     _filepaths = {}
 
-    def get_window(self, filename, filepath):
+    def get_window(self, filepath):
+        filename = os.path.relpath(filepath)
         if filepath not in self._filepaths.keys():
             self._filepaths[filepath] = CodeWindow(filename, filepath)
         return self._filepaths[filepath]

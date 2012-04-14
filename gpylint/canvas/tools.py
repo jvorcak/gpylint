@@ -21,7 +21,7 @@ class OpenEditorTool(Tool):
             dialog.run()
             dialog.destroy()
 
-        window = wm.get_window(class_box.filepath, class_box.filepath)
+        window = wm.get_window(class_box.filepath)
         window.show_all()
         window.present()
 

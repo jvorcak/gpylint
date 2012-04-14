@@ -165,7 +165,7 @@ class Window:
 
         # TODO check whether file exists
         # TODO remove duplicated code (OpenEditorTool)
-        window = wm.get_window(filename, filepath)
+        window = wm.get_window(filepath)
         window.show_all()
         window.present()
 
