@@ -1,7 +1,7 @@
 import os
 from gi.repository import Gtk
-from pylint.lint import PyLinter
 
+from gpylint.lint import GPyLinter
 from gpylint.editor import GeditEditor, VimEditor
 from gpylint.reporters import EditorReporter
 from gpylint.settings.PylintMessagesManager import PylintMessagesManager
@@ -24,10 +24,14 @@ class CodeWindow:
         self._builder.add_from_file('windows/code_window.xml')
         self._window = self._builder.get_object('code_window')
         self._code_frame = self._builder.get_object('code_frame')
+        self._error_image = self._builder.get_object('error_image')
+        self._error_label = self._builder.get_object('error_label')
+        self._statusbar = self._builder.get_object('statusbar')
         self._builder.connect_signals(self)
         self._filename = filename
         self._filepath = filepath
-        self._editor = GeditEditor(filename, filepath)
+        self._editor = GeditEditor(filename, filepath, self._window, \
+                (self._error_image, self._error_label, self._statusbar))
         self._code_frame.add(self._editor.get_component())
         self._window.connect("delete-event", self.exit)
         self._window.set_title("%s : %s" % (filename, filepath))
@@ -45,7 +49,7 @@ class CodeWindow:
         '''
         plugins = []
         pylintrc = None
-        linter = PyLinter(reporter=EditorReporter(self._editor),
+        linter = GPyLinter(reporter=EditorReporter(self._editor),
                 pylintrc=pylintrc)
         linter.load_default_plugins()
         linter.load_plugin_modules(plugins)
@@ -54,6 +58,13 @@ class CodeWindow:
         args = linter.load_command_line_configuration(\
                 ['--reports=n', self._filepath])
         linter.check(args)
+
+    def ignore_message_clicked(self, button):
+        self._editor.ignore_message_clicked()
+
+    def disable_message_clicked(self, button):
+        self._editor.disable_message_clicked()
+        pmm.ignore_code(self._editor.error_tag.msg_code)
 
     def save(self, parent):
         raise NotImplementedError

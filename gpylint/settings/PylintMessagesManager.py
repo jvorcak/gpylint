@@ -79,6 +79,11 @@ class PylintMessagesManager(SettingsManager):
         # don't ignore any errors by default
         return False
 
+    def ignore_code(self, code):
+        for section in config.sections():
+            if config.has_option(section, code):
+                config.set(section, code, 'off')
+
     def get_pylint_msgs(self):
         return self.msgs
 

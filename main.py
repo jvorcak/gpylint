@@ -19,11 +19,14 @@ from gpylint.editor import ignored_tags
 from gpylint.scanner import ScanProject
 from gpylint.canvas.tools import OpenEditorTool
 from gpylint.windows import WindowManager, SettingsWindow
+from gpylint.settings.PylintMessagesManager import PylintMessagesManager
 
 config=ConfigParser()
 config.read('config.ini')
 
 wm = WindowManager()
+
+pmm = PylintMessagesManager()
 
 class Window:
     '''
@@ -160,7 +163,6 @@ class Window:
         Author: Jan Vorcak <vorcak@mail.muni.cz>
         '''
         tree_iter = self.treestore.get_iter(path)
-        filename = self.treestore.get_value(tree_iter, 0)
         filepath = self.treestore.get_value(tree_iter, 1)
 
         # TODO check whether file exists
@@ -193,6 +195,8 @@ class Window:
         #TODO fix closing the program
         with open('config.ini', 'w') as f:
             config.write(f)
+
+        pmm.save()
 
         Gtk.main_quit(event, data)
 

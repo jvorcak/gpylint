@@ -26,3 +26,6 @@ class EditorReporter(BaseReporter):
         if not settings_filter.code_is_ignored(msg_id):
             self._editor.add_message(msg_id, line, col_offset, obj, msg)
 
+    def close(self, linter):
+        self._editor.show_statistics(linter)
+

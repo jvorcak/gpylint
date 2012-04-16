@@ -93,6 +93,15 @@ class Editor(object):
     def set_lineno(self, lineno):
         raise NotImplementedError
 
+    def show_statistics(self, linter):
+        raise NotImplementedError
+
+    def ignore_message_clicked(self):
+        raise NotImplementedError
+
+    def disable_message_clicked(self):
+        raise NotImplementedError
+
 
 class VimEditor(Editor):
 
@@ -124,6 +133,15 @@ class VimEditor(Editor):
     def fatal_line(self, error):
         pass
 
+    def show_statistics(self, linter):
+        pass
+
+    def ignore_message_clicked(self):
+        pass
+
+    def disable_message_clicked(self):
+        pass
+
 
 class GeditEditor(Editor):
 
@@ -131,9 +149,10 @@ class GeditEditor(Editor):
     GeditEditor
     """
 
-    def __init__(self, filename, filepath):
+    def __init__(self, filename, filepath, window, info_frame):
         Editor.__init__(self, filename, filepath)
-        self._error = self.ErrorWindow(filepath)
+        self._window = window
+        self._error_image, self._error_label, self._status_bar = info_frame
 
     def open_file(self):
         self.component = Gtk.ScrolledWindow()
@@ -146,7 +165,6 @@ class GeditEditor(Editor):
         self.view.set_property('insert-spaces-instead-of-tabs', True)
         self.view.set_property('tab-width', 4)
 
-
         self.component.add(self.view)
         self.component.show()
         self.buff = GtkSource.Buffer()
@@ -155,7 +173,6 @@ class GeditEditor(Editor):
         self.buff.set_language(manager.guess_language(self.filename, None))
 
         self.view.connect('button-release-event', self.show_error_tag)
-
         # open file
         with open(self.filepath) as f:
             self.buff.set_text(f.read())
@@ -201,16 +218,52 @@ class GeditEditor(Editor):
         @param - widget
         @param - event
         '''
-        self._error.window.hide()
         offset = self.buff.get_property('cursor-position')
         it = self.buff.get_iter_at_offset(offset)
+
+        self._error_image.set_from_stock(Gtk.STOCK_FILE, \
+                        Gtk.IconSize.SMALL_TOOLBAR)
+        self._error_label.set_text('No error selected')
+
         for x in it.get_tags():
             if hasattr(x, 'error'):
-                w, h = self._error.window.get_size()
-                self._error.window.move(event.x_root - w/2, \
-                        event.y_root - h - 5)
-                self._error.set_error_tag(x)
-                self._error.window.show_all()
+
+                self.error_tag = x
+                stock_name = \
+                {
+                 'C': Gtk.STOCK_DIALOG_WARNING,
+                 'E': Gtk.STOCK_DIALOG_ERROR,
+                 'F': Gtk.STOCK_DIALOG_ERROR,
+                 'I': Gtk.STOCK_DIALOG_INFO,
+                 'R': Gtk.STOCK_DIALOG_WARNING,
+                 'W': Gtk.STOCK_DIALOG_WARNING,
+                }[x.msg_type]
+
+                self._error_image.set_from_stock(stock_name, \
+                        Gtk.IconSize.SMALL_TOOLBAR)
+                self._error_label.set_text('%s : %s' % (x.msg_code, x.msg))
+
+    def show_statistics(self, linter):
+        total_errors = sum(linter.stats['by_msg'].values())
+        self._status_bar.push(0, '%d errors and warnings' % total_errors)
+
+    def ignore_message_clicked(self):
+        self.error_tag.disable()
+
+        if self.error_tag.error not in \
+               ignored_tags.get_values(self.filepath):
+           ignored_tags.add_tag(self.filepath, \
+                   self.error_tag.error)
+
+    def disable_message_clicked(self):
+        # get the msg_code we want to disable
+        msg_code = self.error_tag.msg_code
+        self.buff.get_tag_table().foreach(self._disable_message_clicked, \
+                msg_code)
+
+    def _disable_message_clicked(editor, tag, msg_code):
+        if hasattr(tag, 'msg_code') and getattr(tag, 'msg_code') == msg_code:
+           tag.disable()
 
     class ErrorTag(Gtk.TextTag):
 
@@ -223,6 +276,7 @@ class GeditEditor(Editor):
         # self error example
         # ('C', 'C0111', 31, 4, 'CodeWindow.present', 'Missing docstring')
 
+        msg_type = property(lambda self: self.error[0])
         msg_code = property(lambda self: self.error[1])
         msg = property(lambda self: self.error[5])
 
@@ -241,36 +295,4 @@ class GeditEditor(Editor):
 
         def disable(self):
             self._tag_table.remove(self)
-
-    class ErrorWindow(Gtk.Window):
-
-        def __init__(self, filepath):
-            Gtk.Window.__init__(self, type=Gtk.WindowType.POPUP)
-            builder = Gtk.Builder()
-            builder.add_from_file('windows/error_window.xml')
-            self.window = builder.get_object('error_window')
-            self.label = builder.get_object('error_msg')
-            builder.connect_signals(self)
-
-            self._filepath = filepath
-
-        def set_error_tag(self, error):
-            self.error_tag = error
-            self.label.set_text(error.msg_code + ' : ' + error.msg)
-
-        def ignore_pressed(self, button):
-
-            self.error_tag.disable()
-
-            if self.error_tag.error not in \
-                    ignored_tags.get_values(self._filepath):
-                ignored_tags.add_tag(self._filepath, self.error_tag.error)
-
-            self.window.hide()
-
-        def ok_pressed(self, button):
-            self.window.hide()
-
-        def permanent_ignore_pressed(self, button):
-            self.ignore_pressed(button)
 
