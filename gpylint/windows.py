@@ -26,23 +26,29 @@ class CodeWindow:
         self._code_frame = self._builder.get_object('code_frame')
         self._error_image = self._builder.get_object('error_image')
         self._error_label = self._builder.get_object('error_label')
+        self._error_box = self._builder.get_object('error_box')
         self._statusbar = self._builder.get_object('statusbar')
         self._builder.connect_signals(self)
         self._filename = filename
         self._filepath = filepath
+        error_frame = (self._error_image, \
+                       self._error_label, \
+                       self._statusbar, \
+                       self._error_box)
         self._editor = GeditEditor(filename, filepath, self._window, \
-                (self._error_image, self._error_label, self._statusbar))
+                error_frame)
         self._code_frame.add(self._editor.get_component())
         self._window.connect("delete-event", self.exit)
         self._window.set_title("%s : %s" % (filename, filepath))
 
     def show_all(self):
         self._window.show_all()
+        self._error_box.set_visible(False)
 
     def present(self):
         self._window.present()
 
-    def run_pylint(self, parent):
+    def run_pylint(self, parent=None):
         '''
         This method runs pylint agains the currently opened file
         Author: Jan Vorcak <vorcak@mail.muni.cz>
@@ -60,11 +66,16 @@ class CodeWindow:
         linter.check(args)
 
     def ignore_message_clicked(self, button):
-        self._editor.ignore_message_clicked()
+        self._error_box.set_visible(False)
+        self._editor.clear_tags()
+        self._editor.ignore_current_tag()
+        self.run_pylint()
 
     def disable_message_clicked(self, button):
-        self._editor.disable_message_clicked()
+        self._error_box.set_visible(False)
+        self._editor.clear_tags()
         pmm.ignore_code(self._editor.error_tag.msg_code)
+        self.run_pylint()
 
     def save(self, parent):
         raise NotImplementedError

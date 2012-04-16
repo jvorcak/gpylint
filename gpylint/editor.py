@@ -46,7 +46,7 @@ class Editor(object):
     def get_component(self):
         return self.component
 
-    def add_message(self, msg_id, line, col_offset, obj, msg):
+    def add_message(self, msg_id, line, col_offset, obj, msg, ignored):
         '''
         Displays pylint error message on the editor
         @author Jan Vorcak <vorcak@mail.muni.cz>
@@ -57,7 +57,7 @@ class Editor(object):
         @param msg - additional comment
         '''
         sigle = msg_id[0]
-        error = sigle, msg_id, line-1, col_offset, obj, msg
+        error = sigle, msg_id, line-1, col_offset, obj, msg, ignored
 
         # needs to be improved
         if error in ignored_tags.get_values(self.filepath):
@@ -96,10 +96,7 @@ class Editor(object):
     def show_statistics(self, linter):
         raise NotImplementedError
 
-    def ignore_message_clicked(self):
-        raise NotImplementedError
-
-    def disable_message_clicked(self):
+    def ignore_current_tag(self):
         raise NotImplementedError
 
 
@@ -136,10 +133,7 @@ class VimEditor(Editor):
     def show_statistics(self, linter):
         pass
 
-    def ignore_message_clicked(self):
-        pass
-
-    def disable_message_clicked(self):
+    def ignore_current_tag(self):
         pass
 
 
@@ -152,7 +146,8 @@ class GeditEditor(Editor):
     def __init__(self, filename, filepath, window, info_frame):
         Editor.__init__(self, filename, filepath)
         self._window = window
-        self._error_image, self._error_label, self._status_bar = info_frame
+        self._error_image, self._error_label, self._status_bar, \
+                self._error_box = info_frame
 
     def open_file(self):
         self.component = Gtk.ScrolledWindow()
@@ -198,7 +193,10 @@ class GeditEditor(Editor):
 
     def _tag(self, error, bc_color='red'):
 
-        sigle, msg_id, line, col_offset, obj, msg = error
+        sigle, msg_id, line, col_offset, obj, msg, ignored = error
+
+        if ignored:
+            return
 
         start = self.buff.get_iter_at_line(line)
         end = self.buff.get_iter_at_line(line)
@@ -221,12 +219,11 @@ class GeditEditor(Editor):
         offset = self.buff.get_property('cursor-position')
         it = self.buff.get_iter_at_offset(offset)
 
-        self._error_image.set_from_stock(Gtk.STOCK_FILE, \
-                        Gtk.IconSize.SMALL_TOOLBAR)
-        self._error_label.set_text('No error selected')
+        self._error_box.set_visible(False)
 
         for x in it.get_tags():
             if hasattr(x, 'error'):
+                self._error_box.set_visible(True)
 
                 self.error_tag = x
                 stock_name = \
@@ -243,27 +240,25 @@ class GeditEditor(Editor):
                         Gtk.IconSize.SMALL_TOOLBAR)
                 self._error_label.set_text('%s : %s' % (x.msg_code, x.msg))
 
-    def show_statistics(self, linter):
-        total_errors = sum(linter.stats['by_msg'].values())
-        self._status_bar.push(0, '%d errors and warnings' % total_errors)
+    def show_statistics(self, statistics):
+        total_errors = statistics['msgs_count']
+        total_ignored = statistics['ignored_msgs_count']
+        self._status_bar.push(0, \
+                '%d errors and warnings, %d blocked' % \
+                (total_errors, total_ignored))
 
-    def ignore_message_clicked(self):
-        self.error_tag.disable()
-
+    def ignore_current_tag(self):
         if self.error_tag.error not in \
                ignored_tags.get_values(self.filepath):
            ignored_tags.add_tag(self.filepath, \
                    self.error_tag.error)
 
-    def disable_message_clicked(self):
-        # get the msg_code we want to disable
-        msg_code = self.error_tag.msg_code
-        self.buff.get_tag_table().foreach(self._disable_message_clicked, \
-                msg_code)
+    def clear_tags(self):
+        self.buff.get_tag_table().foreach(self._clear_tags, None)
 
-    def _disable_message_clicked(editor, tag, msg_code):
-        if hasattr(tag, 'msg_code') and getattr(tag, 'msg_code') == msg_code:
-           tag.disable()
+    def _clear_tags(editor, tag, data):
+        if hasattr(tag, 'disable'):
+            tag.disable()
 
     class ErrorTag(Gtk.TextTag):
 
