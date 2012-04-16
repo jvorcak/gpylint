@@ -1,3 +1,6 @@
+'''
+Settings Manager
+'''
 class SettingsManager(object):
 
     def save_boolean(self, section, option, value):

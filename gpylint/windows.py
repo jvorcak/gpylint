@@ -1,6 +1,8 @@
 import os
 from gi.repository import Gtk
 
+from logilab.astng.builder import MANAGER as LOGILAB_MANAGER
+
 from gpylint.lint import GPyLinter
 from gpylint.editor import GeditEditor, VimEditor
 from gpylint.reporters import EditorReporter
@@ -28,15 +30,12 @@ class CodeWindow:
         self._error_label = self._builder.get_object('error_label')
         self._error_box = self._builder.get_object('error_box')
         self._statusbar = self._builder.get_object('statusbar')
+        self._pylint_button = self._builder.get_object('pylint_button')
+        self._save_button = self._builder.get_object('save_button')
         self._builder.connect_signals(self)
         self._filename = filename
         self._filepath = filepath
-        error_frame = (self._error_image, \
-                       self._error_label, \
-                       self._statusbar, \
-                       self._error_box)
-        self._editor = GeditEditor(filename, filepath, self._window, \
-                error_frame)
+        self._editor = GeditEditor(filename, filepath, self)
         self._code_frame.add(self._editor.get_component())
         self._window.connect("delete-event", self.exit)
         self._window.set_title("%s : %s" % (filename, filepath))
@@ -53,6 +52,8 @@ class CodeWindow:
         This method runs pylint agains the currently opened file
         Author: Jan Vorcak <vorcak@mail.muni.cz>
         '''
+        LOGILAB_MANAGER.astng_cache.clear()
+        self._editor.clear_tags()
         plugins = []
         pylintrc = None
         linter = GPyLinter(reporter=EditorReporter(self._editor),
@@ -67,18 +68,16 @@ class CodeWindow:
 
     def ignore_message_clicked(self, button):
         self._error_box.set_visible(False)
-        self._editor.clear_tags()
         self._editor.ignore_current_tag()
         self.run_pylint()
 
     def disable_message_clicked(self, button):
         self._error_box.set_visible(False)
-        self._editor.clear_tags()
         pmm.ignore_code(self._editor.error_tag.msg_code)
         self.run_pylint()
 
     def save(self, parent):
-        raise NotImplementedError
+        self._editor.save()
 
     def set_lineno(self, lineno):
         self._editor.set_lineno(lineno)

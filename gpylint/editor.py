@@ -64,12 +64,12 @@ class Editor(object):
             return
 
         {
-            'E': self.error_line,
-            'W': self.warning_line,
-            'C': self.convention_line,
-            'I': self.info_line,
-            'R': self.refactor_line,
-            'F': self.fatal_line
+        'E': self.error_line,
+        'W': self.warning_line,
+        'C': self.convention_line,
+        'I': self.info_line,
+        'R': self.refactor_line,
+        'F': self.fatal_line
         }[sigle](error)
 
     def error_line(self, error):
@@ -99,6 +99,8 @@ class Editor(object):
     def ignore_current_tag(self):
         raise NotImplementedError
 
+    def save(self):
+        raise NotImplementedError
 
 class VimEditor(Editor):
 
@@ -136,6 +138,11 @@ class VimEditor(Editor):
     def ignore_current_tag(self):
         pass
 
+    def save(self):
+        pass
+
+    def set_lineno(self, lineno):
+        pass
 
 class GeditEditor(Editor):
 
@@ -143,11 +150,16 @@ class GeditEditor(Editor):
     GeditEditor
     """
 
-    def __init__(self, filename, filepath, window, info_frame):
+    def __init__(self, filename, filepath, code_window):
         Editor.__init__(self, filename, filepath)
-        self._window = window
-        self._error_image, self._error_label, self._status_bar, \
-                self._error_box = info_frame
+        self._window = code_window._window
+        self._error_image = code_window._error_image
+        self._error_label = code_window._error_label
+        self._status_bar = code_window._statusbar
+        self._error_box = code_window._error_box
+        self._pylint_button = code_window._pylint_button
+        self._save_button = code_window._save_button
+        self._save_button.set_sensitive(False)
 
     def open_file(self):
         self.component = Gtk.ScrolledWindow()
@@ -163,6 +175,9 @@ class GeditEditor(Editor):
         self.component.add(self.view)
         self.component.show()
         self.buff = GtkSource.Buffer()
+
+        self.buff.connect('changed', self.changed)
+
         self.view.set_buffer(self.buff)
         manager = GtkSource.LanguageManager()
         self.buff.set_language(manager.guess_language(self.filename, None))
@@ -172,6 +187,11 @@ class GeditEditor(Editor):
         with open(self.filepath) as f:
             self.buff.set_text(f.read())
         self.view.show()
+
+    def changed(self, signal):
+        if self.buff.get_modified():
+            self._save_button.set_sensitive(True)
+            self._pylint_button.set_sensitive(False)
 
     def error_line(self, error):
         self._tag(error, bc_color='red')
@@ -260,6 +280,15 @@ class GeditEditor(Editor):
         if hasattr(tag, 'disable'):
             tag.disable()
 
+    def save(self):
+        self._save_button.set_sensitive(False)
+        self._pylint_button.set_sensitive(True)
+        with open(self.filepath, 'w') as f:
+            f.write(self.buff.get_text(\
+                    self.buff.get_start_iter(),
+                    self.buff.get_end_iter(), True))
+            self.buff.set_modified(False)
+
     class ErrorTag(Gtk.TextTag):
 
         def __init__(self, error, tag_table):
@@ -290,4 +319,3 @@ class GeditEditor(Editor):
 
         def disable(self):
             self._tag_table.remove(self)
-
