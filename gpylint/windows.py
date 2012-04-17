@@ -62,9 +62,7 @@ class CodeWindow:
         linter.load_plugin_modules(plugins)
         linter.read_config_file()
         linter.load_config_file()
-        args = linter.load_command_line_configuration(\
-                ['--reports=n', self._filepath])
-        linter.check(args)
+        linter.check_text_buffer(self._editor.buff)
 
     def ignore_message_clicked(self, button):
         self._error_box.set_visible(False)

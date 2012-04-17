@@ -191,7 +191,6 @@ class GeditEditor(Editor):
     def changed(self, signal):
         if self.buff.get_modified():
             self._save_button.set_sensitive(True)
-            self._pylint_button.set_sensitive(False)
 
     def error_line(self, error):
         self._tag(error, bc_color='red')
@@ -282,7 +281,6 @@ class GeditEditor(Editor):
 
     def save(self):
         self._save_button.set_sensitive(False)
-        self._pylint_button.set_sensitive(True)
         with open(self.filepath, 'w') as f:
             f.write(self.buff.get_text(\
                     self.buff.get_start_iter(),
