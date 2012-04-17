@@ -3,34 +3,22 @@
 Utilities for creating diagram on canvas
 """
 
+from logilab.common.graph import DotBackend
 from pylint.pyreverse.writer import DiagramWriter
-from igraph import Graph
+import gv
 
 from gpylint.canvas.items import ClassBox
 from gpylint.canvas import set_association
 
-class CanvasBackend:
+class CanvasBackend(DotBackend):
     """ Canvas backend """
 
     def __init__(self, view):
+        super(CanvasBackend, self).__init__('basename')
         self.view = view
         self.nodes = []
         self.edges = []
         self.graph = None
-
-    def emit_node(self, name, **props):
-        '''
-        Append node with given properties to the list
-        '''
-        box = ClassBox(props)
-
-        self.nodes.append({'name' : name, 'box' : box })
-
-    def emit_edge(self, name1, name2, **props):
-        '''
-        Append edge with give properties to the list
-        '''
-        self.edges.append((name1, name2, props))
 
     def generate(self, filename):
         '''
@@ -40,27 +28,47 @@ class CanvasBackend:
         draw connections between them
         Author: Jan Vorcak <vorcak@mail.muni.cz>
         '''
-        self.graph = Graph(len(self.nodes))
-        self.graph.vs['name'] = [node['name'] for node in self.nodes]
-        self.graph.vs['box'] = [node['box'] for node in self.nodes]
 
-        for name1, name2, props in self.edges:
-            v1 = self.graph.vs.select(name_eq=name1)
-            v2 = self.graph.vs.select(name_eq=name2)
-            self.graph.add_edges((v1[0].index, v2[0].index))
+        g = gv.readstring(self.source)
+        gv.layout(g, 'dot')
+        gv.render(g)
 
-        for i, v in enumerate(self.graph.layout_grid_fruchterman_reingold()):
-            x, y = v
-            box = self.graph.vs[i]['box']
-            box.matrix.translate((x+2)*40, (y+2)*40)
-            print box, " at ", x+2, y+2
-            self.view.canvas.add(box)
+        box_dict = {}
 
-        for name1, name2, props in self.edges:
-            v1 = self.graph.vs.select(name_eq=name1)['box'][0]
-            v2 = self.graph.vs.select(name_eq=name2)['box'][0]
+        node = gv.firstnode(g)
+        while node is not None:
+            props = {
+                    'filepath' : gv.getv(node, 'filepath'),
+                    'title' : gv.getv(node, 'label'),
+                    'lineno' : gv.getv(node, 'lineno'),
+                    }
+            pos = gv.getv(node, 'pos').split(',')
+            width = gv.getv(node, 'width')
+            height = gv.getv(node, 'height')
+            x, y = map(int, pos)
+            class_box = ClassBox(props, width, height)
+            class_box.matrix.translate(x, y)
+            self.view.canvas.add(class_box)
+            box_dict[props['filepath'] + props['title']] = class_box
+            node = gv.nextnode(g, node)
 
-            set_association(self.view.canvas, v2, v1, props)
+        edge = gv.firstedge(g)
+        while edge is not None:
+            props = {
+                    'arrowhead' : gv.getv(edge, 'arrowhead'),
+                    'arrowtail' : gv.getv(edge, 'arrowtail'),
+                    }
+
+            head = gv.headof(edge)
+            tail = gv.tailof(edge)
+            head_str = gv.getv(head, 'filepath') + gv.getv(head, 'label')
+            tail_str = gv.getv(tail, 'filepath') + gv.getv(tail, 'label')
+            box_dict[head_str]
+            box_dict[tail_str]
+
+            edge = gv.nextedge(g, edge)
+            set_association(self.view.canvas, box_dict[head_str], \
+                    box_dict[tail_str], props)
 
 
 class CanvasWriter(DiagramWriter):
@@ -92,7 +100,7 @@ class CanvasWriter(DiagramWriter):
         '''
 
         d = dict()
-        d['title'] = obj.title
+        d['label'] = obj.title
 
         if obj.shape == 'class' and hasattr(obj.node.parent, 'file'):
             d['filepath'] = obj.node.parent.file

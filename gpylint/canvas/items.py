@@ -232,7 +232,6 @@ class ClassBox(Box):
         self.width, self.height = text_extents(context.cairo, \
                 str(self.title))
 
-        # add some padding
         self.width += 50
         self.height += 50
 
