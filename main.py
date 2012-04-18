@@ -7,7 +7,7 @@ Author: Jan Vorcak <vorcak@mail.muni.cz>
 import os
 import cPickle as pickle
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GObject
 from ConfigParser import ConfigParser
 
 # gaphas usage
@@ -21,12 +21,15 @@ from gpylint.canvas.tools import OpenEditorTool
 from gpylint.windows import WindowManager, SettingsWindow
 from gpylint.settings.PylintMessagesManager import PylintMessagesManager
 
+GObject.threads_init()
+
 config=ConfigParser()
 config.read('config.ini')
 
 wm = WindowManager()
 
 pmm = PylintMessagesManager()
+
 
 class Window:
     '''
@@ -43,6 +46,9 @@ class Window:
         self.paned_main = self.builder.get_object('paned_main')
         self.paned_left = self.builder.get_object('paned_left')
         self.project_view = self.builder.get_object('project_view')
+        self.diagram_spinner = self.builder.get_object('diagram_spinner')
+        self.canvas_area = self.builder.get_object('canvas_area')
+
 
         self.treestore = Gtk.TreeStore(str, str)
         self.project_view.set_model(self.treestore)
@@ -68,8 +74,8 @@ class Window:
         #self.minimized_view.zoom(1/3.)
         #self.paned_left.add2(self.minimized_view)
 
-
-        self.paned_main.add2(self.view)
+        self.canvas_area.append_page(self.view, None)
+        self.view.show()
 
         # exit on close
         self.window.connect("delete-event", self.exit)
@@ -86,7 +92,8 @@ class Window:
 
         # scan project and display UML on the canvas
         # TODO threading
-        ScanProject(self.view, [self.project_path])
+        t=ScanProject(self.view, [self.project_path], self.show_graph)
+        t.start()
 
         try:
             with open('.ignored_tags', 'r') as f:
@@ -99,6 +106,9 @@ class Window:
             pass
 
         Gtk.main()
+
+    def show_graph(self):
+        self.canvas_area.set_current_page(1)
 
     def open_settings(self, menu_item):
         '''
