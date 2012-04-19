@@ -10,7 +10,7 @@ from gpylint.settings.PylintMessagesManager import PylintMessagesManager
 from gpylint.settings.GeneralSettingsManager import GeneralSettingsManager
 from gpylint.helpers import get_pretty_name
 
-pmm= PylintMessagesManager()
+pmm = PylintMessagesManager()
 gsm = GeneralSettingsManager()
 
 class CodeWindow:

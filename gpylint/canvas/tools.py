@@ -12,7 +12,7 @@ class OpenEditorTool(Tool):
 
     def on_double_click(self, event):
         class_box = self.view.hovered_item
-        if not hasattr(class_box, 'filepath'):
+        if not hasattr(class_box, 'filepath') or not getattr(class_box, 'filepath'):
             # TODO add parent instead of None
             dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
                     Gtk.ButtonsType.OK, 'Can\'t show source code')
@@ -21,8 +21,9 @@ class OpenEditorTool(Tool):
             dialog.run()
             dialog.destroy()
 
-        window = wm.get_window(class_box.filepath)
-        window.show_all()
-        window.present()
+        else:
+            window = wm.get_window(class_box.filepath)
+            window.show_all()
+            window.present()
 
 
