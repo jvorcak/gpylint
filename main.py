@@ -48,6 +48,7 @@ class Window:
         self.project_view = self.builder.get_object('project_view')
         self.diagram_spinner = self.builder.get_object('diagram_spinner')
         self.canvas_area = self.builder.get_object('canvas_area')
+        self.refresh_diagram = self.builder.get_object('refresh_diagram')
 
 
         self.treestore = Gtk.TreeStore(str, str)
@@ -81,6 +82,7 @@ class Window:
         self.window.connect("delete-event", self.exit)
         self.window.maximize()
         self.window.show_all()
+        self.refresh_diagram.set_visible(False)
 
         self.builder.connect_signals(self)
         self.project_path = '.'
@@ -150,6 +152,7 @@ class Window:
             pass
 
         dialog.destroy()
+        self.refresh_clicked(None)
 
     def load_tree_view(self):
         '''
@@ -200,11 +203,18 @@ class Window:
         '''
         self.view.zoom(1/1.2)
 
+    def quit(self, button):
+        self._quit()
+
     def exit(self, event, data):
         '''
         Close the program and save the path to config
         '''
+        self._quit()
 
+
+    def _quit(self):
+        
         # pickle ignored tags to a file
         with open('.ignored_tags', 'w') as f:
             pickle.dump(ignored_tags.ignored, f)
@@ -215,8 +225,7 @@ class Window:
 
         pmm.save()
 
-        Gtk.main_quit(event, data)
-
+        Gtk.main_quit(None, None)
 
 if __name__ == '__main__':
     w = Window()

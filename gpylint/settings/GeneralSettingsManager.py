@@ -23,7 +23,18 @@ class GeneralSettingsManager(SettingsManager):
 
         return cls._instance
 
-    SECTIONS = ['pylint']
+    PYLINT_SECTION = 'pylint'
+    GENERAL_SECTION = 'general'
+
+    SECTIONS = [PYLINT_SECTION, GENERAL_SECTION]
+
+    # config values
+    VIM_EDITOR = 'vim'
+    VISUAL_EDITOR = 'visual'
+
+    # values (name, section, default)
+    EDITOR = 'editor', GENERAL_SECTION, VISUAL_EDITOR
+
 
     def __init__(self):
 
@@ -38,14 +49,24 @@ class GeneralSettingsManager(SettingsManager):
     def get_pylint_msgs_types(self):
         msgs = {}
         for msg in MSG_TYPES.values():
-            if not config.has_option('pylint', msg):
-                config.set('pylint', msg, 'on')
-            msgs[msg] = config.getboolean('pylint', msg)
+            if not config.has_option(self.PYLINT_SECTION, msg):
+                config.set(self.PYLINT_SECTION, msg, 'on')
+            msgs[msg] = config.getboolean(self.PYLINT_SECTION, msg)
         return msgs
 
     def code_is_ignored(self, code):
         error_type = MSG_TYPES[code[0]]
-        if config.has_option('pylint', error_type):
-            return not config.getboolean('pylint', error_type)
+        if config.has_option(self.PYLINT_SECTION, error_type):
+            return not config.getboolean(self.PYLINT_SECTION, error_type)
         return False
 
+    def set(self, cname, value):
+        name, section, default = cname
+        config.set(section, name, value)
+
+    def get(self, cname):
+        name, section, default = cname
+        if config.has_option(section, name):
+            return config.get(section, name)
+        else:
+            return default

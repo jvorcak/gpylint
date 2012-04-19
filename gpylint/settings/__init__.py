@@ -16,3 +16,4 @@ class SettingsManager(object):
     def save(self):
         with open(self.CONFIG_FILE, 'w') as configfile:
             self.config.write(configfile)
+

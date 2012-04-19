@@ -28,9 +28,7 @@ class IgnoredTags(object):
             self.ignored[k].extend(errors[k])
             self.ignored[k] = list(set(self.ignored[k]))
 
-
 ignored_tags = IgnoredTags()
-
 
 class Editor(object):
 

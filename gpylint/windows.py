@@ -35,7 +35,11 @@ class CodeWindow:
         self._builder.connect_signals(self)
         self._filename = filename
         self._filepath = filepath
-        self._editor = GeditEditor(filename, filepath, self)
+        if gsm.get(gsm.EDITOR) == gsm.VISUAL_EDITOR:
+            self._editor = GeditEditor(filename, filepath, self)
+        else:
+            self._editor = VimEditor(filename, filepath)
+
         self._code_frame.add(self._editor.get_component())
         self._window.connect("delete-event", self.exit)
         self._window.set_title("%s : %s" % (filename, filepath))
@@ -109,7 +113,20 @@ class SettingsWindow(object):
         self._message_types_box = self._builder.get_object('message_types_box')
         self._main_notebook = self._builder.get_object('main_notebook')
         self._pylint_messages = self._builder.get_object('pylint_messages')
+        self._visual_editor_button = self._builder.get_object('visual_editor_button')
+        self._vim_editor_button = self._builder.get_object('vim_editor_button')
         self._window.connect("delete-event", self.exit)
+
+
+        self._vim_editor_button.connect('toggled', \
+                self.on_editor_button_toggled, gsm.VIM_EDITOR)
+        self._visual_editor_button.connect('toggled', \
+                self.on_editor_button_toggled, gsm.VISUAL_EDITOR)
+
+        if gsm.get(gsm.EDITOR) == gsm.VIM_EDITOR:
+            self._vim_editor_button.set_active(True)
+        else:
+            self._visual_editor_button.set_active(True)
 
         for name, messages in pmm.get_pylint_msgs().iteritems():
             self.add_section_tab(name, messages)
@@ -117,11 +134,18 @@ class SettingsWindow(object):
         self.load_pylint_general_page()
         self._builder.connect_signals(self)
 
+    def on_editor_button_toggled(self, button, name):
+        if button.get_active():
+            gsm.set(gsm.EDITOR, name)
+
     def show_pylint_general(self, button):
         self._main_notebook.set_current_page(0)
 
     def show_pylint_messages(self, button):
         self._main_notebook.set_current_page(1)
+
+    def show_editor_settings(self, button):
+        self._main_notebook.set_current_page(2)
 
     def load_pylint_general_page(self):
         '''
