@@ -107,6 +107,13 @@ class Window:
 
         Gtk.main()
 
+    def refresh_clicked(self, button):
+        self.canvas_area.set_current_page(0)
+        for item in self.view.canvas.get_all_items():
+            self.view.canvas.remove(item)
+        t=ScanProject(self.view, [self.project_path], self.show_graph)
+        t.start()
+
     def show_graph(self):
         self.canvas_area.set_current_page(1)
 

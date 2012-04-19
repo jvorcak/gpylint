@@ -90,7 +90,7 @@ class ScannerCommand(ConfigurationMixIn):
         # dependencies to local modules even if cwd is not in the PYTHONPATH
         sys.path.insert(0, os.getcwd())
         try:
-            project = self.manager.project_from_files(args, black_list=['']) # tmp solution, need to add popupmenu
+            project = self.manager.project_from_files(args, black_list=['gaphas']) # tmp solution, need to add popupmenu
             linker = Linker(project, tag=True)
             handler = DiadefsHandler(self.config)
             diadefs = handler.get_diadefs(project, linker)
@@ -103,8 +103,8 @@ class ScannerCommand(ConfigurationMixIn):
         # update GUI
         Gdk.threads_init()
         self.callback()
-        writer.CanvasWriter(self.view, self.config).write(diadefs)
         Gdk.threads_leave()
+        writer.CanvasWriter(self.view, self.config).write(diadefs)
 
 class ScanProject(Thread):
     """pyreverse main class"""
