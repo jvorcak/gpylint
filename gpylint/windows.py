@@ -29,6 +29,7 @@ class CodeWindow:
         self._error_image = self._builder.get_object('error_image')
         self._error_label = self._builder.get_object('error_label')
         self._error_box = self._builder.get_object('error_box')
+        self._button_toolbar = self._builder.get_object('button_toolbar')
         self._statusbar = self._builder.get_object('statusbar')
         self._pylint_button = self._builder.get_object('pylint_button')
         self._save_button = self._builder.get_object('save_button')
@@ -39,13 +40,14 @@ class CodeWindow:
             self._editor = GeditEditor(filename, filepath, self)
         else:
             self._editor = VimEditor(filename, filepath)
+            self._button_toolbar.set_visible(False)
 
         self._code_frame.add(self._editor.get_component())
         self._window.connect("delete-event", self.exit)
         self._window.set_title("%s : %s" % (filename, filepath))
 
     def show_all(self):
-        self._window.show_all()
+        self._window.show()
         self._error_box.set_visible(False)
 
     def present(self):
