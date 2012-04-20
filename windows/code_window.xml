@@ -165,18 +165,59 @@
           </packing>
         </child>
         <child>
-          <object class="GtkStatusbar" id="statusbar">
+          <object class="GtkBox" id="box1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="no_show_all">True</property>
-            <property name="halign">end</property>
-            <property name="margin_right">31</property>
-            <property name="hexpand">True</property>
+            <child>
+              <object class="GtkSpinner" id="spinner">
+                <property name="width_request">20</property>
+                <property name="height_request">20</property>
+                <property name="can_focus">False</property>
+                <property name="halign">start</property>
+                <property name="margin_left">5</property>
+                <property name="margin_right">5</property>
+                <property name="margin_top">5</property>
+                <property name="margin_bottom">5</property>
+                <property name="active">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkStatusbar" id="statusbar">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="no_show_all">True</property>
+                <property name="halign">end</property>
+                <property name="margin_right">31</property>
+                <property name="hexpand">True</property>
+                <property name="spacing">2</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="pack_type">end</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="scanning_label">
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Scanning code</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="pack_type">end</property>
             <property name="position">4</property>
           </packing>
         </child>

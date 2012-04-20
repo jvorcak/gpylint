@@ -32,6 +32,8 @@ class CodeWindow:
         self._button_toolbar = self._builder.get_object('button_toolbar')
         self._statusbar = self._builder.get_object('statusbar')
         self._pylint_button = self._builder.get_object('pylint_button')
+        self._spinner = self._builder.get_object('spinner')
+        self._scanning_label = self._builder.get_object('scanning_label')
         self._save_button = self._builder.get_object('save_button')
         self._builder.connect_signals(self)
         self._filename = filename
@@ -62,13 +64,15 @@ class CodeWindow:
         self._editor.clear_tags()
         plugins = []
         pylintrc = None
-        linter = GPyLinter(reporter=EditorReporter(self._editor),
-                pylintrc=pylintrc)
+        linter = GPyLinter()
+        linter.init_linter(EditorReporter(self._editor), pylintrc)
+        linter.set_scanning_items(self._scanning_label, self._spinner)
         linter.load_default_plugins()
         linter.load_plugin_modules(plugins)
         linter.read_config_file()
         linter.load_config_file()
-        linter.check_text_buffer(self._editor.buff)
+        linter.set_buffer(self._editor.buff)
+        linter.start()
 
     def ignore_message_clicked(self, button):
         self._error_box.set_visible(False)

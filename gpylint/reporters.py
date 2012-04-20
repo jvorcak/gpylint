@@ -45,8 +45,7 @@ class EditorReporter(BaseReporter):
                 return True
         return False
 
-
-    def close(self):
+    def display_results(self, sect):
         statistics = {}
         statistics['ignored_msgs_count'] = self._ignored_msgs_count
         statistics['msgs_count'] = self._msgs_count
