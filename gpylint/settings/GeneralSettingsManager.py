@@ -34,7 +34,7 @@ class GeneralSettingsManager(SettingsManager):
 
     # values (name, section, default)
     EDITOR = 'editor', GENERAL_SECTION, VISUAL_EDITOR
-
+    PROJECT_PATH = 'project_path', GENERAL_SECTION, None
 
     def __init__(self):
 

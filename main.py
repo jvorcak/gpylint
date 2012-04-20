@@ -20,16 +20,14 @@ from gpylint.scanner import ScanProject
 from gpylint.canvas.tools import OpenEditorTool
 from gpylint.windows import WindowManager, SettingsWindow
 from gpylint.settings.PylintMessagesManager import PylintMessagesManager
+from gpylint.settings.GeneralSettingsManager import GeneralSettingsManager
 
 GObject.threads_init()
-
-config=ConfigParser()
-config.read('config.ini')
 
 wm = WindowManager()
 
 pmm = PylintMessagesManager()
-
+gsm = GeneralSettingsManager()
 
 class Window:
     '''
@@ -85,17 +83,20 @@ class Window:
         self.refresh_diagram.set_visible(False)
 
         self.builder.connect_signals(self)
-        self.project_path = '.'
 
+        self.project_path = None
+        self.canvas_area.set_current_page(1)
+        
         # init lastest project
-        if config.has_option('project', 'project_path'):
-            self.project_path = config.get('project', 'project_path')
+        if gsm.get(gsm.PROJECT_PATH):
+            self.project_path = gsm.get(gsm.PROJECT_PATH)
             self.load_tree_view()
-
+        
         # scan project and display UML on the canvas
-        # TODO threading
-        t=ScanProject(self.view, [self.project_path], self.show_graph)
-        t.start()
+        if self.project_path:
+            self.canvas_area.set_current_page(0)
+            t=ScanProject(self.view, [self.project_path], self.show_graph)
+            t.start()
 
         try:
             with open('.ignored_tags', 'r') as f:
@@ -143,10 +144,8 @@ class Window:
 
             # add project_path to config to that program starts with latest
             # project opened
-            if not config.has_section('project'):
-                config.add_section('project')
-            config.set('project', 'project_path', self.project_path)
-
+            gsm.set(gsm.PROJECT_PATH, self.project_path)
+            
             self.load_tree_view()
         elif response == Gtk.ResponseType.CANCEL:
             pass
@@ -214,15 +213,12 @@ class Window:
 
 
     def _quit(self):
-        
+
         # pickle ignored tags to a file
         with open('.ignored_tags', 'w') as f:
             pickle.dump(ignored_tags.ignored, f)
 
-        #TODO fix closing the program
-        with open('config.ini', 'w') as f:
-            config.write(f)
-
+        gsm.save()
         pmm.save()
 
         Gtk.main_quit(None, None)
