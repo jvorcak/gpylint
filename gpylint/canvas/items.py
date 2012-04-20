@@ -81,7 +81,7 @@ class AssociationLine(Line):
 
         {
             'diamond': self.draw_head_composite,
-            'empty': self.draw_head_none
+            'empty': self.draw_head_navigable
         }[self.props['arrowhead']](context)
 
     def draw_head_none(self, context):
@@ -131,6 +131,7 @@ class AssociationLine(Line):
         aggregation at association head.
         """
         cr = context.cairo
+        cr.rotate(self._head_angle)
         self._draw_diamond(cr)
         context.cairo.fill_preserve()
         cr.stroke()
@@ -178,6 +179,7 @@ class AssociationLine(Line):
         association head.
         """
         cr = context.cairo
+        cr.rotate(self._head_angle)
         cr.move_to(15, -6)
         cr.line_to(0, 0)
         cr.line_to(15, 6)
