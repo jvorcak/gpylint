@@ -7,7 +7,7 @@ Author: Jan Vorcak <vorcak@mail.muni.cz>
 import os
 import cPickle as pickle
 
-from gi.repository import Gtk, GObject
+from gi.repository import Gtk, Gdk, GObject
 from ConfigParser import ConfigParser
 
 # gaphas usage
@@ -29,6 +29,15 @@ wm = WindowManager()
 pmm = PylintMessagesManager()
 gsm = GeneralSettingsManager()
 
+try:
+    with open('.ignored_files', 'r') as f:
+        try:
+            ScanProject.blacklist=pickle.load(f)
+        except EOFError:
+            pass
+except IOError:
+    pass
+
 class Window:
     '''
     This class maps actions from xml to it's methods
@@ -48,11 +57,46 @@ class Window:
         self.canvas_area = self.builder.get_object('canvas_area')
         self.refresh_diagram = self.builder.get_object('refresh_diagram')
 
-
         self.treestore = Gtk.TreeStore(str, str)
         self.project_view.set_model(self.treestore)
-        column = Gtk.TreeViewColumn("Title", Gtk.CellRendererText(), text=0)
+        renderer = Gtk.CellRendererText()
+
+        def renderId(treeviewcolumn, renderer, model, iter, data):
+            if model.get_value(iter,1) in ScanProject.blacklist:
+                renderer.set_property('foreground', 'red')
+            else:
+                renderer.set_property('foreground', 'black')
+
+
+        column = Gtk.TreeViewColumn("Title", renderer, text=0)
+        column.set_cell_data_func(renderer, renderId)
         self.project_view.append_column(column)
+        self.project_view.connect('button_release_event', self.popup_show)
+
+        action_group = Gtk.ActionGroup('actions')
+
+        self.ignore_action = Gtk.Action('Ignore', 'Ignore', None, Gtk.STOCK_STOP)
+        self.ignore_action.connect('activate', self.ignore_file)
+
+        self.dont_ignore_action = Gtk.Action('Dontignore', 'Don\'t ignore', None, Gtk.STOCK_STOP)
+        self.dont_ignore_action.connect('activate', self.dont_ignore_file)
+
+        action_group.add_action(self.ignore_action)
+        action_group.add_action(self.dont_ignore_action)
+
+        uimanager = Gtk.UIManager()
+        uimanager.add_ui_from_string("""
+        <ui>
+         <popup name='PopupMenu'>
+          <menuitem action='Ignore' />
+          <menuitem action='Dontignore' />
+         </popup>
+        </ui>
+        """)
+        uimanager.insert_action_group(action_group)
+
+        self.popup = uimanager.get_widget("/PopupMenu")
+
 
         # set graph as a second item in the main paned
         self.view = GtkView()
@@ -86,12 +130,12 @@ class Window:
 
         self.project_path = None
         self.canvas_area.set_current_page(1)
-        
+
         # init lastest project
         if gsm.get(gsm.PROJECT_PATH):
             self.project_path = gsm.get(gsm.PROJECT_PATH)
             self.load_tree_view()
-        
+
         # scan project and display UML on the canvas
         if self.project_path:
             self.canvas_area.set_current_page(0)
@@ -109,6 +153,32 @@ class Window:
             pass
 
         Gtk.main()
+
+    def ignore_file(self, event):
+        treestore, treepaths = self.project_view.get_selection().get_selected_rows()
+	for treepath in treepaths:
+            iter = treestore.get_iter(treepath)
+            ScanProject.blacklist.append(treestore.get_value(iter, 1))
+
+    def dont_ignore_file(self, event):
+        treestore, treepaths = self.project_view.get_selection().get_selected_rows()
+	for treepath in treepaths:
+            iter = treestore.get_iter(treepath)
+            ScanProject.blacklist.remove(treestore.get_value(iter, 1))
+
+    def popup_show(self, widget, event):
+        if event.type == Gdk.EventType.BUTTON_RELEASE and event.button == 3:
+            self.dont_ignore_action.set_visible(False)
+            self.ignore_action.set_visible(False)
+            treestore, treepaths = self.project_view.get_selection().get_selected_rows()
+	    for treepath in treepaths:
+                iter = treestore.get_iter(treepath)
+                if treestore.get_value(iter, 1) in ScanProject.blacklist:
+                    self.dont_ignore_action.set_visible(True)
+                else:
+                    self.ignore_action.set_visible(True)
+            self.popup.popup(None, None, None, None, event.button, event.time)    
+            
 
     def refresh_clicked(self, button):
         self.canvas_area.set_current_page(0)
@@ -145,7 +215,7 @@ class Window:
             # add project_path to config to that program starts with latest
             # project opened
             gsm.set(gsm.PROJECT_PATH, self.project_path)
-            
+
             self.load_tree_view()
         elif response == Gtk.ResponseType.CANCEL:
             pass
@@ -217,6 +287,9 @@ class Window:
         # pickle ignored tags to a file
         with open('.ignored_tags', 'w') as f:
             pickle.dump(ignored_tags.ignored, f)
+
+        with open('.ignored_files', 'w') as f:
+            pickle.dump(ScanProject.blacklist, f)
 
         gsm.save()
         pmm.save()
