@@ -1,5 +1,7 @@
 import sys
 
+from gi.repository import Gdk
+
 from pylint.interfaces import IReporter
 from pylint.reporters import BaseReporter
 from gpylint.filters import SettingsFilter
@@ -59,13 +61,22 @@ class CanvasReporter(BaseReporter):
 
     __implements__ = IReporter
 
-    def __init__(self):
+    def __init__(self, progressbar):
         BaseReporter.__init__(self, sys.stdout)
         self.context = CanvasContext().dictionary
+        self.progressbar = progressbar
+        self.i = 0
         for class_box in self.context.values():
             class_box.clear_errors()
 
     def add_message(self, msg_id, location, msg):
+
+        if self.i % 50 == 0:
+            Gdk.threads_enter()
+            self.progressbar.pulse()
+            Gdk.threads_leave()
+        self.i += 1
+
 
         filepath, module, obj, line, col_offset = location
         if settings_filter.code_is_ignored(msg_id) or \
@@ -78,5 +89,10 @@ class CanvasReporter(BaseReporter):
             self.context[key].add_error(msg_id)
 
     def display_results(self, sect):
-       for class_box in self.context.values():
+        Gdk.threads_enter()
+        self.progressbar.set_visible(False)
+
+
+        for class_box in self.context.values():
            class_box.request_update()
+        Gdk.threads_leave()

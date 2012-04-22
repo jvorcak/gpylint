@@ -25,6 +25,7 @@ from gpylint.settings.PylintMessagesManager import PylintMessagesManager
 from gpylint.settings.GeneralSettingsManager import GeneralSettingsManager
 
 GObject.threads_init()
+Gdk.threads_init()
 
 wm = WindowManager()
 
@@ -64,7 +65,7 @@ class Window:
         self.project_view.set_model(self.treestore)
         renderer = Gtk.CellRendererText()
         #self.scanning_bar.pulse()
-        self.scanning_bar.set_visible(False)
+
   
         def renderId(treeviewcolumn, renderer, model, iter, data):
             if model.get_value(iter,1) in BlackList.blacklist:
@@ -130,6 +131,7 @@ class Window:
         self.window.maximize()
         self.window.show_all()
         self.refresh_diagram.set_visible(False)
+        self.scanning_bar.set_visible(False)
 
         self.builder.connect_signals(self)
 
@@ -141,6 +143,7 @@ class Window:
             self.project_path = gsm.get(gsm.PROJECT_PATH)
             self.load_tree_view()
 
+        
         # scan project and display UML on the canvas
         if self.project_path:
             self.canvas_area.set_current_page(0)
@@ -160,22 +163,17 @@ class Window:
         Gtk.main()
 
     def check_project(self, button):
-        #Gdk.threads_enter()
-        #self.scanning_bar.set_visible(True)
-        #Gdk.threads_leave()
+        self.scanning_bar.set_visible(True)
         pylintrc = None
         plugins = []
         linter = ProjectLinter()
         linter.set_project_path(self.project_path)
-        linter.init_linter(CanvasReporter(), pylintrc)
+        linter.init_linter(CanvasReporter(self.scanning_bar), pylintrc)
         linter.load_default_plugins()
         linter.load_plugin_modules(plugins)
         linter.read_config_file()
         linter.load_config_file()
         linter.start()
-        #Gdk.threads_enter()
-        #self.scanning_bar.set_visible(False)
-        #Gdk.threads_leave()
 
     def ignore_file(self, event):
         treestore, treepaths = self.project_view.get_selection().get_selected_rows()
@@ -221,7 +219,7 @@ class Window:
         window.show_all()
 
     def open_project(self, menu_item):
-        '''
+        '''    def exit(self, event, data):
         Open project and load project path
         Author: Jan Vorcak <vorcak@mail.muni.cz>
         '''
