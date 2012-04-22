@@ -6,6 +6,24 @@ Author: Jan Vorcak <vorcak@mail.muni.cz>
 from gpylint.canvas.items import AssociationLine
 from gaphas.aspect import Connector, ConnectionSink
 
+class CanvasContext(object):
+
+    '''
+    Is used to store information about items placed on the canvas and
+    their relation to the files
+    '''
+
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(CanvasContext, cls).__new__(\
+                    cls, *args, **kwargs)
+
+        return cls._instance
+
+    dictionary = {}
+
 
 def set_association(canvas, o1, o2, props):
     '''

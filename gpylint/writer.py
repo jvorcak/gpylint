@@ -8,7 +8,7 @@ from pylint.pyreverse.writer import DiagramWriter
 import gv
 
 from gpylint.canvas.items import ClassBox
-from gpylint.canvas import set_association
+from gpylint.canvas import set_association, CanvasContext
 
 class CanvasBackend(DotBackend):
     """ Canvas backend """
@@ -33,7 +33,7 @@ class CanvasBackend(DotBackend):
         gv.layout(g, 'dot')
         gv.render(g)
 
-        box_dict = {}
+        context = CanvasContext().dictionary
 
         node = gv.firstnode(g)
         while node is not None:
@@ -49,7 +49,7 @@ class CanvasBackend(DotBackend):
             class_box = ClassBox(props, width, height)
             class_box.matrix.translate(x, y)
             self.view.canvas.add(class_box)
-            box_dict[props['filepath'] + props['title']] = class_box
+            context[(props['filepath'], props['title'])] = class_box
             node = gv.nextnode(g, node)
 
         edge = gv.firstedge(g)
@@ -61,14 +61,14 @@ class CanvasBackend(DotBackend):
 
             head = gv.headof(edge)
             tail = gv.tailof(edge)
-            head_str = gv.getv(head, 'filepath') + gv.getv(head, 'label')
-            tail_str = gv.getv(tail, 'filepath') + gv.getv(tail, 'label')
-            box_dict[head_str]
-            box_dict[tail_str]
+            head_str = (gv.getv(head, 'filepath'), gv.getv(head, 'label'))
+            tail_str = (gv.getv(tail, 'filepath'), gv.getv(tail, 'label'))
+            context[head_str]
+            context[tail_str]
 
             edge = gv.nextedge(g, edge)
-            set_association(self.view.canvas, box_dict[head_str], \
-                    box_dict[tail_str], props)
+            set_association(self.view.canvas, context[head_str], \
+                    context[tail_str], props)
 
 
 class CanvasWriter(DiagramWriter):

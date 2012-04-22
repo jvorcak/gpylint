@@ -8,15 +8,17 @@ import os
 import cPickle as pickle
 
 from gi.repository import Gtk, Gdk, GObject
-from ConfigParser import ConfigParser
 
 # gaphas usage
 from gaphas import Canvas, GtkView
-from gaphas.tool import ToolChain, HoverTool, ConnectHandleTool, PanTool, ZoomTool, ItemTool, TextEditTool, RubberbandTool
+from gaphas.tool import ToolChain, HoverTool, ConnectHandleTool, PanTool, \
+        ZoomTool, ItemTool, TextEditTool, RubberbandTool
 
 # gpylint usage
 from gpylint.editor import ignored_tags
-from gpylint.scanner import ScanProject
+from gpylint.scanner import ScanProject, BlackList
+from gpylint.lint import ProjectLinter
+from gpylint.reporters import CanvasReporter
 from gpylint.canvas.tools import OpenEditorTool
 from gpylint.windows import WindowManager, SettingsWindow
 from gpylint.settings.PylintMessagesManager import PylintMessagesManager
@@ -32,7 +34,7 @@ gsm = GeneralSettingsManager()
 try:
     with open('.ignored_files', 'r') as f:
         try:
-            ScanProject.blacklist=pickle.load(f)
+            BlackList.blacklist=pickle.load(f)
         except EOFError:
             pass
 except IOError:
@@ -54,15 +56,18 @@ class Window:
         self.paned_left = self.builder.get_object('paned_left')
         self.project_view = self.builder.get_object('project_view')
         self.diagram_spinner = self.builder.get_object('diagram_spinner')
+        self.scanning_bar = self.builder.get_object('scanning_bar')
         self.canvas_area = self.builder.get_object('canvas_area')
         self.refresh_diagram = self.builder.get_object('refresh_diagram')
-
+        
         self.treestore = Gtk.TreeStore(str, str)
         self.project_view.set_model(self.treestore)
         renderer = Gtk.CellRendererText()
-
+        #self.scanning_bar.pulse()
+        self.scanning_bar.set_visible(False)
+  
         def renderId(treeviewcolumn, renderer, model, iter, data):
-            if model.get_value(iter,1) in ScanProject.blacklist:
+            if model.get_value(iter,1) in BlackList.blacklist:
                 renderer.set_property('foreground', 'red')
             else:
                 renderer.set_property('foreground', 'black')
@@ -154,17 +159,35 @@ class Window:
 
         Gtk.main()
 
+    def check_project(self, button):
+        #Gdk.threads_enter()
+        #self.scanning_bar.set_visible(True)
+        #Gdk.threads_leave()
+        pylintrc = None
+        plugins = []
+        linter = ProjectLinter()
+        linter.set_project_path(self.project_path)
+        linter.init_linter(CanvasReporter(), pylintrc)
+        linter.load_default_plugins()
+        linter.load_plugin_modules(plugins)
+        linter.read_config_file()
+        linter.load_config_file()
+        linter.start()
+        #Gdk.threads_enter()
+        #self.scanning_bar.set_visible(False)
+        #Gdk.threads_leave()
+
     def ignore_file(self, event):
         treestore, treepaths = self.project_view.get_selection().get_selected_rows()
 	for treepath in treepaths:
             iter = treestore.get_iter(treepath)
-            ScanProject.blacklist.append(treestore.get_value(iter, 1))
+            BlackList.blacklist.append(treestore.get_value(iter, 1))
 
     def dont_ignore_file(self, event):
         treestore, treepaths = self.project_view.get_selection().get_selected_rows()
 	for treepath in treepaths:
             iter = treestore.get_iter(treepath)
-            ScanProject.blacklist.remove(treestore.get_value(iter, 1))
+            BlackList.blacklist.remove(treestore.get_value(iter, 1))
 
     def popup_show(self, widget, event):
         if event.type == Gdk.EventType.BUTTON_RELEASE and event.button == 3:
@@ -173,7 +196,7 @@ class Window:
             treestore, treepaths = self.project_view.get_selection().get_selected_rows()
 	    for treepath in treepaths:
                 iter = treestore.get_iter(treepath)
-                if treestore.get_value(iter, 1) in ScanProject.blacklist:
+                if treestore.get_value(iter, 1) in BlackList.blacklist:
                     self.dont_ignore_action.set_visible(True)
                 else:
                     self.ignore_action.set_visible(True)
@@ -289,7 +312,7 @@ class Window:
             pickle.dump(ignored_tags.ignored, f)
 
         with open('.ignored_files', 'w') as f:
-            pickle.dump(ScanProject.blacklist, f)
+            pickle.dump(BlackList.blacklist, f)
 
         gsm.save()
         pmm.save()

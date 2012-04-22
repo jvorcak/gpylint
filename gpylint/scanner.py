@@ -12,6 +12,24 @@ from pylint.pyreverse.utils import insert_default_options
 
 import writer
 
+class BlackList(object):
+
+    '''
+    Is used to store information about items placed on the canvas and
+    their relation to the files
+    '''
+
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(BlackList, cls).__new__(\
+                    cls, *args, **kwargs)
+
+        return cls._instance
+
+    blacklist = []
+
 class ScannerCommand(ConfigurationMixIn):
     """base class providing common behaviour for pyreverse commands"""
 
@@ -36,7 +54,7 @@ class ScannerCommand(ConfigurationMixIn):
         sys.path.insert(0, os.getcwd())
         try:
             project = self.manager.project_from_files(args, black_list= \
-                    map(os.path.relpath, ScanProject.blacklist))
+                    map(os.path.relpath, BlackList.blacklist))
             linker = Linker(project, tag=True)
             handler = DiadefsHandler(self.config)
             diadefs = handler.get_diadefs(project, linker)
@@ -47,14 +65,12 @@ class ScannerCommand(ConfigurationMixIn):
         diadefs = filter(lambda x: x.TYPE == 'class', diadefs)
 
         # update GUI
-        Gdk.threads_init()
+        Gdk.threads_enter()
         self.callback()
-        Gdk.threads_leave()
         writer.CanvasWriter(self.view, self.config).write(diadefs)
+        Gdk.threads_leave()
 
 class ScanProject(Thread):
-
-    blacklist = []
 
     """pyreverse main class"""
     def __init__(self, view, args, callback):

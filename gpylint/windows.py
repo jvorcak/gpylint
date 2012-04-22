@@ -3,7 +3,7 @@ from gi.repository import Gtk
 
 from logilab.astng.builder import MANAGER as LOGILAB_MANAGER
 
-from gpylint.lint import GPyLinter
+from gpylint.lint import TextBufferLinter
 from gpylint.editor import GeditEditor, VimEditor
 from gpylint.reporters import EditorReporter
 from gpylint.settings.PylintMessagesManager import PylintMessagesManager
@@ -64,7 +64,7 @@ class CodeWindow:
         self._editor.clear_tags()
         plugins = []
         pylintrc = None
-        linter = GPyLinter()
+        linter = TextBufferLinter()
         linter.init_linter(EditorReporter(self._editor), pylintrc)
         linter.set_scanning_items(self._scanning_label, self._spinner)
         linter.load_default_plugins()

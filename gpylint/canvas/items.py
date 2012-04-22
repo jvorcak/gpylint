@@ -1,3 +1,5 @@
+from pylint.lint import MSG_TYPES
+
 from gaphas.item import Element, NW, SW, NE, SE, Line
 from gaphas.connector import Handle, PointPort
 from gaphas.solver import STRONG, VERY_WEAK, VERY_STRONG
@@ -55,7 +57,10 @@ class Box(Element):
         if context.hovered:
             c.set_source_rgba(.8,.8,1, .8)
         else:
-            c.set_source_rgba(.96, .82, 0.65)
+            if self.is_error:
+                c.set_source_rgba(.85, .6, 0.6)
+            else:
+                c.set_source_rgba(.96, .82, 0.65)
         c.fill()
         c.set_source_rgba(0,0,0)
         c.rectangle(nw.x, nw.y, self.width, self.height)
@@ -225,9 +230,22 @@ class ClassBox(Box):
         super(ClassBox, self).__init__(width, height)
         self.properties = props
 
+    errors = {}
+
+    is_error = property(lambda x: sum(x.errors.values())>0)
     filepath = property(lambda x: x.properties['filepath'])
     title = property(lambda x: x.properties['title'])
     lineno = property(lambda x: x.properties['lineno'])
+
+    def add_error(self, error):
+        etype = error[0]
+        if etype in self.errors:
+            self.errors[etype] += 1
+        else:
+            self.errors[etype] = 1
+
+    def clear_errors(self):
+        self.errors = {}
 
     def draw(self, context):
         # count the size of the Box
@@ -244,6 +262,14 @@ class ClassBox(Box):
         c = context.cairo
         x,y = self._central_handle.pos
         text_align(c, x, 10, str(self.title), 0, 0)
+
+        count = sum(self.errors.values())
+        if count > 0:
+            text_align(c, x, 30, str(self.get_error_string()), 0, 0)
+
+    def get_error_string(self):
+        count = sum(self.errors.values())
+        return str(count) + ' errors'
 
     def _create_handle_and_port(self):
         handle = Handle(strength=VERY_STRONG)

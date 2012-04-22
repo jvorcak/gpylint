@@ -1,4 +1,3 @@
-from gi.repository import Gdk
 from threading import Thread
 from StringIO import StringIO
 
@@ -10,9 +9,11 @@ from logilab.common.interface import implements
 from logilab.astng.builder import ASTNGBuilder
 from logilab.astng import MANAGER
 
+from gpylint.scanner import BlackList
+
 class GPyLinter(Thread):
 
-    def __init(self):
+    def __init__(self):
         super(GPyLinter, self).__init__()
 
     def init_linter(self, reporter, pylintrc):
@@ -30,6 +31,26 @@ class GPyLinter(Thread):
     def load_config_file(self):
         self.linter.load_config_file()
 
+    def run(self):
+        pass
+
+class ProjectLinter(GPyLinter):
+
+    def set_project_path(self, project_path):
+        self.project_path = project_path
+
+    def run(self):
+        self.linter.config.black_list = BlackList().blacklist
+        args = self.linter.load_command_line_configuration([self.project_path])
+        self.linter.check(args)
+
+class TextBufferLinter(GPyLinter):
+
+    '''
+    Linter for running pylint on TextBuffer instance
+    Author: Jan Vorcak <vorcak@mail.muni.cz>
+    '''
+
     def set_buffer(self, buff):
         self.buff = buff
 
@@ -38,9 +59,6 @@ class GPyLinter(Thread):
         self.spinner = spinner
 
     def run(self):
-        self._check_text_buffer(self.buff)
-
-    def _check_text_buffer(self, buff):
         '''
         Author: Jan Vorcak <vorcak@mail.muni.cz>
         Run pylint on input from GtkTextBuffer
@@ -62,8 +80,8 @@ class GPyLinter(Thread):
             checker.open()
             if implements(checker, IASTNGChecker):
                 walker.add_checker(checker)
-        source = buff.get_text(buff.get_start_iter(), buff.get_end_iter(), \
-                True)
+        source = self.buff.get_text(self.buff.get_start_iter(), \
+                self.buff.get_end_iter(), True)
 
         self.linter.base_name = 'textbuffername'
         self.linter.base_file = 'textbufferpath'
