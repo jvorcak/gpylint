@@ -1,8 +1,10 @@
+from os.path import exists, isdir, normpath, join, dirname
+from logilab.common.modutils import modpath_from_file, file_from_modpath, get_module_files
 from threading import Thread
 from StringIO import StringIO
 
 from pylint.lint import PyLinter
-from pylint.utils import PyLintASTWalker
+from pylint.utils import PyLintASTWalker, expand_modules
 from pylint.interfaces import IASTNGChecker, IRawChecker
 
 from logilab.common.interface import implements
@@ -11,13 +13,37 @@ from logilab.astng import MANAGER
 
 from gpylint.scanner import BlackList
 
+class IgnoreLinter(PyLinter):
+
+    '''
+    Class extends PyLinter functionality and adds filtering functionality
+    '''
+
+    def expand_files(self, modules):
+        """get modules and errors from a list of modules and handle errors
+        """
+        result, errors = expand_modules(modules, [''])
+        result = filter(self.blacklist_result, result)
+        for error in errors:
+            message = modname = error["mod"]
+            key = error["key"]
+            self.set_current_module(modname)
+            if key == "F0001":
+                message = str(error["ex"]).replace(os.getcwd() + os.sep, '')
+            self.add_message(key, args=message)
+        return result
+
+    def blacklist_result(self, item):
+        return not any([item['path'].startswith(ignored_item) \
+             for ignored_item in BlackList().blacklist])
+
 class GPyLinter(Thread):
 
     def __init__(self):
         super(GPyLinter, self).__init__()
 
     def init_linter(self, reporter, pylintrc):
-        self.linter = PyLinter(reporter=reporter, pylintrc=pylintrc)
+        self.linter = IgnoreLinter(reporter=reporter, pylintrc=pylintrc)
 
     def load_default_plugins(self):
         self.linter.load_default_plugins()
@@ -40,7 +66,6 @@ class ProjectLinter(GPyLinter):
         self.project_path = project_path
 
     def run(self):
-        self.linter.config.black_list = BlackList().blacklist
         args = self.linter.load_command_line_configuration([self.project_path])
         self.linter.check(args)
 
