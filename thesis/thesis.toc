@@ -26,6 +26,8 @@
 \contentsline {section}{\numberline {5.1}\slshape Cie\IeC {\v l}}{17}{section*.11}
 \contentsline {section}{\numberline {5.2}\slshape Zd\IeC {\^o}vodnenie v\IeC {\'y}beru kni\IeC {\v z}n\IeC {\'\i }c a n\IeC {\'a}strojov pre implement\IeC {\'a}ciu}{17}{section*.11}
 \contentsline {section}{\numberline {5.3}\slshape Anal\IeC {\'y}za a n\IeC {\'a}vrh}{18}{section*.11}
-\contentsline {section}{\numberline {5.4}\slshape Aplik\IeC {\'a}cia jednotliv\IeC {\'y}ch n\IeC {\'a}strojov}{18}{section*.11}
-\contentsline {section}{\numberline {5.5}\slshape Vyhodnotenie}{18}{section*.11}
-\contentsline {chapter}{\numberline {6}\bfseries Z\IeC {\'a}ver}{19}{section*.11}
+\contentsline {section}{\numberline {5.4}\slshape Aplik\IeC {\'a}cia jednotliv\IeC {\'y}ch n\IeC {\'a}strojov}{19}{section*.11}
+\contentsline {subsection}{\numberline {5.4.1}\rmfamily Aplik\IeC {\'a}cia n\IeC {\'a}stroja Pyreverse}{19}{section*.12}
+\contentsline {subsection}{\numberline {5.4.2}\rmfamily Aplik\IeC {\'a}cia n\IeC {\'a}stroja Pylint}{20}{section*.12}
+\contentsline {section}{\numberline {5.5}\slshape Vyhodnotenie}{21}{section*.12}
+\contentsline {chapter}{\numberline {6}\bfseries Z\IeC {\'a}ver}{22}{section*.12}

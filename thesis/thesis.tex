@@ -470,14 +470,58 @@ else:
 		
 		Backend systému bude zabezpečovať program Pylint, nakoľko je dostupný na všetkých platformách a je dlhodobo používaný a otestovaný. Fakt že je implementovaný do viacerých populárnych IDE potvrdzuje prítomnosť výborne navrhnutej API. Okrem generovania chýb poskytuje taktiež služby Pyreverse, vďaka ktorým bude možné naimplementovať generovanie diagramu tried a modulov.
 		
-		Nakoľko bude ako grafické prostredie použitá knižnica GTK+ je jednoduché použiť ako editor Gedit komponentu, ktorú ponúka táto knižnica. Nakoľko ale nechcem obmedziť program len na jeden druh editoru vytvorím jednoduché rozhranie pomocou ktorého naimplementujem napríklad editor Vim a umožním implementovať ostatné editory v prípade potreby. V prípade editorov je nutné aby boli schopné zobrazovať na chybových miestach príslušné značky. V prípade Gedit editoru využijeme jeho funkcionalitu značiek. V prípade editoru Vim využijeme možnosť zvýraznenia určitých riadkov.
+		Nakoľko bude ako grafické prostredie použitá knižnica GTK+ je jednoduché použiť ako editor GtkSourceView komponentu, ktorú ponúka táto knižnica. Nakoľko ale nechcem obmedziť program len na jeden druh editoru vytvorím jednoduché rozhranie pomocou ktorého naimplementujem napríklad editor Vim a umožním implementovať ostatné editory v prípade potreby. V prípade editorov je nutné aby boli schopné zobrazovať na chybových miestach príslušné značky. V prípade GtkSourceView editoru využijeme jeho funkcionalitu značiek. V prípade editoru Vim využijeme možnosť zvýraznenia určitých riadkov.
 		
 		Pre zobrazenie grafu modulov a tried využijeme knižnicu Gaphas dostupnú pre GTK+. Knižnica nám pomôže vizualizovať výsledky analýzy. Jej jediným nedostatkom je neprítomnosť prvkov pre UML. Prvky pre zobrazenie tried, modulov a funkcií bude nutné doprogramovať manuálne.
 
 
 	\section{Analýza a návrh}
+	
+	Nakoľko program využíva vnútornú štruktúru viacerých programov a knižníc, úlohou anlýzy je vhodne navrhnúť spôsob ich využitia. Nasledujúci DFD diagram popisuje základný tok dát v aplikácií. 	
+	
+	\begin{figure}[htb]
+	 \centering
+	 \includegraphics[width=\textwidth]{images/dfd_main}
+	\end{figure}
+	
+Pri spustení programu užívateľ zvolí cestu k projektu pomocou grafického rozhrania alebo ako parameter na príkazovom riadku. Ten sa predá triede, ktorá používa metódy z knižnice Pyreverse. Vygenerovaná štruktúra reprezentujúca diagram sa predá knižnici Graphviz, ktorá rozhodne o pozíciách jednotlivých elementov diagramu tak aby bol diagram čo najprehľadnejší. Pre každý element v štruktúre diagramu sa vytvorí objekt knižnice Gaphas, ktorý sa vykreslí na plátne. Referencia na diagram a položky na plátne je uložená ako kontext plátna pre neskoršie využitie. Pri spustení analýzy kódu projektu sa pomocou Pylint knižnice vygenerujú chybové hlásenia, prefiltrujú sa tak aby sa užívateľovi nezobrazovali hlásenia, ktoré v minulosti zablokoval. Následne pomocou kontextu plátna predajú informácie o počte nájdených chýb a informáciách o nich priamo jednotlivým položkám na plátne a zabezpečia ich prekreslenie. Tieto položky si uchovávajú napríklad aj aj informácie o pozícií v súbore. Po kliknutí na položku plátna sa vytvorí nové okno s editorom podľa aktuálnych nastavení. Pri kontrole zdrojového kódu danej triedy sa pošle požiadavka danému editoru, ktorý sa stará o zobrazovanie chýb.
 
+	
 	\section{Aplikácia jednotlivých nástrojov}
+	Pre požiadavky aplikácie sme potrebovali vytvoriť triedy využívajúce alebo upravujúce funkcionalitu jednotlivých nástrojov. V nasledujúcej podkapitole popíšeme využitie jednotlivých knižních a ich implementáciu v našom projekte.
+	
+		\subsection{Aplikácia nástroja Pyreverse}	
+			Pri popise nástroja Pyreverse sme poukázali na hlavnú kostru programu Pyreverse, ktorá vracia diagram tried, predávaný triede zodpovednej za zápis. Vytvorili sme teda triedu ScannerCommand, ktorá spúšťa kostru programu Pyreverse v samostatnom vlákne, prefiltruje výsledky pre potreby aplikácie a výsledky predá zapisujúcej triede, ktorú naimplementujeme.
+			
+			Triedu zodpovednú za zápis na plátno sme nazvali CanvasWriter. Táto trieda  implementuje metódu get\_values(self, obj), ktorá rozhoduje aké informácie budú predané jednotlivýcm položkám na plátne. V tejto metóde teda rozhodneme, ktoré údaje od programu Pyreverse predáme k dalšiemu spracovaniu. Inak len deleguje funkcionalitu na triedu CanvasBackend.
+		
+			Trieda CanvasBackend rozširuje triedu DotBackend z programu Pylint. Všetky výstupy tak generuje do dot formátu, ktoré v prekrytej metóde generate(self, filename) použijeme ako vstup pre knižnicu Gaphas. 
+			
+			Vďaka nej dostaneme pozície jednotlivých elementov na plátne tak aby bol výsledný graf prehľadný a uložíme potrebné informácie do kontextu plátna. Daný graf následne vykreslíme na plátno.
+	
+
+	\begin{figure}[htb]
+	 \centering
+	 \includegraphics[width=\textwidth]{images/dfd_diagram}
+	\end{figure}
+
+	
+		\subsection{Aplikácia nástroja Pylint}
+
+		Nástroj Pylint využívame dvomi rôznymi spôsobmi. Potrebujeme jednak preskenovať celý projekt, aby sme chyby pre jednotlivé triedy vykreslili na plátno a zároveň potrebujeme preskenovať práve otvorený súbor. Pre každý tento účel vytvoríme triedy implementujúce funkcionalitu triedy PyLinter pomocou kompozície, ktoré budú bežať v samostnatnom vlákne. 
+		
+		Pri kontrole samostatného súboru funkcionalitu analýzy chýb rieši každý editor samostatne. V nasledujúcom odseku popíšeme spôsob akým túto funkcionalitu implementuje grafický editor využívajúci komponentu GtkSourceView. Ten vytvorí inštanciu triedy TextBufferLinter, ktorú sme naimplementovali tak aby jednotlivým triedam kontrolujúcim kód predala obsah textového bufferu, ktorý obdržala pri inicializácií. Nakoľko každá inštancia triedy PyLinter potrebuje triedu zodpovednú za výstup výsledkov naimplementovali sme triedu EditorReporter.
+		
+		Trieda EditorReporter po obdržaní chybovej správy skontroluje, či nieje užívateľom blokovaná. Ak blokovaná nieje vykreslí chybu v zdrojovom kóde.
+		
+
+	
+	\begin{figure}[htb]
+	 \centering
+	 \includegraphics[width=\textwidth]{images/dfd_editor}
+	\end{figure}
+
+
 		
 	\section{Vyhodnotenie}	
 
