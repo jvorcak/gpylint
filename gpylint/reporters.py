@@ -69,14 +69,12 @@ class CanvasReporter(BaseReporter):
         for class_box in self.context.values():
             class_box.clear_errors()
 
+    def update_progressbar(self, ratio):
+        Gdk.threads_enter()
+        self.progressbar.set_fraction(ratio)
+        Gdk.threads_leave()
+
     def add_message(self, msg_id, location, msg):
-
-        if self.i % 50 == 0:
-            Gdk.threads_enter()
-            self.progressbar.pulse()
-            Gdk.threads_leave()
-        self.i += 1
-
 
         filepath, module, obj, line, col_offset = location
         if settings_filter.code_is_ignored(msg_id) or \
