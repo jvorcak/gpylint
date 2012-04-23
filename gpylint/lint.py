@@ -1,4 +1,5 @@
 import os
+from gi.repository import Gdk
 from threading import Thread
 from StringIO import StringIO
 
@@ -105,10 +106,10 @@ class TextBufferLinter(GPyLinter):
         @param buff - instance of GtkTextBuffer to be checked
         '''
 
-#        Gdk.threads_init()
-#        self.spinner.set_visible(True)
-#        self.label.set_visible(True)
-#        Gdk.threads_leave()
+        Gdk.threads_enter()
+        self.spinner.set_visible(True)
+        self.label.set_visible(True)
+        Gdk.threads_leave()
 
         walker = PyLintASTWalker(self.linter)
 
@@ -142,7 +143,7 @@ class TextBufferLinter(GPyLinter):
         for checker in checkers:
             checker.close()
 
-#        Gdk.threads_init()
-#        self.spinner.set_visible(False)
-#        self.label.set_visible(False)
-#        Gdk.threads_leave()
+        Gdk.threads_enter()
+        self.spinner.set_visible(False)
+        self.label.set_visible(False)
+        Gdk.threads_leave()

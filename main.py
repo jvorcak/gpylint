@@ -59,13 +59,12 @@ class Window:
         self.scanning_bar = self.builder.get_object('scanning_bar')
         self.canvas_area = self.builder.get_object('canvas_area')
         self.refresh_diagram = self.builder.get_object('refresh_diagram')
-        
+
         self.treestore = Gtk.TreeStore(str, str)
         self.project_view.set_model(self.treestore)
         renderer = Gtk.CellRendererText()
-        #self.scanning_bar.pulse()
 
-  
+
         def renderId(treeviewcolumn, renderer, model, iter, data):
             if model.get_value(iter,1) in BlackList.blacklist:
                 renderer.set_property('foreground', 'red')
@@ -128,8 +127,7 @@ class Window:
         # exit on close
         self.window.connect("delete-event", self.exit)
         self.window.maximize()
-        self.window.show_all()
-        self.refresh_diagram.set_visible(False)
+        self.window.show()
         self.scanning_bar.set_visible(False)
 
         self.builder.connect_signals(self)
@@ -142,7 +140,7 @@ class Window:
             self.project_path = gsm.get(gsm.PROJECT_PATH)
             self.load_tree_view()
 
-        
+
         # scan project and display UML on the canvas
         if self.project_path:
             self.canvas_area.set_current_page(0)
@@ -176,13 +174,13 @@ class Window:
 
     def ignore_file(self, event):
         treestore, treepaths = self.project_view.get_selection().get_selected_rows()
-	for treepath in treepaths:
+        for treepath in treepaths:
             iter = treestore.get_iter(treepath)
             BlackList.blacklist.append(treestore.get_value(iter, 1))
 
     def dont_ignore_file(self, event):
         treestore, treepaths = self.project_view.get_selection().get_selected_rows()
-	for treepath in treepaths:
+        for treepath in treepaths:
             iter = treestore.get_iter(treepath)
             BlackList.blacklist.remove(treestore.get_value(iter, 1))
 
@@ -191,14 +189,14 @@ class Window:
             self.dont_ignore_action.set_visible(False)
             self.ignore_action.set_visible(False)
             treestore, treepaths = self.project_view.get_selection().get_selected_rows()
-	    for treepath in treepaths:
+            for treepath in treepaths:
                 iter = treestore.get_iter(treepath)
                 if treestore.get_value(iter, 1) in BlackList.blacklist:
                     self.dont_ignore_action.set_visible(True)
                 else:
                     self.ignore_action.set_visible(True)
             self.popup.popup(None, None, None, None, event.button, event.time)    
-            
+
 
     def refresh_clicked(self, button):
         self.canvas_area.set_current_page(0)
