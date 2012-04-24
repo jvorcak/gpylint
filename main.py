@@ -3,6 +3,7 @@
 This is the module which wrapps GUI functionality and executes main gtk Window
 Author: Jan Vorcak <vorcak@mail.muni.cz>
 '''
+import gtk
 import os
 import cPickle as pickle
 import argparse
