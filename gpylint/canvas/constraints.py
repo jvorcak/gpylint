@@ -37,8 +37,9 @@ class HandlesConstraint(Constraint):
                 get_cross_point(two_boxes_line, (SW, NW)) or \
                 get_cross_point(two_boxes_line, (NE, SE))
 
-        _update(updated_pos[0], point[0])
-        _update(updated_pos[1], point[1])
+        if point:
+            _update(updated_pos[0], point[0])
+            _update(updated_pos[1], point[1])
 
 def get_cross_point(line1, line2):
     '''

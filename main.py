@@ -3,10 +3,10 @@
 This is the module which wrapps GUI functionality and executes main gtk Window
 Author: Jan Vorcak <vorcak@mail.muni.cz>
 '''
-import gtk
 import os
 import cPickle as pickle
 import argparse
+import logging
 
 parser = argparse.ArgumentParser(description='GPylint help')
 parser.add_argument('path', default=None, nargs='?', help='Path of the project to be scanned')
@@ -39,10 +39,21 @@ wm = WindowManager()
 pmm = PylintMessagesManager()
 gsm = GeneralSettingsManager()
 
+logger = logging.getLogger('main')
+hdlr = logging.FileHandler('/var/tmp/gpylint.log', 'w')
+formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+hdlr.setFormatter(formatter)
+logger.addHandler(hdlr)
+logger.setLevel(logging.INFO)
+
+logger.info('Initializing application')
+
 try:
     with open('.ignored_files', 'r') as f:
         try:
+            logger.info('Parsing blacklist from cPickled data')
             BlackList.blacklist=pickle.load(f)
+            logger.info('Loaded BlackList = %s' % BlackList().blacklist)
         except EOFError:
             pass
 except IOError:
@@ -150,10 +161,12 @@ class Window:
             self.project_path = gsm.get(gsm.PROJECT_PATH)
             self.load_tree_view()
 
+        logger.info('Application GUI sucesfully loaded')
 
         # scan project and display UML on the canvas
         if self.project_path:
             self.canvas_area.set_current_page(0)
+            logger.info('Starting to scan project %s' % self.project_path)
             t=ScanProject(self.view, [self.project_path], self.show_graph)
             t.start()
 

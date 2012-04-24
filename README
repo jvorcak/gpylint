@@ -2,3 +2,22 @@ Dependencies:
     * graphviz-python
     * pylint
     * python-simplegeneric
+
+If you have problems scanning big project you should apply this patch 
+logilab.astng.inspector
+
+diff --git a/inspector.py b/inspector.py
+--- a/inspector.py
++++ b/inspector.py
+@@ -252,11 +252,11 @@ class Linker(IdGeneratorMixIn, LocalsVis
+            # analyze dependencies
+            fullname = '%s.%s' % (basename, name[0])
+            if fullname.find('.') > -1:
+                try:
+                    # XXX: don't use get_module_part, missing package precedence
+-                    fullname = get_module_part(fullname)
++                    fullname = get_module_part(fullname, node.root().file)
+                except ImportError:
+                    continue
+            if fullname != basename:
+                self._imported_module(node, fullname, relative)

@@ -1,4 +1,4 @@
-from gi.repository import Gtk, GtkSource, Vte, GLib
+from gi.repository import Gtk, Gdk, GtkSource, Vte, GLib
 
 class IgnoredTags(object):
 

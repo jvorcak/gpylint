@@ -51,7 +51,9 @@ class ScannerCommand(ConfigurationMixIn):
             return
         # insert current working directory to the python path to recognize
         # dependencies to local modules even if cwd is not in the PYTHONPATH
+        sys.path.insert(0, args[0])
         sys.path.insert(0, os.getcwd())
+
         try:
             project = self.manager.project_from_files(args, black_list= \
                     map(os.path.relpath, BlackList.blacklist))
