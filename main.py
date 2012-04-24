@@ -5,8 +5,15 @@ Author: Jan Vorcak <vorcak@mail.muni.cz>
 '''
 import os
 import cPickle as pickle
+import argparse
 
+parser = argparse.ArgumentParser(description='GPylint help')
+parser.add_argument('path', default=None, nargs='?', help='Path of the project to be scanned')
+args = parser.parse_args()
+
+from gi import require_version
 from gi.repository import Gtk, Gdk, GObject
+require_version('Gtk', '3.0')
 
 # gaphas usage
 from gaphas import Canvas, GtkView
@@ -135,8 +142,10 @@ class Window:
         self.project_path = None
         self.canvas_area.set_current_page(1)
 
-        # init lastest project
-        if gsm.get(gsm.PROJECT_PATH):
+        if args.path:
+            self.project_path = args.path
+            self.load_tree_view()
+        elif gsm.get(gsm.PROJECT_PATH):
             self.project_path = gsm.get(gsm.PROJECT_PATH)
             self.load_tree_view()
 

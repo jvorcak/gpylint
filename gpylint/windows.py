@@ -21,6 +21,8 @@ class CodeWindow:
     def __init__(self, filename, filepath):
         '''
         Initialize builder class and reads objects from xml
+        @param filename - filename to be used
+        @param filepath - source code filepath
         '''
         self._builder = Gtk.Builder()
         self._builder.add_from_file('windows/code_window.xml')
@@ -38,6 +40,7 @@ class CodeWindow:
         self._builder.connect_signals(self)
         self._filename = filename
         self._filepath = filepath
+    
         if gsm.get(gsm.EDITOR) == gsm.VISUAL_EDITOR:
             self._editor = GeditEditor(filename, filepath, self)
         else:
