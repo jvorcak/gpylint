@@ -21,13 +21,15 @@
 \contentsline {subsection}{\numberline {4.1.3}\rmfamily Zhrnutie}{12}{section*.9}
 \contentsline {section}{\numberline {4.2}\slshape Anal\IeC {\'y}za n\IeC {\'a}stroja Pylint}{13}{section*.9}
 \contentsline {subsection}{\numberline {4.2.1}\rmfamily Pylint}{13}{section*.10}
-\contentsline {subsection}{\numberline {4.2.2}\rmfamily Pyreverse}{15}{lstlisting.4.-12}
-\contentsline {chapter}{\numberline {5}\bfseries Implement\IeC {\'a}cia n\IeC {\'a}stroja}{17}{lstlisting.4.-13}
-\contentsline {section}{\numberline {5.1}\slshape Cie\IeC {\v l}}{17}{section*.11}
-\contentsline {section}{\numberline {5.2}\slshape Zd\IeC {\^o}vodnenie v\IeC {\'y}beru kni\IeC {\v z}n\IeC {\'\i }c a n\IeC {\'a}strojov pre implement\IeC {\'a}ciu}{17}{section*.11}
-\contentsline {section}{\numberline {5.3}\slshape Anal\IeC {\'y}za a n\IeC {\'a}vrh}{18}{section*.11}
-\contentsline {section}{\numberline {5.4}\slshape Aplik\IeC {\'a}cia jednotliv\IeC {\'y}ch n\IeC {\'a}strojov}{19}{section*.11}
-\contentsline {subsection}{\numberline {5.4.1}\rmfamily Aplik\IeC {\'a}cia n\IeC {\'a}stroja Pyreverse}{19}{section*.12}
-\contentsline {subsection}{\numberline {5.4.2}\rmfamily Aplik\IeC {\'a}cia n\IeC {\'a}stroja Pylint}{20}{section*.12}
-\contentsline {section}{\numberline {5.5}\slshape Vyhodnotenie}{21}{section*.12}
-\contentsline {chapter}{\numberline {6}\bfseries Z\IeC {\'a}ver}{22}{section*.12}
+\contentsline {subsection}{\numberline {4.2.2}\rmfamily Pyreverse}{14}{lstlisting.4.-12}
+\contentsline {chapter}{\numberline {5}\bfseries Implement\IeC {\'a}cia n\IeC {\'a}stroja}{16}{lstlisting.4.-13}
+\contentsline {section}{\numberline {5.1}\slshape Cie\IeC {\v l}}{16}{section*.11}
+\contentsline {section}{\numberline {5.2}\slshape Zd\IeC {\^o}vodnenie v\IeC {\'y}beru kni\IeC {\v z}n\IeC {\'\i }c a n\IeC {\'a}strojov pre implement\IeC {\'a}ciu}{16}{section*.11}
+\contentsline {section}{\numberline {5.3}\slshape Anal\IeC {\'y}za a n\IeC {\'a}vrh}{17}{section*.11}
+\contentsline {section}{\numberline {5.4}\slshape Aplik\IeC {\'a}cia jednotliv\IeC {\'y}ch n\IeC {\'a}strojov}{18}{section*.11}
+\contentsline {subsection}{\numberline {5.4.1}\rmfamily Aplik\IeC {\'a}cia n\IeC {\'a}stroja Pyreverse}{18}{section*.12}
+\contentsline {subsection}{\numberline {5.4.2}\rmfamily Aplik\IeC {\'a}cia n\IeC {\'a}stroja Pylint}{19}{section*.12}
+\contentsline {subsection}{\numberline {5.4.3}\rmfamily Aplik\IeC {\'a}cia n\IeC {\'a}stroja Gaphas}{20}{section*.12}
+\contentsline {subsection}{\numberline {5.4.4}\rmfamily Aplik\IeC {\'a}cia ostatn\IeC {\'y}ch n\IeC {\'a}strojov}{21}{section*.12}
+\contentsline {chapter}{\numberline {6}\bfseries Z\IeC {\'a}ver}{23}{section*.12}
+\contentsline {chapter}{\numberline {7}\bfseries Pr\IeC {\'\i }loha}{24}{section*.12}

@@ -378,31 +378,7 @@ Pri náleze chyby checker zaregistruje chybu pomocou metódy add\_message zdeden
         self.linter.add_message(msg_id, line, node, args)
 \end{lstlisting}
 
-		Pylint obsahuje nasledujúce triedy typu checker
-		
-			    \begin{list}{•}{}
-					\item ImportsChecker
-					\item NewStyleConflictChecker
-					\item ClassChecker
-					\item BaseChecker
-					\item BaseRawChecker
-					\item BasicErrorChecker
-					\item NameChecker
-					\item DocStringChecker
-					\item PassChecker
-					\item MisdesignChecker
-					\item ExceptionsChecker
-					\item TypeChecker
-					\item LoggingChecker
-					\item StringFormatChecker
-					\item FormatChecker
-					\item VariablesChecker
-					\item RawMetricsChecker
-					\item SimilarChecker
-    			\end{list}
-		
-
-		
+	
 		\item Reporters
 		Tento typ tried je odvodený od triedy pylint.reporters.BaseReporter. Triedy slúžia na formátovanie a vygenerovanie samotného výstupu. Pri inicializácií sa triede pomocou metódy set\_output nastaví výstupný prúd, ktorý je v predvolenom režime nastavený na štandardný výstup. Je ale možné ho predefinovať na súbor alebo iný typ výstupného prúdu. Tak ako pri triedach typu checker je aj v tomto prípade veľmi jednoduché vytvoriť vlastnú implementáciu.
 		
@@ -513,7 +489,6 @@ Pri spustení programu užívateľ zvolí cestu k projektu pomocou grafického r
 		Pri kontrole samostatného súboru funkcionalitu analýzy chýb rieši každý editor samostatne. V nasledujúcom odseku popíšeme spôsob akým túto funkcionalitu implementuje grafický editor využívajúci komponentu GtkSourceView. Ten vytvorí inštanciu triedy TextBufferLinter, ktorú sme naimplementovali tak aby jednotlivým triedam kontrolujúcim kód predala obsah textového bufferu, ktorý obdržala pri inicializácií. Nakoľko každá inštancia triedy PyLinter potrebuje triedu zodpovednú za výstup výsledkov naimplementovali sme triedu EditorReporter.
 		
 		Trieda EditorReporter po obdržaní chybovej správy skontroluje, či nieje užívateľom blokovaná. Ak blokovaná nieje vykreslí chybu v zdrojovom kóde.
-		
 
 	
 	\begin{figure}[htb]
@@ -521,9 +496,85 @@ Pri spustení programu užívateľ zvolí cestu k projektu pomocou grafického r
 	 \includegraphics[width=\textwidth]{images/dfd_editor}
 	\end{figure}
 
-
 		
-	\section{Vyhodnotenie}	
+	Pri kontrole celého projektu sa vytvorí inštancia triedy ProjectLinter, ktorej sme nastavili triedu CanvasReporter ako triedu zodpovednú za výstup. Trieda CanvasReporter pri obdržaní správy 
+ skontroluje či nieje blokovaná a následne ju nastaví jednotlivým položkám na plátne. Tie obdrží jeho kontextu.
+ 
+		\subsection{Aplikácia nástroja Gaphas}
+		
+		Nástroj Gaphas použijeme na vykresľovanie diagramu tried na plátno. Jeho jedinou nevýhodou je prítomnosť len základných elementov ako úsečka, obdĺžnik alebo text. Vďaka výbornému návrhu knižnice Gaphas ich ale môžeme využiť na zostavenie vlastných elementov. Z triedy gaphas.item.Element odvodíme triedu Box, ktorá bude reprezentovať triedu. Bude taktiež uchovávať informácie o triede ktorú reprezentuje ako je cesta k súboru, názov, číslo riadku jej výskytu ale aj informácie o chybách, ktoré detekujeme.
+		
+		Vzťahy medzi triedami vykreslíme za pomoci triedy AssociationLine, ktorá spája dve triedy Box. Podľa vzťahu medzi jednotlivými triedami vykreslí vzor typický pre špecializáciu alebo kompozíciu.
+		
+		Jednotlivé komponenty reprezentujúce triedy môžeme po plátne presúvať. Z tohto dôvodu sme boli nútení vytvoriť obmedzenie, ktoré bude udržiavať asociačnú čiaru medzi danými dvomi triedami. Triedu sme nazvali HandlesConstraint. Pri pohybe komponenty si parametricky vyjadrí úsečku medzi stredmi spájaných objektov a nájde prieniky medzi ich hranami. Na dané prieniky umiestni konce spájanej úsečky.
+		
+		Nakoľko chceme vytvoriť rozhranie čo najviac interaktívne potrebujeme nástroj, ktorý po dvojkliku na položku plátna zobrazí jej zdrojový kód v nastavenom editore.
+		
+		Knižnica Gaphas ponúka výborné rozhranie pre tvorbu vlastného nástroja. Nástroj OpenEditorTool odvodíme od triedy gaphas.tool.Tool a v metóde on\_double\_click(self, event) pristúpime k vykreslenej položke na plátne nad ktorou je umiestnená myš. Z jej atribútov zistíme cestu k zdrojovému kódu a kód zobrazíme.
 
+		\subsection{Aplikácia ostatných nástrojov}
+		
+	Pre potreby aplikácie potrebujeme využiť nasledujúce nástroje:
+	
+				\begin{list}{•}{}
+					\item ConfigParser
+					\item cPickle
+					\item OptionParser
+    			\end{list}
+	
+	 Pre uloženie nastavenií použijeme triedu ConfigParser, ktorá umožnuje bezproblémovú prácu s nastaveniami. Jej chovanie sme pre aplikáciu prisôsobili vytvorením manažérov nastavení, ktoré implementujeme pomocou singleton návrhového vzoru. Takýmto spôsobom implementujeme nastavenia blokovania Pylint chýb, nastavenie použitého editora alebo uchovanie naposledy otvoreného projektu.
+	
+	Vlastnosťou nášho nástroja je aj ignorovanie konkrétnych chýb na jednotlivých riadkoch, ktoré ale nechceme ignorovať globálne. Informácie o nich teda uložíme do datového kontajneru, ktorý pomocou nástroja cPickle serializujeme. Pri opätovnom spustení aplikácie prevedieme deserializáciu deserializovaný objekt neskôr použijeme na prefiltrovanie chybových správ.
+	
+		OptionParser použijeme na získanie informácií, ktoré užívateľ zadá na príkazovom riadku.    Trieda OptionParser poskytuje veľmi jednoduché rozhranie na prácu s parametrami príkazového riadka ako je napríklad automatická generácia nápovedy. Pomocou príkazového riadku bude môcť užívateľ zadať napríklad cestu k projektu, ktorý sa má otvoriť alebo typ použitého editoru.
+				
 \chapter{Záver}
+
+	Našou úlohou bolo analyzovať nástroje na analýzu a vizualizáciu Python kódu a vytvoriť nástroj, ktorý poskytuje funkcionalitu, ktorú doteraz vytvorené nástroje neposkytujú.
+	
+	Po predstavení základných vlastností jazyka Python sme preskúmali vlastnosti jeho introspekcie, ktoré nám vytvorili prehľad o možnosti preskúmať vlastnosti jednotlivých objektov.
+	
+	Neskôr sme si predstavili nástroje na analýzu kódu PEP8, PyChecker a Pylint a zhodnotili sme, že najvhodnejší nástroj pre backend našej aplikácie je program Pylint, nakoľko je ľahko prispôsobiteľný a okrem detekcie chýb poskytuje funcionalitu vygenerovania grafu. Navyše je široko používaný či už ako samostatná utilita alebo implementáciou v rôzných IDE moduloch.
+	
+	Analyzovali sme taktiež existujúce nástroje na vizualizáciu kódu a zhodnotili sme ich či už po stránke funkcionality, kompaktnosti alebo iných kritérií.
+	
+	Nakoniec sme preskúmali a vybrali nástroje, ktoré nám pomohli k ľahšej implementácií projektu a projekt sme navrhli a implementovali.
+	
+	Implementovaný program nám umožnuje zobraziť ľubovoľný Python projekt v podobe UML diagramu.  Výsledný UML diagram sa výzorovo podobá na diagram vygenerovaný programom Graphviz no poskytuje nám okrem iného interaktívnosť a možnosť zobraziť chyby v rámci hierarchie modulov a tried. Pomocou nastavení máme možnosť ignorovať či už celé skupiny chýb, konkrétne typy chýb či ignorovať chyby len na konkrétnych riadkoch. Zdrojové kódy môžeme upravovať v jednoduchých editoroch vizuálneho alebo konzolového charakteru. Aj vďaka zvoleniu vhodných knižníc program veľmi dobre škáluje a je spustený a inicializovaný za krátky čas.
+	
+	Medzi nevýhody programu môžeme zaradiť fakt, že slúži na analýzu len jedného programovacieho jazyka alebo fakt, že niektorá funkcionalita ako je napríklad filtrácia chýb by mohla byť implementovaná na nižšej úrovni aby bola prístupná aj spustením z príkazového riadku bez spustenia grafického rozhrania.
+	
+	V budúcnosti sa program bude môcť spustiť na iných operačných systémoch medri ktoré patrí napríklad aj Microsoft Windows. Ďalej bude možné viac prispôsobiť program pre jednoduchšie editovanie zdrojových kódov akými sú napríklad klávesové skratky a iné vlastnosti pokročilých editorov.
+	
+	
+	
+
+
+\chapter{Príloha}
+
+
+
+		Pylint obsahuje nasledujúce triedy typu checker
+		
+			    \begin{list}{•}{}
+					\item ImportsChecker
+					\item NewStyleConflictChecker
+					\item ClassChecker
+					\item BaseChecker
+					\item BaseRawChecker
+					\item BasicErrorChecker
+					\item NameChecker
+					\item DocStringChecker
+					\item PassChecker
+					\item MisdesignChecker
+					\item ExceptionsChecker
+					\item TypeChecker
+					\item LoggingChecker
+					\item StringFormatChecker
+					\item FormatChecker
+					\item VariablesChecker
+					\item RawMetricsChecker
+					\item SimilarChecker
+    			\end{list}
+
 \end{document}
