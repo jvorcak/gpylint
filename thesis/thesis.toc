@@ -4,7 +4,7 @@
 \contentsline {section}{\numberline {2.1}\slshape Charekteristika jazyka Python}{3}{section*.6}
 \contentsline {section}{\numberline {2.2}\slshape Introspekcia v~jazyku Python}{3}{section*.6}
 \contentsline {chapter}{\numberline {3}\bfseries N\IeC {\'a}stroje na anal\IeC {\'y}zu k\IeC {\'o}du pre jazyk Python}{7}{lstlisting.2.-9}
-\contentsline {section}{\numberline {3.1}\slshape N\IeC {\'a}stroje anal\IeC {\'y}zu k\IeC {\'o}du Python projektu}{7}{section*.7}
+\contentsline {section}{\numberline {3.1}\slshape N\IeC {\'a}stroje na detekciu ch\IeC {\'y}b pre jazyk Python}{7}{section*.7}
 \contentsline {subsection}{\numberline {3.1.1}\rmfamily PEP8}{7}{section*.7}
 \contentsline {subsection}{\numberline {3.1.2}\rmfamily PyChecker}{7}{section*.7}
 \contentsline {subsection}{\numberline {3.1.3}\rmfamily Pylint}{8}{section*.7}

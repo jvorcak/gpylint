@@ -37,11 +37,11 @@
 \end{ThesisDeclaration}
 
 \begin{ThesisThanks}
-Rád by som poďakoval Mgr. Marekovi Grácovi, vedúcemu tejto bakalárskej práce a Ing. Martinovi Sivákovi za podnetné návrhy pri jej tvorbe ale najmä za možnosť zrealizovať tento projekt formou bakalárskej práce.
+Ďakujem Mgr. Marekovi Grácovi, vedúcemu tejto bakalárskej práce a Ing. Martinovi Sivákovi za podnetné návrhy pri jej tvorbe, ale aj za možnosť zrealizovať tento projekt formou bakalárskej práce.
 \end{ThesisThanks}
 
 \begin{ThesisAbstract}
-Cieľom tejto bakalárskej práce je návrh a implementácia nástroja, ktorý umožní analyzovať a následne vizualizovať projekt v jazyku Python. V úvodnej kapitole si predstavíme jazyk Python a jeho vlastnosti, ako aj existujúce nástroje na jeho analýzu. Neskôr navrhneme a analyzujeme knižnice, ktoré nám pomôžu k samotnej implementácii. Nástroj navrhneme, a v poslednej kapitole popíšeme jeho implementáciu a zhodnotíme dosiahnuté výsledky.
+Cieľom tejto bakalárskej práce je návrh a implementácia nástroja, ktorý umožní analyzovať a následne vizualizovať projekt v jazyku Python. V úvodnej kapitole si predstavíme jazyk Python a jeho vlastnosti, ako aj existujúce nástroje na jeho analýzu. Neskôr navrhneme a analyzujeme knižnice, ktoré nám pomôžu k samotnej implementácii. Nástroj navrhneme a v poslednej kapitole popíšeme jeho implementáciu a zhodnotíme dosiahnuté výsledky.
 \end{ThesisAbstract}
 
 \begin{ThesisKeyWords}
@@ -55,11 +55,11 @@ analýza kódu, Python, Pylint, Pyreverse, Gtk, Graphviz, UML, introspekcia
 
 \chapter{Úvod}
 
-	V dnešnej dobe sa čoraz viac pri vývoji aplikácií kladie dôraz nielen na samotné programovanie, ale najmä na analýzu a návrh systému, dôkladné otestovanie, ale aj spätnú analýzu samotného kódu. Z~tohto dôvodu vzniká pre takmer každý programovací či značkovací jazyk množstvo nástrojov, ktoré nám pomáhajú automaticky objaviť potencionálne chyby či porušenie konvencií v~zdrojových kódoch. Častokrát sú tieto nástroje síce efektívne a ľahko konfigurovateľné, no najmä výstupom nie príliš užívateľsky prívetivé. Asi najpoužívanejším nástrojom na analýzu kódu v~jazyku Python je konzolová utilita Pylint~\cite{pylint}. Pokiaľ si chceme vďaka tomuto programu vytvoriť obraz o~väčšom projekte, nestačí nám iba textový výstup, no je potrebné tieto dáta interaktívne vizualizovať.
+	V dnešnej dobe sa pri vývoji aplikácií čoraz viac kladie dôraz nielen na samotné programovanie, ale najmä na analýzu a návrh systému, dôkladné otestovanie, ale aj spätnú analýzu samotného kódu. Z~tohto dôvodu vzniká pre takmer každý programovací či značkovací jazyk množstvo nástrojov, ktoré nám pomáhajú automaticky objaviť potencionálne chyby či porušenie konvencií v~zdrojových kódoch. Častokrát sú tieto nástroje síce efektívne a ľahko konfigurovateľné, no najmä výstupom nie príliš užívateľsky prívetivé. Asi najpoužívanejším nástrojom na analýzu kódu v~jazyku Python je konzolová utilita Pylint~\cite{pylint}. Pokiaľ si chceme vďaka tomuto programu vytvoriť obraz o~väčšom projekte, nestačí nám iba textový výstup, no je potrebné tieto dáta interaktívne vizualizovať.
 	
 	Cieľom tejto bakalárskej práce je analyzovať nástroje na analýzu a vizualizáciu Python kódu ako aj vlastnosti jazyka, ako je napríklad introspekcia, ktoré nám túto analýzu umožnujú. Z~dôvodu vizualizácie je nutné taktiež naštudovať základy modelovania hierarchických štruktúr v~jazyku UML. Výstupom bakalárskej práce je nástroj, ktorý poskytuje funkcionalitu, ktorú v~existujúcich nástrojoch nenájdeme. Nástroj teda zjednoduší orientáciu najmä vo väčšom projekte pomocou vizualizácie dát najmä za pomoci vygenerovania interaktívnych UML diagramov. Program bude taktiež dopĺňať funkcionalitu, ktorú nám klasický program Pylint neumožnuje, ako je napríklad filtrácia falošných poplachov. 
 
-	Práca pozostáva zo šiestich kapitol. V~druhej kapitole si predstavíme jazyk Python a jeho vlastnosti, neskôr rozanalyzujeme existujúce nástroje na analýzu kódu v~jazyku Python a ich nedostatky. Pred implementačnou časťou si predstavíme knižnice, ktoré nám neskôr pomôžu pri implementácií nástroja ako je napríklad knižnica Gaphas~\cite{gaphas} na vykresľovanie grafiky v~GTK+~\cite{gtkplus} programoch alebo samotný Pylint. Nasledovať bude kapitola o~návrhu a samotenej implementácii. Nakoniec zhodnotíme, či implementovaný nástroj spĺňa určené požiadavky či už po stránke funkcionality, alebo škálovateľnosti a navrhneme zmeny na jeho zlepšenie.
+	Práca pozostáva zo šiestich kapitol. V~druhej kapitole si predstavíme jazyk Python a jeho vlastnosti, neskôr rozanalyzujeme existujúce nástroje na analýzu kódu v~jazyku Python a ich nedostatky. Pred implementačnou časťou si predstavíme knižnice, ktoré nám neskôr pomôžu pri implementácií nástroja, ako je napríklad knižnica Gaphas~\cite{gaphas} na vykresľovanie grafiky v~GTK+~\cite{gtkplus} programoch alebo samotný Pylint. Nasledovať bude kapitola o~návrhu a samotenej implementácii. Nakoniec zhodnotíme, či implementovaný nástroj spĺňa určené požiadavky či už po stránke funkcionality, alebo škálovateľnosti a navrhneme zmeny na jeho zlepšenie.
  
 
 
@@ -217,7 +217,7 @@ Out[17]: True
 
 
 \chapter{Nástroje na analýzu kódu pre jazyk Python}
-	\section{Nástroje analýzu kódu Python projektu}	
+	\section{Nástroje na detekciu chýb pre jazyk Python}	
 
 
 \subsection{PEP8}
@@ -309,7 +309,7 @@ Gaphas API využíva MVC návrhový vzor a môžeme ho teda rozdeliť na 3 hlavn
     	\item \texttt{api/items} -- položky \texttt{gaphas.item.Element} a \texttt{gaphas.\\item.Line} odvodené od triedy \texttt{gaphas.item.Item}, ktoré sú uchovávané a vykresľované na plátne.
     	Jednoduchým odvodením novej triedy z~\texttt{gaphas.item.Item} môžeme vytvoriť vlastný prvok na vykresľovanie
     	\item \texttt{api/connectors} -- v~tejto kategórií ide o~triedy \texttt{gaphas.\\connector.Handle} a \texttt{gaphas.connector.Port}, ktoré umožňujú spájať jednotlivé položky na plátne
-    	\item \texttt{api/solver} -- umožňuje definovať podmienku aspoň medzi dvomi premennými a a udržiavať túto podmienku ako pravdivú pri zmene premenných.
+    	\item \texttt{api/solver} -- umožňuje definovať podmienku aspoň medzi dvomi premennými a a udržiavať túto podmienku ako pravdivú pri zmene premenných
  		\item \texttt{api/constraint} -- obmedzenia pre premenné, ktoré sú zaregistrované na plátne. Každé obmedzenie obsahuje zoznam premenných, ktoré sú zaregistrované v~objekte typu \texttt{gaphas.solver.\\Solver}
  		\item \texttt{api/utils} -- obsahuje pomocné funkcie týkajúce sa najmä vykresľovania textu na plátno
     \end{list}
@@ -382,7 +382,7 @@ Pri náleze chyby checker zaregistruje chybu pomocou metódy \\\texttt{add\_mess
 
 	
 		\item Triedy typu Reporters -- 
-		Tento typ tried je odvodený od triedy \texttt{pylint.\\reporters.BaseReporter}. Triedy slúžia na formátovanie a vygenerovanie samotného výstupu. Pri inicializácií sa triede pomocou metódy \texttt{set\_output} nastaví výstupný prúd, ktorý je v~predvolenom režime nastavený na štandardný výstup. Je možné ho predefinovať na súbor alebo iný typ výstupného prúdu. Tak ako pri triedach typu \texttt{Checker}, je aj v~tomto prípade veľmi jednoduché vytvoriť vlastnú implementáciu.
+		Tento typ tried je odvodený od triedy \texttt{pylint.\\reporters.BaseReporter}. Triedy slúžia na formátovanie a vygenerovanie samotného výstupu. Pri inicializácii sa triede pomocou metódy \texttt{set\_output} nastaví výstupný prúd, ktorý je v~predvolenom režime nastavený na štandardný výstup. Je možné ho predefinovať na súbor alebo iný typ výstupného prúdu. Tak ako pri triedach typu \texttt{Checker}, je aj v~tomto prípade veľmi jednoduché vytvoriť vlastnú implementáciu.
 		
 		V~programe Pylint ale nájdeme pomerne široký výber výstupov.
 		
@@ -439,7 +439,7 @@ else:
 \chapter{Implementácia nástroja}
 	\section{Cieľ}
 	
-	Našim cieľom je naimplementovať nástroj, ktorý bude schopný prehľadne a interaktívne zobrazovať chyby v~kóde v~rámci hierarchie modulov, tried a funkcií a taktiež ich zobraziť v~zdrojovom kóde bez nutnosti pregenerovania. Nástroj bude zobrazovať zdrojové kódy a umožnovať ich editáciu, pričom nebude obmedzený na jeden typ editoru. Taktiež by mal fungovať v~plnej funkčnosti multiplatformne.
+	Naším cieľom je naimplementovať nástroj, ktorý bude schopný prehľadne a interaktívne zobrazovať chyby v~kóde v~rámci hierarchie modulov, tried a funkcií a taktiež ich zobraziť v~zdrojovom kóde bez nutnosti pregenerovania. Nástroj bude zobrazovať zdrojové kódy a umožnovať ich editáciu, pričom nebude obmedzený na jeden typ editoru. Taktiež by mal fungovať v~plnej funkčnosti multiplatformne.
 	
 	\section{Zdôvodnenie výberu knižníc a nástrojov pre implementáciu}
 		Program bude implementovaný ako aplikácia s~grafickým rozhraním v~programovacom jazyku Python, nakoľko vďaka jeho introspekcii je väčšina programov a knižníc pre jeho analýzu naprogramovaná práve v~ňom.
@@ -488,7 +488,7 @@ Pri spustení programu užívateľ zvolí cestu k~projektu pomocou grafického r
 	
 		\subsection{Aplikácia nástroja Pylint}
 
-		Nástroj Pylint využívame dvomi rôznymi spôsobmi. Potrebujeme jednak preskenovať celý projekt, aby sme chyby pre jednotlivé triedy vykreslili na plátno a zároveň potrebujeme preskenovať práve otvorený súbor. Pre každý tento účel vytvoríme triedy implementujúce funkcionalitu triedy \texttt{PyLinter} pomocou kompozície, ktoré budú bežať v~samostnatnom vlákne. 
+		Nástroj Pylint využívame dvomi rôznymi spôsobmi. Potrebujeme jednak preskenovať celý projekt, aby sme chyby pre jednotlivé triedy vykreslili na plátno a zároveň potrebujeme preskenovať práve otvorený súbor. Pre každý tento účel vytvoríme triedy implementujúce funkcionalitu triedy \texttt{PyLinter} pomocou kompozície, ktoré budú bežať v~samostatnom vlákne. 
 		
 		Pri kontrole samostatného súboru funkcionalitu analýzy chýb rieši každý editor samostatne. V~nasledujúcom odseku popíšeme spôsob, akým túto funkcionalitu implementuje grafický editor využívajúci komponentu GtkSourceView~\cite{gtksourceview}. Ten vytvorí inštanciu triedy \texttt{TextBufferLinter}, ktorú sme naimplementovali tak, aby jednotlivým triedam kontrolujúcim kód predala obsah textového bufferu, ktorý obdržala pri inicializácii. Nakoľko každá inštancia triedy \texttt{PyLinter} potrebuje triedu zodpovednú za výstup výsledkov, naimplementovali sme triedu \texttt{EditorReporter}.
 		
