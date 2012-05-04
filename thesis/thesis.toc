@@ -9,10 +9,10 @@
 \contentsline {subsection}{\numberline {3.1.2}\rmfamily PyChecker}{7}{section*.7}
 \contentsline {subsection}{\numberline {3.1.3}\rmfamily Pylint}{8}{section*.7}
 \contentsline {subsection}{\numberline {3.1.4}\rmfamily Zhrnutie}{8}{section*.7}
-\contentsline {section}{\numberline {3.2}\slshape N\IeC {\'a}stroje na vizualiz\IeC {\'a}ciu Python projektu}{9}{section*.7}
+\contentsline {section}{\numberline {3.2}\slshape N\IeC {\'a}stroje na vizualiz\IeC {\'a}ciu projektu v jazyku Python}{9}{section*.7}
 \contentsline {subsection}{\numberline {3.2.1}\rmfamily Pyreverse}{9}{section*.8}
 \contentsline {subsection}{\numberline {3.2.2}\rmfamily Pylint-gui}{9}{lstlisting.3.-10}
-\contentsline {subsection}{\numberline {3.2.3}\rmfamily Implement\IeC {\'a}cia programu Pylint v~IDE}{10}{lstlisting.3.-10}
+\contentsline {subsection}{\numberline {3.2.3}\rmfamily Implement\IeC {\'a}cia programu Pylint do v\IeC {\'y}vojov\IeC {\'y}ch prostred\IeC {\'\i }}{10}{lstlisting.3.-10}
 \contentsline {subsection}{\numberline {3.2.4}\rmfamily Zhrnutie}{10}{lstlisting.3.-10}
 \contentsline {chapter}{\numberline {4}\bfseries Anal\IeC {\'y}za n\IeC {\'a}strojov potrebn\IeC {\'y}ch k~implement\IeC {\'a}cii}{11}{lstlisting.3.-10}
 \contentsline {section}{\numberline {4.1}\slshape Anal\IeC {\'y}za n\IeC {\'a}stroja Gaphas}{11}{section*.9}
@@ -32,4 +32,6 @@
 \contentsline {subsection}{\numberline {5.4.3}\rmfamily Aplik\IeC {\'a}cia n\IeC {\'a}stroja Gaphas}{20}{figure.5.3}
 \contentsline {subsection}{\numberline {5.4.4}\rmfamily Aplik\IeC {\'a}cia ostatn\IeC {\'y}ch n\IeC {\'a}strojov}{21}{figure.5.3}
 \contentsline {chapter}{\numberline {6}\bfseries Z\IeC {\'a}ver}{23}{figure.5.3}
-\contentsline {chapter}{\numberline {A}\bfseries Screenshot grafick\IeC {\'e}ho rozhrania}{26}{chapter*.13}
+\contentsline {section}{\numberline {6.1}\slshape Popis implementovan\IeC {\'e}ho n\IeC {\'a}stroja}{23}{section*.13}
+\contentsline {chapter}{\numberline {A}\bfseries Screenshot grafick\IeC {\'e}ho rozhrania}{27}{chapter*.14}
+\contentsline {chapter}{\numberline {B}\bfseries Obsah prilo\IeC {\v z}en\IeC {\'e}ho CD}{30}{figure.A.4}
