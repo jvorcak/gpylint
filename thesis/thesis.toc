@@ -3,35 +3,35 @@
 \contentsline {chapter}{\numberline {2}\bfseries Python}{3}{chapter*.5}
 \contentsline {section}{\numberline {2.1}\slshape Charekteristika jazyka Python}{3}{section*.6}
 \contentsline {section}{\numberline {2.2}\slshape Introspekcia v~jazyku Python}{3}{section*.6}
-\contentsline {chapter}{\numberline {3}\bfseries N\IeC {\'a}stroje na anal\IeC {\'y}zu k\IeC {\'o}du pre jazyk Python}{7}{lstlisting.2.-9}
-\contentsline {section}{\numberline {3.1}\slshape N\IeC {\'a}stroje na detekciu ch\IeC {\'y}b pre jazyk Python}{7}{section*.7}
-\contentsline {subsection}{\numberline {3.1.1}\rmfamily PEP8}{7}{section*.7}
-\contentsline {subsection}{\numberline {3.1.2}\rmfamily PyChecker}{7}{section*.7}
-\contentsline {subsection}{\numberline {3.1.3}\rmfamily Pylint}{8}{section*.7}
-\contentsline {subsection}{\numberline {3.1.4}\rmfamily Zhrnutie}{8}{section*.7}
-\contentsline {section}{\numberline {3.2}\slshape N\IeC {\'a}stroje na vizualiz\IeC {\'a}ciu projektu v jazyku Python}{9}{section*.7}
-\contentsline {subsection}{\numberline {3.2.1}\rmfamily Pyreverse}{9}{section*.8}
-\contentsline {subsection}{\numberline {3.2.2}\rmfamily Pylint-gui}{9}{lstlisting.3.-10}
-\contentsline {subsection}{\numberline {3.2.3}\rmfamily Implement\IeC {\'a}cia programu Pylint do v\IeC {\'y}vojov\IeC {\'y}ch prostred\IeC {\'\i }}{10}{lstlisting.3.-10}
-\contentsline {subsection}{\numberline {3.2.4}\rmfamily Zhrnutie}{10}{lstlisting.3.-10}
-\contentsline {chapter}{\numberline {4}\bfseries Anal\IeC {\'y}za n\IeC {\'a}strojov potrebn\IeC {\'y}ch k~implement\IeC {\'a}cii}{11}{lstlisting.3.-10}
-\contentsline {section}{\numberline {4.1}\slshape Anal\IeC {\'y}za n\IeC {\'a}stroja Gaphas}{11}{section*.9}
-\contentsline {subsection}{\numberline {4.1.1}\rmfamily Z\IeC {\'a}kladn\IeC {\'a} charakteristika n\IeC {\'a}stroja Gaphas}{11}{section*.9}
-\contentsline {subsection}{\numberline {4.1.2}\rmfamily Popis Gaphas API}{11}{section*.9}
-\contentsline {subsection}{\numberline {4.1.3}\rmfamily Zhrnutie}{12}{section*.9}
-\contentsline {section}{\numberline {4.2}\slshape Anal\IeC {\'y}za n\IeC {\'a}stroja Pylint}{13}{section*.9}
-\contentsline {subsection}{\numberline {4.2.1}\rmfamily Pylint}{13}{section*.10}
-\contentsline {subsection}{\numberline {4.2.2}\rmfamily Pyreverse}{14}{lstlisting.4.-12}
-\contentsline {chapter}{\numberline {5}\bfseries Implement\IeC {\'a}cia n\IeC {\'a}stroja}{16}{lstlisting.4.-13}
-\contentsline {section}{\numberline {5.1}\slshape Cie\IeC {\v l}}{16}{section*.11}
-\contentsline {section}{\numberline {5.2}\slshape Zd\IeC {\^o}vodnenie v\IeC {\'y}beru kni\IeC {\v z}n\IeC {\'\i }c a n\IeC {\'a}strojov pre implement\IeC {\'a}ciu}{16}{section*.11}
-\contentsline {section}{\numberline {5.3}\slshape Anal\IeC {\'y}za a n\IeC {\'a}vrh}{17}{section*.11}
-\contentsline {section}{\numberline {5.4}\slshape Aplik\IeC {\'a}cia jednotliv\IeC {\'y}ch n\IeC {\'a}strojov}{18}{figure.5.1}
-\contentsline {subsection}{\numberline {5.4.1}\rmfamily Aplik\IeC {\'a}cia n\IeC {\'a}stroja Pyreverse}{18}{section*.12}
-\contentsline {subsection}{\numberline {5.4.2}\rmfamily Aplik\IeC {\'a}cia n\IeC {\'a}stroja Pylint}{19}{figure.5.2}
-\contentsline {subsection}{\numberline {5.4.3}\rmfamily Aplik\IeC {\'a}cia n\IeC {\'a}stroja Gaphas}{20}{figure.5.3}
-\contentsline {subsection}{\numberline {5.4.4}\rmfamily Aplik\IeC {\'a}cia ostatn\IeC {\'y}ch n\IeC {\'a}strojov}{21}{figure.5.3}
-\contentsline {chapter}{\numberline {6}\bfseries Z\IeC {\'a}ver}{23}{figure.5.3}
-\contentsline {section}{\numberline {6.1}\slshape Popis implementovan\IeC {\'e}ho n\IeC {\'a}stroja}{23}{section*.13}
-\contentsline {chapter}{\numberline {A}\bfseries Screenshot grafick\IeC {\'e}ho rozhrania}{27}{chapter*.14}
-\contentsline {chapter}{\numberline {B}\bfseries Obsah prilo\IeC {\v z}en\IeC {\'e}ho CD}{30}{figure.A.4}
+\contentsline {chapter}{\numberline {3}\bfseries N\IeC {\'a}stroje na anal\IeC {\'y}zu k\IeC {\'o}du pre jazyk Python}{8}{lstlisting.2.-10}
+\contentsline {section}{\numberline {3.1}\slshape N\IeC {\'a}stroje na detekciu ch\IeC {\'y}b pre jazyk Python}{8}{section*.7}
+\contentsline {subsection}{\numberline {3.1.1}\rmfamily PEP8}{8}{section*.7}
+\contentsline {subsection}{\numberline {3.1.2}\rmfamily PyChecker}{8}{section*.7}
+\contentsline {subsection}{\numberline {3.1.3}\rmfamily Pylint}{9}{section*.7}
+\contentsline {subsection}{\numberline {3.1.4}\rmfamily Zhrnutie}{9}{section*.7}
+\contentsline {section}{\numberline {3.2}\slshape N\IeC {\'a}stroje na vizualiz\IeC {\'a}ciu projektu v jazyku Python}{10}{section*.7}
+\contentsline {subsection}{\numberline {3.2.1}\rmfamily Pyreverse}{10}{section*.8}
+\contentsline {subsection}{\numberline {3.2.2}\rmfamily Pylint-gui}{10}{lstlisting.3.-11}
+\contentsline {subsection}{\numberline {3.2.3}\rmfamily Integr\IeC {\'a}cia programu Pylint do v\IeC {\'y}vojov\IeC {\'y}ch prostred\IeC {\'\i }}{11}{lstlisting.3.-11}
+\contentsline {subsection}{\numberline {3.2.4}\rmfamily Graphviz}{11}{lstlisting.3.-11}
+\contentsline {subsection}{\numberline {3.2.5}\rmfamily Zhrnutie}{12}{figure.3.1}
+\contentsline {chapter}{\numberline {4}\bfseries Anal\IeC {\'y}za n\IeC {\'a}strojov potrebn\IeC {\'y}ch k~implement\IeC {\'a}cii}{13}{figure.3.1}
+\contentsline {section}{\numberline {4.1}\slshape Anal\IeC {\'y}za n\IeC {\'a}stroja Gaphas}{13}{section*.9}
+\contentsline {subsection}{\numberline {4.1.1}\rmfamily Z\IeC {\'a}kladn\IeC {\'a} charakteristika n\IeC {\'a}stroja Gaphas}{13}{section*.9}
+\contentsline {subsection}{\numberline {4.1.2}\rmfamily Popis Gaphas API}{13}{section*.9}
+\contentsline {subsection}{\numberline {4.1.3}\rmfamily Zhrnutie}{15}{section*.9}
+\contentsline {section}{\numberline {4.2}\slshape Anal\IeC {\'y}za n\IeC {\'a}stroja Pylint}{15}{section*.9}
+\contentsline {subsection}{\numberline {4.2.1}\rmfamily Pylint}{15}{section*.10}
+\contentsline {subsection}{\numberline {4.2.2}\rmfamily Pyreverse}{17}{lstlisting.4.-16}
+\contentsline {chapter}{\numberline {5}\bfseries Implement\IeC {\'a}cia n\IeC {\'a}stroja}{19}{lstlisting.4.-16}
+\contentsline {section}{\numberline {5.1}\slshape Cie\IeC {\v l}}{19}{section*.11}
+\contentsline {section}{\numberline {5.2}\slshape Zd\IeC {\^o}vodnenie v\IeC {\'y}beru kni\IeC {\v z}n\IeC {\'\i }c a n\IeC {\'a}strojov pre implement\IeC {\'a}ciu}{19}{section*.11}
+\contentsline {section}{\numberline {5.3}\slshape Anal\IeC {\'y}za a n\IeC {\'a}vrh}{20}{section*.11}
+\contentsline {section}{\numberline {5.4}\slshape Aplik\IeC {\'a}cia jednotliv\IeC {\'y}ch n\IeC {\'a}strojov}{21}{figure.5.2}
+\contentsline {subsection}{\numberline {5.4.1}\rmfamily Aplik\IeC {\'a}cia n\IeC {\'a}stroja Pyreverse}{22}{section*.12}
+\contentsline {subsection}{\numberline {5.4.2}\rmfamily Aplik\IeC {\'a}cia n\IeC {\'a}stroja Pylint}{23}{figure.5.3}
+\contentsline {subsection}{\numberline {5.4.3}\rmfamily Aplik\IeC {\'a}cia n\IeC {\'a}stroja Gaphas}{24}{figure.5.4}
+\contentsline {subsection}{\numberline {5.4.4}\rmfamily Aplik\IeC {\'a}cia ostatn\IeC {\'y}ch n\IeC {\'a}strojov}{25}{figure.5.4}
+\contentsline {chapter}{\numberline {6}\bfseries Z\IeC {\'a}ver}{27}{figure.5.4}
+\contentsline {chapter}{\numberline {A}\bfseries Screenshot grafick\IeC {\'e}ho rozhrania}{32}{chapter*.13}
+\contentsline {chapter}{\numberline {B}\bfseries Obsah prilo\IeC {\v z}en\IeC {\'e}ho CD}{35}{figure.A.4}

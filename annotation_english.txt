@@ -1,0 +1,3 @@
+The aim of this bachelor thesis is design and implementation of tool, which will be able to analyze and visualize Python project.
+In the introduction part, we will introduce Python programming language and its features, and also existing tools for its analysis.
+Later, we will analyze libraries, which will help us with implementation. We will design the tool, in the last chapter, we will describe its implementation and evaluate achieved results.

@@ -13,7 +13,8 @@
 \usepackage{multirow}
 \usepackage{listing}
 \usepackage[protrusion=true, expansion, kerning]{microtype}
-\lstset{basicstyle=\ttfamily, breaklines=true, breakatwhitespace=false}
+\lstset{basicstyle=\ttfamily, breaklines=true, breakatwhitespace=false, numbers=left}
+\renewcommand\lstlistingname{Ukážka kódu}
 
 \thesistitle{Nástroje na analýzu kódu v~jazyku Python a vizualizácia ich výstupu}
 \thesissubtitle{Bakalárska práca}  
@@ -41,7 +42,7 @@
 \end{ThesisThanks}
 
 \begin{ThesisAbstract}
-Cieľom tejto bakalárskej práce je návrh a implementácia nástroja, ktorý umožní analyzovať a následne vizualizovať projekt v jazyku Python. V úvodnej kapitole si predstavíme jazyk Python a jeho vlastnosti, ako aj existujúce nástroje na jeho analýzu. Neskôr navrhneme a analyzujeme knižnice, ktoré nám pomôžu k samotnej implementácii. Nástroj navrhneme a v poslednej kapitole popíšeme jeho implementáciu a zhodnotíme dosiahnuté výsledky.
+Cieľom tejto bakalárskej práce je návrh a implementácia nástroja, ktorý umožní analyzovať a následne vizualizovať projekt v jazyku Python. V úvodnej kapitole si predstavíme jazyk Python a jeho vlastnosti, ako aj existujúce nástroje na jeho analýzu. Neskôr analyzujeme knižnice, ktoré nám pomôžu k samotnej implementácii. Nástroj navrhneme, v poslednej kapitole popíšeme jeho implementáciu a zhodnotíme dosiahnuté výsledky.
 \end{ThesisAbstract}
 
 \begin{ThesisKeyWords}
@@ -59,7 +60,7 @@ analýza kódu, Python, Pylint, Pyreverse, Gtk, Graphviz, UML, introspekcia
 	
 	Cieľom tejto bakalárskej práce je analyzovať nástroje na analýzu a vizualizáciu Python kódu ako aj vlastnosti jazyka, ako je napríklad introspekcia, ktoré nám túto analýzu umožnujú. Z~dôvodu vizualizácie je nutné taktiež naštudovať základy modelovania hierarchických štruktúr v~jazyku UML. Výstupom bakalárskej práce je nástroj, ktorý poskytuje funkcionalitu, ktorú v~existujúcich nástrojoch nenájdeme. Nástroj teda zjednoduší orientáciu najmä vo väčšom projekte pomocou vizualizácie dát najmä za pomoci vygenerovania interaktívnych UML diagramov. Program bude taktiež dopĺňať funkcionalitu, ktorú nám klasický program Pylint neumožnuje, ako je napríklad filtrácia falošných poplachov. 
 
-	Práca pozostáva zo šiestich kapitol. V~druhej kapitole si predstavíme jazyk Python a jeho vlastnosti, neskôr rozanalyzujeme existujúce nástroje na analýzu kódu v~jazyku Python a ich nedostatky. Pred implementačnou časťou si predstavíme knižnice, ktoré nám neskôr pomôžu pri implementácií nástroja, ako je napríklad knižnica Gaphas~\cite{gaphas} na vykresľovanie grafiky v~GTK+~\cite{gtkplus} programoch alebo samotný Pylint. Nasledovať bude kapitola o~návrhu a samotenej implementácii. Nakoniec zhodnotíme, či implementovaný nástroj spĺňa určené požiadavky či už po stránke funkcionality, alebo škálovateľnosti a navrhneme zmeny na jeho zlepšenie.
+	Práca pozostáva zo šiestich kapitol. V~druhej kapitole si predstavíme jazyk Python a jeho vlastnosti, neskôr rozanalyzujeme existujúce nástroje na analýzu kódu v~jazyku Python a ich nedostatky. Pred implementačnou časťou si predstavíme knižnice, ktoré nám neskôr pomôžu pri implementácií nástroja, ako je napríklad knižnica Gaphas~\cite{gaphas} na vykresľovanie grafiky v~GTK+~\cite{gtkplus} programoch alebo samotný Pylint. Nasledovať bude kapitola o~návrhu a samotnej implementácii. Nakoniec zhodnotíme, či implementovaný nástroj spĺňa určené požiadavky či už po stránke funkcionality, alebo škálovateľnosti a navrhneme zmeny na jeho zlepšenie.
  
 
 
@@ -88,14 +89,16 @@ Existuje viacero implementácií jazka Python. Medzi najznámejšie patria:
 \item PyPy
 \end{list}
 
-Najpožívanejšou a najpodporovanejšou je ale CPython. Každá z~implementácií sa môže líšiť špecifickými informáciami mimo štandardnej Python dokumentácie.
-Zdrojové kódy sú preložené do byte kódu a zvyčajne uložené v~\texttt{.pyc} alebo \texttt{.pyo} súboroch, ktoré sú neskôr spúšťané virtuálnym strojom.
+Najpožívanejšou a najpodporovanejšou implementáciou je ale CPython. Každá z~implementácií sa môže líšiť špecifickými vlastnosťami mimo štandardnej Python dokumentácie.
+Zdrojové kódy sú pri interpretácii preložené do byte kódu a zvyčajne uložené v~\texttt{.pyc} alebo \texttt{.pyo} súboroch, ktoré sú neskôr spúšťané virtuálnym strojom.
 
-	V~štandardnej knižnici je dostupných mnoho dátových typov, ako napríklad reálne a komplexné čísla, celé čísla s~neobmedzenou dĺžkou, znakové reťazce, zoznamy a slovníky. Dátové typy sú silno a dynamicky typované. Použitie nekompatibilného typu spôsobí vyvolanie výnimky. Python podporuje objektovo orientované programovanie vrátane viacnásobnej dedičnosti. Kód je sústredený do modulov a balíkov s~možnosťou importovať špecifický modul, triedu, funkciu alebo iný objekt. Za účelom ošetrenia chýb Python podporuje vyvolávanie a odchytávanie výnimiek. Automatická správa pamäti nahrádza nutnosť manuálne alokovať a uvoľnovať pamäť v~kóde.~\cite{pythonintro}
+	V~štandardnej knižnici je dostupných mnoho dátových typov, ako napríklad reálne a komplexné čísla, celé čísla s~neobmedzenou dĺžkou, znakové reťazce, zoznamy a slovníky. Dátové typy sú silno a dynamicky typované. Operácia nad nekompatibilným typom spôsobí vyvolanie výnimky.
+	
+	Python podporuje objektovo orientované programovanie vrátane viacnásobnej dedičnosti. Kód je sústredený do modulov a balíkov s~možnosťou importovať špecifický modul, triedu, funkciu alebo iný objekt. Za účelom ošetrenia chýb Python podporuje vyvolávanie a odchytávanie výnimiek. Automatická správa pamäti nahrádza nutnosť manuálne alokovať a uvoľnovať pamäť v~kóde.~\cite{pythonintro}
 
 
 	\section{Introspekcia v~jazyku Python}
-		Introspekcia je schopnosť preskúmať daný objekt a rozhodnúť o~jeho identite, vlastnostiach a schopnostiach. Jazyk Python podporuje rozsiahlu introspekciu objektov. Medzi hlavné informácie, ktoré potrebujeme o~objektoch v~jazyku Python zistiť, patrí ich meno, typ, identita, vlastnosti, schopnosti a ich pôvod. Jazyk Python ponúka množstvo nástrojov, ktoré nám tieto vlastnosti umožnujú zistiť. Môžeme ich rozdeliť do dvoch hlavných skupín. V~prvej sú funkcie či už zo štandardnej knižnice, alebo z~pomocných modulov, akým je napríklad modul \texttt{inspect}~\cite{inspectmodule}. Do druhej skupiny radíme atribúty objektov, ktoré priamo v~objekte uchovávajú užitočné informácie.
+		Introspekcia je schopnosť programovo preskúmať daný objekt a rozhodnúť o~jeho identite, vlastnostiach a schopnostiach. Jazyk Python podporuje rozsiahlu introspekciu objektov. Medzi hlavné informácie, ktoré potrebujeme o~objektoch v~jazyku Python zistiť, patrí ich meno, typ, identita, vlastnosti, schopnosti a ich pôvod. Jazyk Python ponúka množstvo nástrojov, ktoré nám tieto vlastnosti umožnujú zistiť. Môžeme ich rozdeliť do dvoch hlavných skupín. V~prvej sú funkcie či už zo štandardnej knižnice, alebo z~pomocných modulov, akým je napríklad modul \texttt{inspect}~\cite{inspectmodule}. Do druhej skupiny radíme atribúty objektov, ktoré uchovávajú užitočné informácie priamo v~objekte.
 		
 \begin{list}{•}{}
 		\item 
@@ -107,19 +110,52 @@ In [1]: print dir(__builtin__)[-10:]
 ['str', 'sum', 'super', 'tuple', 'type', 'unichr', 'unicode', 'vars', 'xrange', 'zip']
 \end{lstlisting}
 
-			 V~prípade, že je funkcia \texttt{dir()} použitá bez argumentov, vracia zoznam mien, ktoré sú momentálne definované.
+			 V~prípade, že je funkcia \texttt{dir()} použitá bez argumentov, vracia zoznam mien, ktoré sú momentálne definované. Zaujímavá je funkcia \texttt{locals()}, ktorá vracia slovník momentálne definovaných premenných a ich hodnôt.
+			 
+			 
+			 
 
 \begin{lstlisting}[language=python]
 In [2]: print dir()
 ['In', 'Out', '_', '__', '___', '__builtin__', '__builtins__', '__name__', '_dh', '_i', '_i1', '_i2', '_ih', '_ii', '_iii', '_oh', '_sh', 'exit', 'get_ipython', 'help', 'quit']
 
 \end{lstlisting}
+
+		\item 
+			Atribút \texttt{\_\_dict\_\_} uchováva slovník atribútov a metód daného objektu. Nie sú tu však zahrnuté metódy definované v triede, z ktorej bol objekt odvodený.
+			
+\begin{lstlisting}[language=python]
+In [13]: class A(object):
+   ....:     x=1
+   ....:     y=''
+   ....:     def helloWorld(self):
+   ....:         pass
+   ....:     
+
+In [14]: a=A()
+
+In [15]: a.__dict__
+Out[15]: {}
+
+In [16]: A.__dict__
+Out[16]: 
+<dictproxy {'__dict__': <attribute '__dict__' of 'A' objects>,
+ '__doc__': None,
+ '__module__': '__main__',
+ '__weakref__': <attribute '__weakref__' of 'A' objects>,
+ 'helloWorld': <function __main__.helloWorld>,
+ 'x': 1,
+ 'y': ''}>
+\end{lstlisting}
+
+		\item 
+			Funkcia \texttt{vars()} je bez argumentov ekvivalentná funkcii \texttt{locals()}. Pri použití s argumentom \texttt{x} je to ekvivalent \texttt{x.\_\_dict\_\_}.
 	
 
 		\item 
-			Atribút \texttt{\_\_doc\_\_} obsahuje komentáre, ktoré popisujú objekt. V~prípade, že prvý v~module, triede alebo v~metóde je znakový reťazec, je automaticky považovaný za \texttt{\_\_doc\_\_} atribút. V~opačnom prípade sa jeho hodnota nastaví na \texttt{None}. Hodnoty \texttt{\_\_doc\_\_} sa z~dôvodu kompaktnosti nevkladajú do byte kódu.
+			Atribút \texttt{\_\_doc\_\_} obsahuje komentáre, ktoré popisujú objekt. V~prípade, že prvý v~module, triede alebo v~metóde je znakový reťazec, je automaticky považovaný za \texttt{\_\_doc\_\_} atribút. V~opačnom prípade sa jeho hodnota nastaví na \texttt{None}. Pri použití optimalizácie sa hodnoty \texttt{\_\_doc\_\_} z~dôvodu kompaktnosti nevkladajú do byte kódu.
 			
-\begin{lstlisting}[language=python]
+\begin{lstlisting}
 In [3]: print __doc__.__doc__
 str(object) -> string
 
@@ -128,7 +164,7 @@ If the argument is a string, the return value is the same object.
 \end{lstlisting}
 
 		\item 
-			Atribút \texttt{\_\_name\_\_} obsahuje názov objektu odvodený z~jeho typu. Niektoré objekty, ako napríklad znakové reťazce, tento atribút neobsahujú. Tento atribút obsahujú napríklad moduly. V~prípade, že spúšťame skript priamo pomocou Python interpretu, je atribút \texttt{\_\_name\_\_} nastavený na hodnotu \texttt{\_\_main\_\_}, nakoľko Python interpret je považovaný za hlavný modul, a to aj v~prípade, že Python skript spúšťame z~príkazového riadku. Je teda často používaný na rozpoznanie, či daný modul len importujeme, alebo priamo spúšťame.
+			Atribút \texttt{\_\_name\_\_} obsahuje názov objektu odvodený z~jeho typu. Niektoré objekty, ako napríklad znakové reťazce, tento atribút neobsahujú. Tento atribút obsahujú napríklad moduly. V~prípade, že spúšťame skript priamo pomocou Python interpretu, je atribút \texttt{\_\_name\_\_} nastavený na hodnotu \texttt{'\_\_main\_\_'}, nakoľko Python interpret je považovaný za hlavný modul, a to aj v~prípade, že Python skript spúšťame z~príkazového riadku. Je teda často používaný na rozpoznanie, či daný modul len importujeme, alebo priamo spúšťame.
 	
 \begin{lstlisting}[language=python]		
 In [4]: def my_function():
@@ -157,7 +193,7 @@ Out[8]: int
 
 		\item 
 		
-		Funkcia \texttt{id()} vracia unikátnu identitu objektu. Táto funkcia je užitočná, nakoľko viacero premenných môže odkazovať na rovnaký objekt. Funkcia \texttt{id()} konkrétne vracia pamäťovú adresu objektu.
+		Funkcia \texttt{id()} vracia unikátnu identitu objektu. Táto funkcia je užitočná, nakoľko viacero premenných môže odkazovať na rovnaký objekt. Funkcia \texttt{id()} vracia pamäťovú adresu objektu.
 
 \begin{lstlisting}[language=python]	
 In [9]: id('string')
@@ -191,7 +227,7 @@ Out[14]: False
 
 
 		\item Funkcie \texttt{isinstance()} a \texttt{issubclass()} - 
-		funkcia \texttt{isinstance()} vracia hodnotu v~závislosti od toho, či je objekt inštanciou danej triedy. Funkcia vracia pravdivú hodnotu aj v~prípade, že je objekt inštanciou jej predka.
+		funkcia \texttt{isinstance()} vracia hodnotu v~závislosti od toho, či je objekt inštanciou danej triedy. Funkcia vracia pravdivú hodnotu aj v~prípade, že je objekt inštanciou jej potomka.
 		
 		Funkcia \texttt{issubclass()} vracia pravdivú hodnotu v~prípade, že objekt reprezentujúci triedu je podtriedou druhého argumentu.
 
@@ -228,12 +264,12 @@ Out[17]: True
 
 \subsection{PyChecker}
 
-	PyChecker je program zachytávajúci problémy, na ktoré upozorňuje u~nedynamických jazykov, ako je napríklad C kompilátor v~podobe varovaní a chýb. Medzi problémy, ktoré tento program zachytí, patrí napríklad zlý počet parametrov predaný funkcii, metóde či konštruktoru, používanie neexistujúcich metód a tried, ako aj použitie premennej pred jej inicializáciou. Detekuje taktiež nepoužité inštancie globálnych či lokálnych premenných, kontroluje definíciu \texttt{self} ako prvej premennej u~metód tried, ako aj úroveň dokumentácie pre triedy, moduly a metódy~\cite{pychecker}. 
+	PyChecker je program zachytávajúci problémy, na ktoré upozorňuje u~nedynamických jazykov kompilátor v~podobe varovaní a chýb. Medzi problémy, ktoré tento program zachytí, patrí napríklad zlý počet parametrov predaných funkcii, metóde či konštruktoru, používanie neexistujúcich metód a tried, ako aj použitie premennej pred jej inicializáciou. Detekuje taktiež nepoužité inštancie globálnych či lokálnych premenných, kontroluje definíciu \texttt{self} ako prvej premennej u~metód tried, ako aj úroveň dokumentácie pre triedy, moduly a metódy~\cite{pychecker}. 
 	
 	Jednou z~predností je aj priamy import do zdrojového kódu. Pokiaľ má užívateľ prístup a práva k~modifikácii zdrojového kódu, je veľmi jednoduché PyChecker naimportovať priamo. Jeho hlavnou nevýhodou je, že daný kód spustí a vykoná. PyChecker je teda nevhodný na detekciu chýb v~aplikáciách, ktoré napríklad pracujú nad databázou, alebo pracujú v~ostrom prostredí, ktoré je nevhodné na testovanie.
 
 \subsection{Pylint}
-	Pylint je jeden z~najpoužívanejších, ľahko konfigurovateľných nástrojov na analýzu kódu Python, využívaný či už manuálne, alebo automaticky. Je vyvíjaný za podpory Logilab.org a vydaný pod licenciou GNU GPL~\cite{gnugpl}. V~zdrojových kódoch analyzuje potencionálne chyby a varovania, ale aj porušenie konvencií podľa štandardu PEP 8. S~projektom Pylint je dodávaný aj program Pyreverse, ktorý pre daný kód vygeneruje UML diagram v~podobe \textit{dot}~\cite{dotformat} formátu. Daný \textit{dot} súbor dokáže priamo pretransformovať do \textit{PNG} alebo iného formátu. Výhodou programu Pylint oproti PyChecker je, že daný súbor väčšinou nespúšťa, ale analyzuje staticky. Je teda vhodný do každého prostredia. Pylint dopĺňa PyChecker hlavne v~kontrole dĺžky riadkov a kontrole názvov premenných za pomoci regulárnych výrazov. Overuje taktiež implementáciu deklarovaných rozhraní a detekuje duplicitný kód.
+	Pylint je jeden z~najpoužívanejších, ľahko konfigurovateľných nástrojov na analýzu kódu Python, využívaný či už manuálne, alebo automaticky. Je vyvíjaný za podpory Logilab.org a vydaný pod licenciou GNU GPL~\cite{gnugpl}. V~zdrojových kódoch analyzuje potencionálne chyby a varovania, ale aj porušenie konvencií podľa štandardu PEP 8. S~projektom Pylint je dodávaný aj program Pyreverse, ktorý pre daný kód vygeneruje UML diagram v~podobe \textit{dot}~\cite{dotformat} formátu. Daný \textit{dot} súbor je možné priamo pretransformovať do \textit{PNG} alebo iného formátu. Výhodou programu Pylint oproti PyChecker je, že daný súbor väčšinou nespúšťa, ale analyzuje staticky. Je teda vhodný do každého prostredia. Pylint dopĺňa PyChecker hlavne v~kontrole dĺžky riadkov a kontrole názvov premenných za pomoci regulárnych výrazov. Overuje taktiež implementáciu deklarovaných rozhraní a detekuje duplicitný kód.
     Obzvlášť zaujímavou vlastnosťou je generovanie metrík a externých závislostí~\cite{pylint}.
 
 	Správanie sa programu je možné upraviť pomocou prepínačov špecifikovaných na príkazovom riadku alebo pomocou konfiguračného súboru. V~konfiguračnom súbore je možná filtrácia varovaní a chýb rôznych druhov, ignorovanie rôznych typov súborov. Taktiež je možné načítať rôzne typy doplnkov, nastavenie minimálneho počtu znakov v~riadkoch, obmedzenie veľkosti modulu, nastavanie znakov využitých na odsadenie, vlastné definície zastaralých modulov.
@@ -241,7 +277,7 @@ Out[17]: True
     Najmä u~vačších projektov s~požiadavkami na prehľadnosť kódu a dobrý návrh užívateľ ocení možnosť nakonfigurovať maximálny počet atribútov triedy pomocou prepínača \textit{max-attributes}, rodičov triedy pomocou prepínača \textit{max-parents}. Počet výrazov \textit{return} a \textit{yield} je možné obmedziť s~využitím prepínača \textit{max-returns}. U~niektorých existuje možnosť špecifikovať aj minimálny počet, napríklad u~počtu verejných metód triedy pomocou prepínačov \textit{min-public-methods} alebo \textit{max-public-methods}~\cite{pylintfeatures}.
     
 \subsection{Zhrnutie}
-Pylint patrí medzi najpoužívanejší program na analýzu kódu Python, nakoľko je ľahko konfigurovateľný a kombinuje funkcionalitu ostatných nástrojov. Do každého prostredia je vhodné vybrať nástroj na analýzu vždy unikátne. Aj keď Pylint môžeme nazvať najpoužívanejším nástrojom, projekty ako Moap~\cite{moap} využívajú pre testovanie PyChecker.
+Pylint patrí medzi najpoužívanejší program na analýzu kódu Python, nakoľko je ľahko konfigurovateľný a kombinuje funkcionalitu ostatných nástrojov. Do každého prostredia je vhodné vybrať nástroj na analýzu vždy podľa špecifických potrieb. Aj keď Pylint môžeme nazvať najpoužívanejším nástrojom, projekty ako Moap~\cite{moap} využívajú pre testovanie PyChecker.
     
     Program PEP8 má taktiež široké použitie, no len s~obmedzením na porušenie konvenčných chýb, ktoré  sú v~niektorých prípadoch akceptovateľné, hlavne za účelom sprehľadnenia kódu alebo z~historických dôvodov projektu.
     	
@@ -251,12 +287,12 @@ Pylint patrí medzi najpoužívanejší program na analýzu kódu Python, nakoľ
 	Nástroje na vizualizáciu nám slúžia nielen na vygenerovanie UML diagramov, ale aj na zobrazenie dodatočných informácií o~projekte, akými sú napríklad metriky alebo chyby v~kóde. V~tejto kapitole si predstavíme dostupné nástroje na vizualizáciu Python kódu.
 	
 	\subsection{Pyreverse}
-		Pyreverse je program dodávaný spoločne s~utilitou Pylint. Jeho úlohou je vygenerovať UML diagramy pre Python projekt. Vykonáva synaktickú analýzu Python balíkov a vygeneruje UML diagram vo formátoch \texttt{dot} alebo \texttt{vgc}. Pyreverse je za pomoci programu \texttt{dot} schopný vygenerovať aj UML diagram vo formáte PNG.
+		Pyreverse je program dodávaný spoločne s~utilitou Pylint. Jeho úlohou je vygenerovať UML diagramy pre Python projekt. Vykonáva synaktickú analýzu Python balíkov a vygeneruje UML diagram vo formátoch \texttt{dot} alebo \texttt{vgc}. Pyreverse je za pomoci programu dot~\cite{dotformat} schopný vygenerovať aj UML diagram vo formáte PNG.
 		
 		Medzi hlavné výhody programu Pyreverse patrí jeho rýchlosť a široká ponuka prepínačov, ktoré umožňujú ignorovať moduly a súbory, filtrovať typy atribútov alebo ovládať výzor výsledného UML diagramu.		
 		Zaujímavou vlastnosťou je vygenerovanie diagramu tried súvisiacich s~jednou konkrétnou triedou. Túto vlastnosť umožnuje prepínač\texttt{ --class=<class>}.
 		
-		Nevýhodou programu Pyreverse je jeho neinteraktívnosť. Pri editácii projektu musíme daný graf pregenerovať. Navyše nemôžeme pomocou programu Pyreverse editovať projekt.		
+		Nevýhodou programu Pyreverse je jeho neinteraktívnosť. Pri zmene v projekte musíme daný graf pregenerovať. Navyše nemôžeme pomocou programu Pyreverse upravovať projekt.		
 		
 \begin{lstlisting}[language=bash]
 $ pyreverse -o png .
@@ -266,13 +302,13 @@ $ pyreverse -o png .
  
 	\subsection{Pylint-gui}
 	
-	Pylint-gui je program, ktorý bol vytvorený najmä pre užívateľov operačného systému Windows ako alternatíva k~spúštaniu Pylint pomocou príkazového riadku. Grafické rozhranie programu využívajúce \texttt{Tk} je veľmi jednoduché a ide len o~prevedenie konzolového výstupu do vizuálnej podoby. Pylint-gui teda neodstránil základné nedostatky programu Pylint. Pri editácii projektu treba výstup znova pregenerovať, nakoľko chyby sú identifikované číslom riadku, ktorý sa pri editácii môže zmeniť.
+	Pylint-gui je program, ktorý bol vytvorený najmä pre užívateľov operačného systému Windows ako alternatíva k~spúštaniu Pylint pomocou príkazového riadku. Grafické rozhranie programu využívajúce \texttt{Tk} je veľmi jednoduché a ide len o~prevedenie konzolového výstupu do vizuálnej podoby. Pylint-gui teda neodstránil nedostatky programu Pylint. Pri editácii projektu treba výstup znova pregenerovať, nakoľko chyby sú identifikované číslom riadku, ktorý sa pri editácii môže zmeniť.
 	
-	\subsection{Implementácia programu Pylint do vývojových prostredí}
+	\subsection{Integrácia programu Pylint do vývojových prostredí}
  
-	Program Pylint bol implementovaný do väčšiny vývojových prostredí (IDE prostredí), ktoré ho graficky a dynamicky interpretujú. Táto implementácia je často len v~podobe doplnkov a modulov bez priamej podpory vývojárov IDE. Ďalšou z~nevýhod je veľká robustnosť IDE prostredí a obmedzenosť na dané vývojové prostredie. 
+	Program Pylint bol integrovaný do väčšiny vývojových prostredí (IDE), ktoré jeho výsledky graficky interpretujú. Táto integrácia je často len v~podobe doplnkov a modulov bez priamej podpory IDE. Ďalšou z~nevýhod je obmedzenosť na dané vývojové prostredie. 
 	
-	Jedným z~príkladov týchto doplnkov je modul PyDev\cite{pydev} pre vývojové prostredie Eclipse. Jeho výhodou je jeho automatické spustenie po zmene súboru, ktoré však ale pri väčších projektoch môže spôsobiť spomalenie. Výhodou je aj možnosť prefiltrovať typ chyby, ktorú Pylint zaznamená. Obmedzuje sa ale len na nasledujúcich päť skupín chýb, nie však na konkrétne chybové správy.
+	Jedným z~príkladov týchto doplnkov je modul PyDev\cite{pydev} pre vývojové prostredie Eclipse. Jeho výhodou je jeho automatické spustenie po zmene súboru, ktoré však ale pri väčších projektoch môže spôsobiť spomalenie. Výhodou je aj možnosť prefiltrovať zobrazenie podľa typu chyby, ktorú Pylint zaznamená. Obmedzuje sa ale len na nasledujúcich päť skupín chýb, nie však na konkrétne chybové správy.
 
 \begin{list}{•}{}
 \item FATAL
@@ -281,11 +317,44 @@ $ pyreverse -o png .
 \item CONVENTIONS
 \item REFACTOR
 \end{list}
-Nepodporuje taktiež filtráciu falošných poplachov ani generáciu UML.
+PyDev\cite{pydev} taktiež nepodporuje filtráciu falošných poplachov ani generáciu UML.
+	
+	\subsection{Graphviz}
+	
+	Graphviz je software na vizualizáciu grafov. Graphviz pozostáva z jazyka \texttt{dot} popisujúceho grafy a množstva iných nástrojov, ktoré generujú alebo inak spracovávajú súbory v tomto formáte. Tieto nástroje môžu pre výstup zvoliť množstvo užitočných formátov ako napríklad PDF, PNG alebo SVG. Dot súbor môže vyzerať nasledovne.
+	
+	
+\begin{lstlisting}
+digraph "name" {
+charset="utf-8"
+rankdir=BT
+"4" [color="blue", shape="record", label="Editor"];
+"5" [shape="record", label="VimEditor}"];
+"6" [shape="record", label="GeditEditor"];
+"16" [shape="record", label="ClassBox"];
+"5" -> "4" [arrowtail="none", arrowhead="empty"];
+"6" -> "4" [arrowtail="none", arrowhead="empty"];
+}
+\end{lstlisting}
+
+Po spustení nasledujúceho príkazu sa vygeneruje graf vo formáte PNG.
+
+\begin{lstlisting}[language=bash]
+$ dot -Tpng graph.dot -o graph.png
+\end{lstlisting}
+%$
+	
+
+	\begin{figure}[htb]
+	 \centering
+	 \includegraphics[width=200px]{images/graph}
+	 \caption{Graf vygenerovaný programom dot}
+	\end{figure}
+	
 	
 	\subsection{Zhrnutie}
 	
-	Existuje množstvo utilít a programov, ktoré pomáhajú výsledky analýzy Python kódu vizualizovať. Medzi základné problémy, ktoré tieto programy majú, patrí ich neinteraktívnosť, nutnosť výsledky pregenerovať po editácii kódu, robustnosť alebo chýbajúca funkcionalita. Pri implementácii projektu sa pokúsime zamerať práve na tieto chýbajúce vlastnosti. Výsledný program by mal byť rýchly a neobmedzovať programátora na jeden druh editoru, ako je to napríklad pri doplnkoch IDE.
+	Existuje množstvo utilít a programov, ktoré pomáhajú výsledky analýzy Python kódu vizualizovať. Medzi základné problémy, ktoré tieto programy majú, patrí ich neinteraktívnosť, nutnosť výsledky pregenerovať po editácii kódu, alebo chýbajúca funkcionalita. Pri implementácii projektu sa pokúsime zamerať práve na tieto chýbajúce vlastnosti. Výsledný program by mal byť rýchly a neobmedzovať programátora na jeden druh editoru, ako je to napríklad pri doplnkoch IDE.
 	
     
 \chapter{Analýza nástrojov potrebných k~implementácii}
@@ -298,7 +367,9 @@ Nepodporuje taktiež filtráciu falošných poplachov ani generáciu UML.
 
 	\subsection{Popis Gaphas API}
 
-Gaphas API využíva MVC návrhový vzor a môžeme ho teda rozdeliť na 3 hlavné časti -- model, view a controller.
+Gaphas API využíva MVC návrhový vzor a môžeme ho teda rozdeliť na 3 hlavné časti -- \texttt{Model}, \texttt{View} a \texttt{Controller}. 
+
+	\texttt{Model} je časť, ktorá obsahuje doménovú reprezentáciu projektu. Časť \texttt{View} prevádza dáta reprezentované modelom do podoby vhodnej k interaktívnej prezentácii užívateľovi. Časť \texttt{Controller} reaguje na udalosti a zaisťuje zmeny v častiach \texttt{Model} a \texttt{View}.~\cite{mvc}
 
 \begin{list}{•}{}
 
@@ -309,8 +380,8 @@ Gaphas API využíva MVC návrhový vzor a môžeme ho teda rozdeliť na 3 hlavn
     	\item \texttt{api/items} -- položky \texttt{gaphas.item.Element} a \texttt{gaphas.\\item.Line} odvodené od triedy \texttt{gaphas.item.Item}, ktoré sú uchovávané a vykresľované na plátne.
     	Jednoduchým odvodením novej triedy z~\texttt{gaphas.item.Item} môžeme vytvoriť vlastný prvok na vykresľovanie
     	\item \texttt{api/connectors} -- v~tejto kategórií ide o~triedy \texttt{gaphas.\\connector.Handle} a \texttt{gaphas.connector.Port}, ktoré umožňujú spájať jednotlivé položky na plátne
-    	\item \texttt{api/solver} -- umožňuje definovať podmienku aspoň medzi dvomi premennými a a udržiavať túto podmienku ako pravdivú pri zmene premenných
- 		\item \texttt{api/constraint} -- obmedzenia pre premenné, ktoré sú zaregistrované na plátne. Každé obmedzenie obsahuje zoznam premenných, ktoré sú zaregistrované v~objekte typu \texttt{gaphas.solver.\\Solver}
+    	\item \texttt{api/solver} -- umožňuje definovať podmienku medzi dvomi a viacerými premennými a udržiavať jej platnosť pri zmene premenných
+ 		\item \texttt{api/constraint} -- väzby pre premenné, ktoré sú zaregistrované na plátne. Každá väzba obsahuje zoznam premenných, ktoré sú zaregistrované v~objekte typu \texttt{gaphas.solver.\\Solver}
  		\item \texttt{api/utils} -- obsahuje pomocné funkcie týkajúce sa najmä vykresľovania textu na plátno
     \end{list}
 
@@ -319,7 +390,7 @@ Gaphas API využíva MVC návrhový vzor a môžeme ho teda rozdeliť na 3 hlavn
     \begin{list}{•}{}
     \item \texttt{api/view} -- trieda, ktorej úlohou je spravovať vykresľovanie Gaphas položiek, uchováva vykresľovacie plátno, informácie o~označených objektoch a objektoch, nad ktorými sa nachádza myš
     \item \texttt{api/painters} -- objekty, ktoré vykresľujú jednotlivé objekty
-    \item \texttt{api/gtkview} -- trieda implementujúca funkcionalitu \texttt{gaphas.\\view.View} v~\texttt{Gtk.DrawingArea}. Slúži teda na vykreslenie plátna na Gtk prvok. Používa nástroje z~časti controller a objekty z~časti view
+    \item \texttt{api/gtkview} -- trieda implementujúca funkcionalitu \texttt{gaphas.\\view.View} v~\texttt{Gtk.DrawingArea}. Slúži teda na vykreslenie plátna na Gtk+ element. Používa nástroje z~časti controller a objekty z~časti view
     \end{list}
 
 
@@ -336,7 +407,7 @@ Gaphas API využíva MVC návrhový vzor a môžeme ho teda rozdeliť na 3 hlavn
 
 	\subsection{Zhrnutie}
 
-		Gaphas knižnica umožnuje vykresľovanie grafiky na plátno v~prostredí GTK+. Jej výhodou je možnosť prispôsobiť vykresľované objekty priamo na mieru. Výborne spracovaná je aj interakcia medzi objektami. Vďaka obmedzeniam môžeme dva objekty udržovať v~definovanej pozícii, napríklad na jednej čiare, v~jednom bode alebo na pozícii definovanou rovnicou.
+		Gaphas knižnica umožnuje vykresľovanie grafiky na plátno v~prostredí GTK+. Jej výhodou je možnosť prispôsobiť vykresľované objekty priamo na mieru. Výborne spracovaná je aj interakcia medzi objektami. Vďaka väzbám môžeme dva objekty udržovať v~definovanej pozícii, napríklad na jednej čiare, v~jednom bode alebo na pozícii definovanou rovnicou.
     
     
 \section{Analýza nástroja Pylint}
@@ -349,19 +420,18 @@ Gaphas API využíva MVC návrhový vzor a môžeme ho teda rozdeliť na 3 hlavn
     \begin{list}{•}{}
 		\item Triedy typu Checkers 
 		
-		Ide o~triedy, ktoré implementujú aspoň jednu z~tried
+		Ide o~triedy, ktoré rozširujú aspoň jednu z~tried
 		
 			    \begin{list}{•}{}
 					\item IRawChecker
 					\item IASTNGChecker
     			\end{list}		
 		
-		Tieto triedy sú zaregistrované v~triede \texttt{pylint.lint.Pylinter} pomocou jej metódy \texttt{register\_checker}.	Po zaregistrovaní sa prevedie hlavná práca v~metóde \texttt{pylint.lint.Pylinter.check}, kde sa rozdelia zaregistrované triedy podľa ich predkov a začne sa prehľadávanie a kontrola modulov. V~triedach checker sa zavolá metóda \texttt{process\_module}, ktorej implementácia je ponechaná na každej triede samostatne.
+		Tieto triedy sú zaregistrované v~triede \texttt{pylint.lint.Pylinter} pomocou jej metódy \texttt{register\_checker}.	Po zaregistrovaní prebehne spracovanie v~metóde \texttt{pylint.lint.Pylinter.check}, kde sa rozdelia zaregistrované triedy podľa ich predkov a začne sa prehľadávanie a kontrola modulov. V~triedach typu Checker sa zavolá metóda \texttt{process\_module}, ktorej implementácia je ponechaná na každej triede samostatne.
 		
 		Každá takáto trieda má zaregistrovaný slovník chybových správ, ktorý dokáže detekovať. Ako kľúč je použitý kód chyby a ako hodnota dvojica obsahujúca textovú reprezentáciu chyby a jej popis.
-
-\begin{lstlisting}
-
+\\\\
+\begin{lstlisting}[caption=Slovník chybových hlášok triedy \texttt{EncodingChecker}]
 MSGS = {
     'W0511': ('%s',
               'Used when a warning note as FIXME or XXX is detected.'),
@@ -369,7 +439,6 @@ MSGS = {
 		
 \end{lstlisting}		
 
-Slovník chybových hlášok triedy \texttt{EncodingChecker}.
 
 
 Pri náleze chyby checker zaregistruje chybu pomocou metódy \\\texttt{add\_message} zdedenej z~triedy \texttt{pylint.checkers.BaseChecker}, ktorá chybu predá inštancii triedy \texttt{pylint.lint.Pylinter}.
@@ -382,7 +451,7 @@ Pri náleze chyby checker zaregistruje chybu pomocou metódy \\\texttt{add\_mess
 
 	
 		\item Triedy typu Reporters -- 
-		Tento typ tried je odvodený od triedy \texttt{pylint.\\reporters.BaseReporter}. Triedy slúžia na formátovanie a vygenerovanie samotného výstupu. Pri inicializácii sa triede pomocou metódy \texttt{set\_output} nastaví výstupný prúd, ktorý je v~predvolenom režime nastavený na štandardný výstup. Je možné ho predefinovať na súbor alebo iný typ výstupného prúdu. Tak ako pri triedach typu \texttt{Checker}, je aj v~tomto prípade veľmi jednoduché vytvoriť vlastnú implementáciu.
+		Tento typ tried je odvodený od triedy \texttt{pylint.\\reporters.BaseReporter}. Triedy slúžia na formátovanie a vygenerovanie samotného výstupu. Pri inicializácii sa triede pomocou metódy \texttt{set\_output} nastaví výstupné zariadenie, ktoré je v~predvolenom režime nastavené na štandardný výstup. Je možné ho predefinovať na súbor alebo iný typ výstupného zariadenia. Tak ako pri triedach typu \texttt{Checker}, je aj v~tomto prípade veľmi jednoduché vytvoriť vlastnú implementáciu.
 		
 		V~programe Pylint ale nájdeme pomerne široký výber výstupov.
 		
@@ -396,18 +465,34 @@ Pri náleze chyby checker zaregistruje chybu pomocou metódy \\\texttt{add\_mess
     			\end{list}
 		
     \end{list}
+	
+Jednou z nevýhod programu Pylint je neprítomnosť nástroja, ktorý by dokázal ignorovať konkrétne chyby v zdrojovom kóde. Prvou možnosťou programu Pylint je ignorovať daný typ chyby pomocou prepínača \texttt{--disable}.
+
+\begin{lstlisting}[language=bash]
+$ pylint --disable=E1101,R0904
+\end{lstlisting}
+%$
+
+ Druhou možnosťou je spustiť len zvolené triedy typu Checker pomocou prepínača \texttt{--enable}. 	
+
+\begin{lstlisting}
+$ pylint --enable=basic,variables,classes,metrics,similarities
+\end{lstlisting}
+%$
+
+Táto funkcionalita je v praxi veľmi potrebná, nakoľko sa v kóde často vyskytujú miesta, kde istú chybu tolerujeme. Nechceme však jej detekciu vypnúť v celom projekte.
 		
 	\subsection{Pyreverse}
-	Pri prehľadávaní projektu si program Pyreverse vygeneruje z~daných argumentov inštanciu triedy \texttt{logilab.astng.manager.Project} za pomoci triedy \texttt{ASTNGManager} z~balíčka \texttt{logilab.astng}, ktorý je závislosťou projektu Pylint.
-	Táto trieda obsahuje informácie o~názve, ceste, moduloch a premenných.
+	Pri prehľadávaní projektu si program Pyreverse vygeneruje z~daných argumentov inštanciu triedy \texttt{logilab.astng.manager.Project} za pomoci triedy \texttt{ASTNGManager} z~balíčka \texttt{logilab.astng}, ktorý je závislosťou projektu Pylint (viď Ukážka kódu \ref{pyreverse}, riadok 2).
+	Táto trieda obsahuje informácie o~názve, ceste, moduloch a premenných analyzovaného objektu.
 	
-		Za pomoci triedy \texttt{logilab.astng.Linker} preskenuje daný projekt a vygeneruje vzťahy medzi jednotlivými triedami.
+		Za pomoci triedy \texttt{logilab.astng.Linker} prehľadá daný projekt a vygeneruje vzťahy medzi jednotlivými triedami (viď Ukážka kódu \ref{pyreverse}, riadok 3).
 	
-		Inštancie týchto dvoch tried sú predané ako parametre objektu typu \texttt{DiadefsHandler}, ktorý za pomoci triedy \texttt{ClassDiadefGenerator} vygeneruje diagram tried. Diagram tried je neskôr predaný triede zodpovednej za zápis.
+		Inštancie týchto dvoch tried sú predané ako parametre objektu typu \texttt{DiadefsHandler} (viď Ukážka kódu \ref{pyreverse}, riadok 4), ktorý za pomoci triedy \texttt{ClassDiadefGenerator} vygeneruje diagram tried (viď Ukážka kódu \ref{pyreverse}, riadok 5). Diagram tried je neskôr predaný triede zodpovednej za zápis.
 		
 		Nasledujúca časť kódu je hlavnou kostrou programu Pyreverse.
 		
-\begin{lstlisting}[language=python]	
+\begin{lstlisting}[caption=Hlavná časť programu Pyreverse, language=python, label=pyreverse]	
 try:
     project = self.manager.project_from_files(args)
     linker = Linker(project, tag=True)
@@ -444,18 +529,18 @@ else:
 	\section{Zdôvodnenie výberu knižníc a nástrojov pre implementáciu}
 		Program bude implementovaný ako aplikácia s~grafickým rozhraním v~programovacom jazyku Python, nakoľko vďaka jeho introspekcii je väčšina programov a knižníc pre jeho analýzu naprogramovaná práve v~ňom.
 		
-		Ako grafické rozhranie sme zvolili GTK+ toolkit, nakoľko spĺňa naše požiadavky, a tými sú multiplatformnosť, kompaktnosť a rýchlosť. Aj napriek tomu, že bol pôvodne vyvíjaný pre \texttt{X Window System} je možné ho implementovať aj pre platformu \texttt{Microsoft Windows} a \texttt{Quartz}.
+		Ako grafické rozhranie sme zvolili GTK+, nakoľko spĺňa naše požiadavky, a tými sú multiplatformnosť, kompaktnosť a rýchlosť. Aj napriek tomu, že bol pôvodne vyvíjaný pre \texttt{X Window System} je možné ho využiť aj na platforme \texttt{Microsoft Windows} a \texttt{Quartz}.
 		
 		Backend systému bude zabezpečovať program Pylint, nakoľko je dostupný na všetkých platformách a je dlhodobo používaný a otestovaný. Fakt, že je implementovaný do viacerých populárnych IDE prostredí, potvrdzuje prítomnosť výborne navrhnutej API. Okrem generovania chýb poskytuje taktiež služby Pyreverse, vďaka ktorým bude možné naimplementovať generovanie diagramu tried a modulov.
 		
-		Nakoľko bude ako grafické prostredie použitá knižnica GTK+, je jednoduché použiť ako editor GtkSourceView~\cite{gtksourceview} komponentu, ktorú ponúka táto knižnica. Nakoľko ale nechceme obmedziť program len na jeden druh editoru, vytvoríme jednoduché rozhranie, pomocou ktorého naimplementujeme napríklad editor Vim a umožníme implementovať ostatné editory v~prípade potreby. V~prípade editorov je nutné, aby boli schopné zobrazovať na chybových miestach príslušné značky. Pri editore GtkSourceView využijeme jeho funkcionalitu značiek, pri editore Vim možnosť zvýraznenia určitých riadkov.
+		Nakoľko bude ako grafické prostredie použitá knižnica GTK+, je dobrou voľbou použiť pre zobrazenie zdrojového kódu komponentu GtkSourceView~\cite{gtksourceview}, ktorú ponúka táto knižnica. Nakoľko ale nechceme obmedziť program len na jeden druh editoru, vytvoríme jednoduché rozhranie, pomocou ktorého integrujeme napríklad editor Vim a umožníme integrovať ostatné editory v~prípade potreby. V~prípade editorov je nutné, aby boli schopné zobrazovať na chybových miestach príslušné značky. Pri editore GtkSourceView využijeme jeho funkcionalitu značiek, pri editore Vim možnosť zvýraznenia určitých riadkov.
 		
 		Pre zobrazenie grafu modulov a tried využijeme knižnicu Gaphas dostupnú pre GTK+. Knižnica nám pomôže vizualizovať výsledky analýzy. Jej jediným nedostatkom je neprítomnosť prvkov pre UML. Prvky pre zobrazenie tried, modulov a funkcií bude nutné doprogramovať manuálne.
 
 
 	\section{Analýza a návrh}
 	
-	Nakoľko program využíva vnútornú štruktúru viacerých programov a knižníc, úlohou anlýzy je vhodne navrhnúť spôsob ich využitia. Nasledujúci DFD diagram popisuje základný tok dát v~aplikácii. 	
+	Nakoľko program využíva vnútornú štruktúru viacerých programov a knižníc, úlohou anlýzy je vhodne navrhnúť ich prepojenie. Nasledujúci DFD~\cite{dfd} diagram popisuje základný tok dát v~aplikácii. 	
 	
 	\begin{figure}[htb]
 	 \centering
@@ -463,7 +548,31 @@ else:
 	 \caption{DFD diagram navrhnutej aplikácie}
 	\end{figure}
 	
-Pri spustení programu užívateľ zvolí cestu k~projektu pomocou grafického rozhrania alebo ako parameter na príkazovom riadku. Ten sa predá triede, ktorá používa metódy z~knižnice Pyreverse. Vygenerovaná štruktúra reprezentujúca diagram sa predá knižnici Graphviz~\cite{graphviz}, ktorá rozhodne o~pozíciách jednotlivých elementov diagramu tak, aby bol diagram čo najprehľadnejší. Pre každý element v~štruktúre diagramu sa vytvorí objekt knižnice Gaphas, ktorý sa vykreslí na plátne. Referencia na diagram a položky na plátne sú uložené ako kontext plátna pre neskoršie využitie. Pri spustení analýzy kódu projektu sa pomocou Pylint knižnice vygenerujú chybové hlásenia, prefiltrujú sa tak, aby sa užívateľovi nezobrazovali hlásenia, ktoré v~minulosti zablokoval. Následne pomocou kontextu plátna predajú informácie o~počte nájdených chýb a informáciách o~nich priamo jednotlivým položkám na plátne a zabezpečia ich prekreslenie. Tieto položky si uchovávajú napríklad aj informácie o~pozícii v~súbore. Po kliknutí na položku plátna sa vytvorí nové okno s~editorom podľa aktuálnych nastavení. Pri kontrole zdrojového kódu danej triedy sa pošle požiadavka danému editoru, ktorý sa stará o~zobrazovanie chýb.
+Pri spustení programu užívateľ zvolí cestu k~projektu pomocou grafického rozhrania, alebo ako parameter na príkazovom riadku. Ten sa predá triede, ktorá používa metódy z~knižnice Pyreverse. Vygenerovaná štruktúra reprezentujúca diagram sa predá knižnici Graphviz~\cite{graphviz}, ktorá rozhodne o~pozíciách jednotlivých elementov diagramu tak, aby bol diagram čo najprehľadnejší. Pre každý element v~štruktúre diagramu sa vytvorí objekt knižnice Gaphas, ktorý sa vykreslí na plátne. Referencia na diagram a položky na plátne sú uložené ako kontext plátna pre neskoršie využitie. Pri spustení analýzy kódu projektu sa pomocou Pylint knižnice vygenerujú chybové hlásenia, prefiltrujú sa tak, aby sa užívateľovi nezobrazovali hlásenia, ktoré v~minulosti zablokoval. 
+
+	Rozpoznanie týchto chýb prebieha na základe typu chybového hlásenia, názvu objektu, na ktorom sa chyba vyskytla a čísle stĺpca. Nezohľadňujeme teda číslo riadku výskytu chyby, pretože táto informácia sa môže zmeniť pridaním nových riadkov pred výskyt chyby.
+	
+	Následne sa pomocou kontextu plátna predajú informácie o~počte nájdených chýb a informácie o~nich priamo jednotlivým položkám na plátne a zabezpečí sa ich prekreslenie. Tieto položky si uchovávajú napríklad aj informácie o~pozícii v~súbore. Po kliknutí na položku plátna sa vytvorí nové okno s~editorom podľa aktuálnych nastavení. Pri kontrole zdrojového kódu danej triedy sa pošle požiadavka danému editoru, ktorý sa stará o~zobrazovanie chybových hlásení.
+
+	Do tejto chvíle sme naimplementovali dva typy editorov. Grafický editor sme naimplementovali pomocou komponenty GtkSourceView~\cite{gtksourceview}. Editor Vim sme integrovali pomocou komponenty VteTerminal.
+	
+	\begin{lstlisting}[language=python]
+def open_file(self):                                                      
+    self.component = Vte.Terminal()                                     
+    self.component.fork_command_full(Vte.PtyFlags.DEFAULT, None, ['vim', self.filepath], [], \
+       GLib.SpawnFlags.SEARCH_PATH, None, None)  
+    self.component.show()
+	\end{lstlisting}
+	
+	
+
+\begin{figure}[htb]
+	 \centering
+	 \includegraphics[width=\textwidth]{images/gpylint}
+	 \caption{GPylint -- Screenshot implementovaného nástroja}
+	\end{figure}
+	
+		Program je implementovaný spôsobom využívajúcim API nástrojov Pylint, Pyreverse a Gaphas. Je teda závislý aj na ich korektnosti. Pri testovaní programu sme objavili napríklad chybu nástroja Pyreverse \url{www.logilab.org/ticket/92362}.
 
 	
 	\section{Aplikácia jednotlivých nástrojov}
@@ -472,7 +581,7 @@ Pri spustení programu užívateľ zvolí cestu k~projektu pomocou grafického r
 		\subsection{Aplikácia nástroja Pyreverse}	
 			Pri popise nástroja Pyreverse sme poukázali na hlavnú kostru programu Pyreverse, ktorá vracia diagram tried, predávaný triede zodpovednej za zápis. Vytvorili sme teda triedu \texttt{ScannerCommand}, ktorá spúšťa kostru programu Pyreverse v~samostatnom vlákne, prefiltruje výsledky pre potreby aplikácie a výsledky predá zapisujúcej triede, ktorú naimplementujeme.
 			
-			Triedu zodpovednú za zápis na plátno sme nazvali \texttt{CanvasWriter}. Táto trieda  implementuje metódu \texttt{get\_values(self, obj)}, ktorá rozhoduje, aké informácie budú predané jednotlivýcm položkám na plátne. V~tejto metóde teda rozhodneme, ktoré údaje od programu Pyreverse predáme k~ďalšiemu spracovaniu. Inak len deleguje funkcionalitu na triedu \texttt{CanvasBackend}.
+			Triedu zodpovednú za zápis na plátno sme nazvali \texttt{CanvasWriter}~(viď Obrázok \ref{dfdcanvas}, proces 2). Táto trieda  implementuje metódu \texttt{get\_values(self, obj)}, ktorá rozhoduje, aké informácie budú predané jednotlivýcm položkám na plátne. V~tejto metóde teda rozhodneme, ktoré údaje od programu Pyreverse predáme k~ďalšiemu spracovaniu. Inak len deleguje funkcionalitu na triedu \texttt{CanvasBackend}.
 		
 			Trieda \texttt{CanvasBackend} rozširuje triedu \texttt{DotBackend} z~programu Pylint. Všetky výstupy tak generuje do dot~\cite{dotformat} formátu, ktoré v~prekrytej metóde \texttt{generate(self, filename)} použijeme ako vstup pre knižnicu Gaphas. 
 			
@@ -483,42 +592,44 @@ Pri spustení programu užívateľ zvolí cestu k~projektu pomocou grafického r
 	 \centering
 	 \includegraphics[width=\textwidth]{images/dfd_diagram}
 	 \caption{DFD diagram procesu vykresľovania a správy diagramu}
+	 \label{dfdcanvas}
 	\end{figure}
 
 	
 		\subsection{Aplikácia nástroja Pylint}
 
-		Nástroj Pylint využívame dvomi rôznymi spôsobmi. Potrebujeme jednak preskenovať celý projekt, aby sme chyby pre jednotlivé triedy vykreslili na plátno a zároveň potrebujeme preskenovať práve otvorený súbor. Pre každý tento účel vytvoríme triedy implementujúce funkcionalitu triedy \texttt{PyLinter} pomocou kompozície, ktoré budú bežať v~samostatnom vlákne. 
+		Nástroj Pylint využívame dvomi rôznymi spôsobmi. Potrebujeme preskenovať celý projekt, aby sme chyby pre jednotlivé triedy vykreslili na plátno, a zároveň potrebujeme preskenovať práve otvorený súbor. Pre každý tento účel vytvoríme triedy implementujúce funkcionalitu triedy \texttt{PyLinter}, ktoré budú bežať v~samostatnom vlákne. 
 		
-		Pri kontrole samostatného súboru funkcionalitu analýzy chýb rieši každý editor samostatne. V~nasledujúcom odseku popíšeme spôsob, akým túto funkcionalitu implementuje grafický editor využívajúci komponentu GtkSourceView~\cite{gtksourceview}. Ten vytvorí inštanciu triedy \texttt{TextBufferLinter}, ktorú sme naimplementovali tak, aby jednotlivým triedam kontrolujúcim kód predala obsah textového bufferu, ktorý obdržala pri inicializácii. Nakoľko každá inštancia triedy \texttt{PyLinter} potrebuje triedu zodpovednú za výstup výsledkov, naimplementovali sme triedu \texttt{EditorReporter}.
+		Pri kontrole samostatného súboru funkcionalitu analýzy chýb rieši každý editor samostatne. V~nasledujúcom odseku popíšeme spôsob, akým túto funkcionalitu implementuje grafický editor využívajúci komponentu GtkSourceView~\cite{gtksourceview}. Ten vytvorí inštanciu triedy \texttt{TextBufferLinter}~(viď Obrázok \ref{dfddisplay}, proces 3), ktorú sme naimplementovali tak, aby jednotlivým triedam kontrolujúcim kód predala obsah textového bufferu, ktorý obdržala pri inicializácii. Nakoľko každá inštancia triedy \texttt{PyLinter} potrebuje triedu zodpovednú za výstup výsledkov, naimplementovali sme triedu \texttt{EditorReporter}~(viď Obrázok \ref{dfddisplay}, proces 4).
 		
-		Trieda \texttt{EditorReporter} po obdržaní chybovej správy skontroluje, či nie je užívateľom blokovaná. Ak blokovaná nie je, vykreslí chybu v~zdrojovom kóde.
+		Trieda \texttt{EditorReporter} po obdržaní chybovej správy skontroluje, či nie je užívateľom blokovaná~(viď Obrázok \ref{dfddisplay}, proces 6). Ak blokovaná nie je, vykreslí informácie o chybe v~zdrojovom kóde.
 
 	
 	\begin{figure}[htb]
 	 \centering
 	 \includegraphics[width=\textwidth]{images/dfd_editor}
 	 \caption{DFD diagram procesu zobrazenia zdrojového kódu}
+	 \label{dfddisplay}
 	\end{figure}
-
+	
 		
-	Pri kontrole celého projektu sa vytvorí inštancia triedy \texttt{ProjectLinter}, ktorej sme nastavili triedu \texttt{CanvasReporter} ako triedu zodpovednú za výstup. Trieda \texttt{CanvasReporter} pri obdržaní správy skontroluje, či nie je blokovaná a následne ju nastaví jednotlivým položkám na plátne.
+	Pri kontrole celého projektu sa vytvorí inštancia triedy \texttt{ProjectLinter}, ktorej sme nastavili triedu \texttt{CanvasReporter} ako triedu zodpovednú za výstup. Trieda \texttt{CanvasReporter} pri obdržaní správy skontroluje, či táto správa nie je blokovaná a následne ju nastaví jednotlivým položkám na plátne.
  
 		\subsection{Aplikácia nástroja Gaphas}
 		
-		Nástroj Gaphas použijeme na vykresľovanie diagramu tried na plátno. Jeho jedinou nevýhodou je prítomnosť len základných elementov ako je úsečka, obdĺžnik alebo text. Vďaka výbornému návrhu knižnice Gaphas ich ale môžeme využiť na zostavenie vlastných elementov. Z~triedy \texttt{gaphas.item.Element} odvodíme triedu \texttt{Box}, ktorá bude reprezentovať triedu. Bude taktiež uchovávať informácie o~triede, ktorú reprezentuje, ako je cesta k~súboru, názov, číslo riadku jej výskytu ale aj informácie o~chybách, ktoré detekujeme.
+		Nástroj Gaphas použijeme na vykresľovanie diagramu tried na plátno. Jeho jedinou nevýhodou je prítomnosť len základných elementov, ako je úsečka, obdĺžnik alebo text. Vďaka výbornému návrhu knižnice Gaphas ich môžeme využiť na zostavenie vlastných elementov. Z~triedy \texttt{gaphas.item.Element} odvodíme triedu \texttt{Box}, ktorá bude na plátne reprezentovať jednotlivé triedy prehľadávaného projektu. Bude taktiež uchovávať dodatočné informácie, ako je cesta k~súboru triedy, jej názov, číslo riadku jej výskytu ale aj informácie o~chybách, ktoré detekujeme.
 		
 		Vzťahy medzi triedami vykreslíme za pomoci triedy \texttt{AssociationLine}, ktorá spája dve triedy \texttt{Box}. Podľa vzťahu medzi jednotlivými triedami vykreslí vzor typický pre špecializáciu alebo kompozíciu.
 		
-		Jednotlivé komponenty reprezentujúce triedy môžeme po plátne presúvať. Z~tohto dôvodu sme boli nútení vytvoriť obmedzenie, ktoré bude udržiavať asociačnú čiaru medzi danými dvomi triedami. Triedu sme nazvali \texttt{HandlesConstraint}. Pri pohybe komponentu si parametricky vyjadrí úsečku medzi stredmi spájaných objektov a nájde prieniky medzi ich hranami. Na dané prieniky umiestni konce spájanej úsečky.
+		Jednotlivé komponenty reprezentujúce triedy môžeme po plátne presúvať. Z~tohto dôvodu sme boli nútení vytvoriť väzbu, ktorá bude udržiavať asociačnú čiaru medzi danými dvomi triedami. Triedu sme nazvali \texttt{HandlesConstraint}. Pri pohybe komponenty si parametricky vyjadrí úsečku medzi stredmi spájaných objektov a nájde prieniky medzi ich hranami. Na dané prieniky umiestni konce spájanej úsečky.
 		
 		Nakoľko chceme vytvoriť rozhranie čo najviac interaktívne, potrebujeme nástroj, ktorý po dvojkliku na položku plátna zobrazí jej zdrojový kód v~nastavenom editore.
 		
-		Knižnica Gaphas ponúka výborné rozhranie pre tvorbu vlastného nástroja. Nástroj \texttt{OpenEditorTool} odvodíme od triedy \texttt{gaphas.tool.Tool} a v~metóde \texttt{on\_double\_click(self, event)} pristúpime k~vykreslenej položke na plátne, nad ktorou je umiestnená myš. Z~jej atribútov zistíme cestu k~zdrojovému kódu a kód zobrazíme.
+		Knižnica Gaphas ponúka výborné rozhranie pre tvorbu vlastného nástroja. Nástroj \texttt{OpenEditorTool} odvodíme z triedy \texttt{gaphas.tool.Tool} a v~metóde \texttt{on\_double\_click(self, event)} pristúpime k~vykreslenej položke na plátne, nad ktorou je umiestnená myš. Z~jej atribútov zistíme cestu k~zdrojovému kódu a kód zobrazíme.
 
 		\subsection{Aplikácia ostatných nástrojov}
-		
-	Pre potreby aplikácie potrebujeme využiť nasledujúce nástroje:
+			
+	Pre potreby aplikácie potrebujeme využiť nasledujúce Python knižnice:
 	
 				\begin{list}{•}{}
 					\item ConfigParser
@@ -526,35 +637,34 @@ Pri spustení programu užívateľ zvolí cestu k~projektu pomocou grafického r
 					\item argparse
     			\end{list}
 	
-	 Pre uloženie nastavení použijeme triedu ConfigParser~\cite{configparser}, ktorá umožňuje bezproblémovú prácu s~nastaveniami. Jej správanie sme pre aplikáciu prispôsobili vytvorením manažérov nastavení, ktoré implementujeme pomocou \texttt{singleton} návrhového vzoru. Takýmto spôsobom implementujeme nastavenia blokovania Pylint chýb, nastavenie použitého editora alebo uchovanie naposledy otvoreného projektu.
+	 Pre uloženie nastavení použijeme triedu ConfigParser~\cite{configparser}, ktorá umožňuje bezproblémovú prácu s~nastaveniami. Jej správanie sme pre aplikáciu prispôsobili vytvorením manažérov nastavení, ktoré implementujeme pomocou \texttt{Singleton}~\cite{singleton} návrhového vzoru. Takýmto spôsobom implementujeme nastavenia blokovania Pylint chybových hlásení, nastavenie použitého editora alebo uchovanie naposledy otvoreného projektu.
 	
-	Vlastnosťou nášho nástroja je aj ignorovanie konkrétnych chýb na jednotlivých riadkoch, ktoré ale nechceme ignorovať globálne. Informácie o~nich teda uložíme do datového kontajneru, ktorý pomocou nástroja cPickle~\cite{cpickle} serializujeme. Pri opätovnom spustení aplikácie prevedieme deserializáciu. Deserializovaný objekt neskôr použijeme na prefiltrovanie chybových správ.
+	Vlastnosťou nášho nástroja je aj možnosť ignorovať konkrétne chyby na jednotlivých riadkoch, ktoré ale nechceme ignorovať globálne. Informácie o~nich teda uložíme do dátového kontajnera, ktorý pomocou knižnice cPickle~\cite{cpickle} serializujeme. Pri opätovnom spustení aplikácie prevedieme deserializáciu. Deserializovaný objekt neskôr použijeme na prefiltrovanie chybových správ.
 	
-		Module argparse~\cite{argparse} použijeme na získanie informácií, ktoré užívateľ zadá na príkazovom riadku. Modul poskytuje veľmi jednoduché rozhranie na prácu s~parametrami príkazového riadku, ako je napríklad automatická generácia nápovedy. Pomocou príkazového riadku bude môcť užívateľ zadať napríklad cestu k~projektu, ktorý sa má otvoriť, alebo typ použitého editoru.
+		Module argparse~\cite{argparse} použijeme na získanie informácií, ktoré užívateľ zadá na príkazovom riadku. Modul poskytuje veľmi jednoduché rozhranie na prácu s~parametrami príkazového riadku, ako je napríklad automatická generácia nápovedy. Pomocou príkazového riadku bude môcť užívateľ zadať napríklad cestu k~projektu, ktorý sa má otvoriť.
+				
+					
 				
 \chapter{Záver}
 
 	Našou úlohou bolo analyzovať nástroje na analýzu a vizualizáciu Python kódu a vytvoriť nástroj, ktorý poskytuje funkcionalitu, ktorú doteraz vytvorené nástroje neposkytujú.
 	
-	Po predstavení základných vlastností jazyka Python sme preskúmali vlastnosti jeho introspekcie, ktoré nám vytvorili prehľad o~možnosti preskúmať vlastnosti jednotlivých objektov.
+	Po predstavení základných vlastností jazyka Python sme preskúmali vlastnosti jeho introspekcie, ktoré nám vytvorili prehľad o~možnosti programovo preskúmať vlastnosti jednotlivých objektov.
 	
-	Neskôr sme si predstavili nástroje na analýzu kódu PEP8~\cite{pep8}, PyChecker~\cite{pychecker} a Pylint~\cite{pylint} a zhodnotili sme, že najvhodnejší nástroj pre backend našej aplikácie je program Pylint, nakoľko je ľahko prispôsobiteľný a okrem detekcie chýb poskytuje funcionalitu vygenerovania grafu. Navyše je široko používaný či už ako samostatná utilita, alebo implementáciou do~rôznych IDE modulov.
+	Neskôr sme si predstavili nástroje na analýzu kódu PEP8~\cite{pep8}, PyChecker~\cite{pychecker} a Pylint~\cite{pylint} a zhodnotili sme, že najvhodnejší nástroj pre backend našej aplikácie je program Pylint, nakoľko je ľahko prispôsobiteľný a okrem detekcie chýb poskytuje funcionalitu vygenerovania UML diagramu. Navyše je široko používaný, či už ako samostatná utilita, alebo integrovaný do~rôznych IDE modulov.
 	
 	Analyzovali sme taktiež existujúce nástroje na vizualizáciu kódu a zhodnotili sme ich či už po stránke funkcionality, kompaktnosti, alebo iných kritérií.
 	
 	Nakoniec sme preskúmali a vybrali nástroje, ktoré nám pomohli k~ľahšej implementácii projektu a projekt sme navrhli a implementovali.
-	\section{Popis implementovaného nástroja}
-	Implementovaný program nám umožnuje zobraziť ľubovoľný Python projekt v~podobe UML diagramu.  Výsledný UML diagram sa výzorovo podobá na diagram vygenerovaný programom Graphviz~\cite{graphviz}, no poskytuje nám okrem iného interaktívnosť a možnosť zobraziť chyby v~rámci hierarchie modulov a tried. Pomocou nastavení máme možnosť ignorovať či už celé skupiny chýb, konkrétne typy chýb, či ignorovať chyby len na konkrétnych riadkoch. Zdrojové kódy môžeme upravovať v~jednoduchých editoroch vizuálneho alebo konzolového charakteru. Aj vďaka zvoleniu vhodných knižníc program veľmi dobre škáluje a je spustený a inicializovaný za krátky čas.
+	Implementovaný program nám umožnuje zobraziť ľubovoľný Python projekt v~podobe UML diagramu.  Výsledný UML diagram sa výzorovo podobá na diagram vygenerovaný programom Graphviz~\cite{graphviz}. Poskytuje nám okrem iného interaktívnosť a možnosť zobraziť chyby v~rámci hierarchie modulov a tried. Pomocou nastavení máme možnosť ignorovať celé skupiny chýb, konkrétne typy chýb, či ignorovať chyby len na konkrétnych riadkoch. Zdrojové kódy môžeme upravovať v~jednoduchých editoroch vizuálneho, alebo konzolového charakteru. Aj vďaka zvoleniu vhodných knižníc program veľmi dobre škáluje.
+	
+	Pri implementácii sme narazili na viaceré problémy, medzi ktoré patrí napríklad chyba v programe Pyreverse, ktorá bude opravená v ďalšej verzii balíčka \texttt{logilab.astng.inspector}.
 	
 	Medzi nevýhody programu môžeme zaradiť fakt, že slúži na analýzu len jedného programovacieho jazyka, alebo fakt, že niektorá funkcionalita, ako je napríklad filtrácia chýb, by mohla byť implementovaná na nižšej úrovni, aby bola prístupná aj spustením z~príkazového riadku bez spustenia grafického rozhrania.
 	
-	V~budúcnosti sa program bude môcť spustiť na iných operačných systémoch, medzi ktoré patrí napríklad aj Microsoft Windows. Ďalej bude možné viac prispôsobiť program pre jednoduchšie editovanie zdrojových kódov, akými sú napríklad klávesové skratky a iné vlastnosti pokročilých editorov.
+	V~budúcnosti sa program bude môcť spustiť na iných platformách, medzi ktoré patrí napríklad aj \texttt{Microsoft Windows}. Ďalej bude možné viac prispôsobiť program pre jednoduchšie editovanie zdrojových kódov, akými sú napríklad klávesové skratky a iné vlastnosti pokročilých editorov.
 	
-	\begin{figure}[htb]
-	 \centering
-	 \includegraphics[width=\textwidth]{images/gpylint}
-	 \caption{GPylint -- Screenshot implementovaného nástroja}
-	\end{figure}
+	
 	
 \begin{thebibliography}{99}
 
@@ -708,6 +818,25 @@ Pri spustení programu užívateľ zvolí cestu k~projektu pomocou grafického r
     Dostupný na URL:~
     \url{http://http://pydev.org/}.
 	
+	\bibitem{dfd}
+    \textsc{Jaroslav Ráček}.
+    \textit{Strukturovaná analýza systémů}.
+    [cit. 12-11-2011]
+
+	\bibitem{singleton}
+    \textsc{Wikipedia contributors}.
+    \textit{Singleton pattern} [online].
+    [cit. 12-11-2011]
+    Dostupný na URL:~
+    \url{http://en.wikipedia.org/wiki/Singleton_pattern}.
+	
+	\bibitem{mvc}
+    \textsc{Wikipedia contributors}.
+    \textit{Model-view-controller} [online].
+    [cit. 12-11-2011]
+    Dostupný na URL:~
+    \url{http://cs.wikipedia.org/wiki/Model-view-controller}.
+    		
 \end{thebibliography}
 
 \appendix
@@ -734,7 +863,7 @@ Pri spustení programu užívateľ zvolí cestu k~projektu pomocou grafického r
 	\begin{figure}[htb]
 	 \centering
 	 \includegraphics[width=\textwidth]{images/settings}
-	 \caption{Okno nastavení chybových hlášok}
+	 \caption{Okno nastavení chybových hlásení}
 	\end{figure}
 		
 \chapter{Obsah priloženého CD}

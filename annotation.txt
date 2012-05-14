@@ -1,0 +1,2 @@
+Cieľom tejto bakalárskej práce je návrh a implementácia nástroja, ktorý umožní analyzovať a následne vizualizovať projekt v jazyku Python. V úvodnej kapitole si predstavíme jazyk Python a jeho vlastnosti, ako aj existujúce nástroje na jeho analýzu. Neskôr analyzujeme knižnice, ktoré nám pomôžu k samotnej implementácii. Nástroj navrhneme, v poslednej kapitole popíšeme jeho implementáciu a zhodnotíme dosiahnuté výsledky.
+
