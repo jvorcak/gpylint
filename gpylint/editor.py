@@ -177,13 +177,16 @@ class GeditEditor(Editor):
         self.buff.connect('changed', self.changed)
 
         self.view.set_buffer(self.buff)
+
         manager = GtkSource.LanguageManager()
         self.buff.set_language(manager.guess_language(self.filename, None))
 
         self.view.connect('button-release-event', self.show_error_tag)
         # open file
         with open(self.filepath) as f:
+            self.buff.begin_not_undoable_action()
             self.buff.set_text(f.read())
+            self.buff.end_not_undoable_action()
         self.view.show()
 
     def changed(self, signal):
