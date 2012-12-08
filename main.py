@@ -253,11 +253,20 @@ class Window:
         if response == Gtk.ResponseType.OK:
             self.project_path = dialog.get_filename()
 
-            # add project_path to config to that program starts with latest
-            # project opened
-            gsm.set(gsm.PROJECT_PATH, self.project_path)
+            if os.path.exists(self.project_path + "/__init__.py"):
+                # add project_path to config to that program starts with latest
+                # project opened
+                gsm.set(gsm.PROJECT_PATH, self.project_path)
 
-            self.load_tree_view()
+                self.load_tree_view()
+            else:
+                md = Gtk.MessageDialog(None, 0, \
+                        Gtk.MessageType.ERROR, Gtk.ButtonsType.OK, \
+                        "Selected directory does not contain valid python project")
+                md.run()
+                md.destroy()
+                dialog.destroy()
+                return
         elif response == Gtk.ResponseType.CANCEL:
             pass
 
